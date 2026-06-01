@@ -60,9 +60,29 @@ It is engineered to stay out of the way of the application:
 
 ## Running it
 
-Because the JSX components are loaded as external `text/babel` scripts (and
-transformed in the browser by Babel), the page must be served over HTTP —
-opening `index.html` directly via `file://` will not load the components.
+There are two ways to view the dashboard.
+
+### 1. Standalone single file (no server — just double-click)
+
+**`PFC_Dashboard_Standalone.html`** is a fully self-contained build: every
+stylesheet, font, script, React component and the WebGL layer are inlined into
+one file. Download it and open it directly in any modern browser — no server,
+no internet connection required.
+
+- **From GitHub:** open `PFC_Dashboard_Standalone.html`, click the **Download
+  raw file** button (or **Raw → Save As…**), then double-click the saved file.
+- **From a clone:** just open the file in your browser.
+
+It is ~6 MB (it embeds React, the Babel JSX transformer and the woff2 fonts) and
+runs entirely offline.
+
+### 2. Multi-file site (served over HTTP)
+
+The unbundled `index.html` keeps the project as separate files, which is nicer
+for editing and hosting. Because the JSX components are loaded as external
+`text/babel` scripts and transformed in the browser by Babel, this version must
+be served over HTTP — opening `index.html` via `file://` will not load the
+components (use the standalone file for that).
 
 From the repository root:
 
@@ -74,6 +94,15 @@ python3 -m http.server 8000
 Any static server works (`npx serve`, nginx, GitHub Pages, etc.). All paths are
 relative, so it can also be hosted under a sub-path (e.g. GitHub Pages project
 sites).
+
+### Rebuilding the standalone file
+
+The standalone file is generated from the multi-file sources. If you edit any
+CSS/JS, regenerate it with:
+
+```bash
+python3 build_standalone.py
+```
 
 ## Keyboard shortcuts
 
