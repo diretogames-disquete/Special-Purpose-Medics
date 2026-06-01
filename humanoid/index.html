@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <title>Humanoid · Casualty Reach</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Humanoid · Casualty Reach — a field brief on robotic medical-reach teammates, with a live 3D casualty, state-driven vitals, and a WebGL field that reflects patient state.">
+  <meta name="color-scheme" content="dark light">
+
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/webgl.css">
+</head>
+<body>
+  <!-- High-end WebGL ambient field (decorative; pointer-events disabled).
+       Its colour tracks the patient's state; it shows as glass motion behind
+       the narrative panel. -->
+  <canvas id="webgl-bg" aria-hidden="true"></canvas>
+
+  <div id="root"></div>
+
+  <div class="loader" id="loader">
+    <div class="spinner"></div>
+    <div class="loader-label">Booting Humanoid · Stand by</div>
+  </div>
+
+  <noscript>
+    <div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+                background:#07090a;color:#9aa3a6;font:14px/1.5 system-ui,sans-serif;text-align:center;z-index:9999;padding:24px;">
+      This presentation requires JavaScript to display.
+    </div>
+  </noscript>
+
+  <!-- Spline asset map + lazy-WASM URL globals (read by the runtime on load) -->
+  <script src="js/resources.js"></script>
+
+  <!-- WebGL ambient field -->
+  <script src="js/webgl-background.js"></script>
+
+  <!-- Patched local Spline viewer runtime (renders the 3D humanoid) -->
+  <script type="module" src="js/vendor/spline-viewer.module.js"></script>
+
+  <!-- React + in-browser JSX transform -->
+  <script src="js/vendor/react.development.js"></script>
+  <script src="js/vendor/react-dom.development.js"></script>
+  <script src="js/vendor/babel.min.js"></script>
+
+  <!-- Components (JSX, transformed by Babel in load order) -->
+  <script type="text/babel" src="js/components/tweaks-panel.jsx"></script>
+  <script type="text/babel" src="js/components/scene-app.jsx"></script>
+</body>
+</html>
