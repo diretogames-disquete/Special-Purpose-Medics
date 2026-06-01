@@ -54,7 +54,7 @@ def main():
     vendor = [esc(read(f"js/vendor/{f}")) for f in
               ("react.development.js", "react-dom.development.js", "babel.min.js")]
     webgl_js = esc(read("js/webgl-background.js"))
-    data_js = [esc(read(p)) for p in ("js/data/scenarios.js", "js/sound.js", "js/narration-config.js")]
+    data_js = [esc(read(p)) for p in ("js/data/scenarios.js", "js/sound.js")]
     # NB: unlike the PFC build, these components are NOT wrapped in IIFEs.
     # engine.jsx declares `const { useState, ... } = React` once at top level
     # and app.jsx / treatments-panel.jsx rely on that shared binding, so they
