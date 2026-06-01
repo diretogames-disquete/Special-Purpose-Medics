@@ -201,7 +201,7 @@ function App() {
     "theme": "dark",
     "briefRate": 1,
     "glassPanels": true,
-    "glassOpacity": 62,
+    "glassOpacity": 54,
     "bgCondition": true
   } /*EDITMODE-END*/;
 
