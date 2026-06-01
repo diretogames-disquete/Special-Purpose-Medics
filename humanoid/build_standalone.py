@@ -74,7 +74,7 @@ def main():
          '<head>',
          '<meta charset="utf-8">',
          '<title>Humanoid · Casualty Reach</title>',
-         '<meta name="viewport" content="width=device-width, initial-scale=1">',
+         '<meta name="viewport" content="width=1320, viewport-fit=cover">',
          '<meta name="color-scheme" content="dark light">',
          '<style>\n' + fonts_css + '\n</style>',
          '<style>\n' + dashboard_css + '\n</style>',

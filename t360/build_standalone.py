@@ -49,7 +49,7 @@ def main():
          '<html lang="en" data-theme="tactical" data-accent="op">',
          '<head>', '<meta charset="utf-8">',
          '<title>TCCC 360° — Tactical Casualty Dashboard</title>',
-         '<meta name="viewport" content="width=device-width, initial-scale=1">',
+         '<meta name="viewport" content="width=1440, viewport-fit=cover">',
          '<meta name="color-scheme" content="dark light">',
          '<style>\n' + fonts_css + '\n</style>',
          '<style>\n' + dashboard_css + '\n</style>',
