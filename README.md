@@ -1,16 +1,29 @@
 # Special-Purpose-Medics · Training Dashboards
 
-This repository hosts **two** interactive medical-training dashboards, each
+This repository hosts **four** interactive medical-training dashboards, each
 unpacked from a single-file artifact into a clean, structured website with
 separated CSS, self-hosted fonts, modular scripts, a **high-end WebGL ambient
 background** (condition-tinted, with a glass/transparency mode), and an offline
-single-file build — every original feature preserved.
+single-file build — every original feature preserved. A small **landing hub** at
+the site root links them all.
 
 | Dashboard | Path | Live URL |
 |-----------|------|----------|
-| **PFC** · Prolonged Casualty Care (23 scenarios) | `/` | `…github.io/special-purpose-medics/` |
+| **Landing hub** | `/` | `…github.io/special-purpose-medics/` |
+| **PFC** · Prolonged Casualty Care (23 scenarios) | `/pfc/` | `…github.io/special-purpose-medics/pfc/` |
+| **TCCC 360°** · Tactical Casualty (DD-1380 + drip calc) | `/t360/` | `…github.io/special-purpose-medics/t360/` |
 | **TCCC** · Patient Treatment Dashboard (6-patient live trauma sim) | `/tccc/` | `…github.io/special-purpose-medics/tccc/` |
 | **Humanoid** · Casualty Reach (3D field brief) | `/humanoid/` | `…github.io/special-purpose-medics/humanoid/` |
+
+The **TCCC 360°** dashboard (in [`t360/`](t360/)) is a DD-1380 tactical casualty
+card: injury map with front/back body diagrams, mechanism + acute findings, a
+live vitals timeline, MIST auto-fill, treatments/meds/blood logs — plus a
+**separate Drip &amp; Dosage calculator box** (floating, glass) with a built-in
+calculator and **teaching mode** that shows every formula worked out. Three
+modes — weight-based infusion (`mL/hr = dose ÷ concentration`, `gtt/min = mL/hr ×
+drop-set ÷ 60`), weight bolus, and simple fluid drip — all using standard,
+field-correct drip math. Its WebGL field tracks the casualty's acuity from the
+latest vitals. Offline standalone: `t360/TCCC360_Standalone.html`.
 
 The **Humanoid · Casualty Reach** presentation (in [`humanoid/`](humanoid/)) is
 a cinematic field brief: a live **3D humanoid casualty** (Spline/WebGL) beside a

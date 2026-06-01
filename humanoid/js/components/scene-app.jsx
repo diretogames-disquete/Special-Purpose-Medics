@@ -642,6 +642,7 @@ function App() {
   // and the field's pulse tempo follows the live heart rate.
   React.useEffect(() => {
     if (!window.PFC_BG) return;
+    window.PFC_BG.setGlass(true); // brighten the field so it reads behind the humanoid
     const level = overall === 'crit' ? 'critical' : overall === 'warn' ? 'urgent' : 'stable';
     window.PFC_BG.setCondition(level, { hr: t.pulse });
   }, [overall, t.pulse]);

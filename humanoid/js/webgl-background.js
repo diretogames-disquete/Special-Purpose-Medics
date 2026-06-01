@@ -246,7 +246,7 @@
     if (!running) drawOnce();   // refresh static frame in reduced-motion
   };
   api.setGlass = function (on) {
-    targetGain = on ? 1.28 : 1.0;
+    targetGain = on ? 1.6 : 1.0;
     if (!running) drawOnce();
   };
 
