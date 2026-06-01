@@ -1,0 +1,53 @@
+name: Deploy dashboard to GitHub Pages
+
+# Publishes the multi-file site (served over HTTPS, which the in-browser Babel
+# transform needs) plus the offline standalone file. Runs on the default branch
+# and on the working branch, and can be triggered manually.
+on:
+  push:
+    branches:
+      - main
+      - claude/loving-johnson-JdWD9
+  workflow_dispatch:
+
+# Least-privilege token scoped for Pages deployment.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one Pages deployment at a time; newer pushes supersede in-flight ones.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages (enables Pages on first run)
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Stage the site
+        run: |
+          mkdir -p _site
+          cp -r index.html css js assets PFC_Dashboard_Standalone.html _site/
+          # Disable Jekyll processing — we serve the files exactly as-is.
+          touch _site/.nojekyll
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
