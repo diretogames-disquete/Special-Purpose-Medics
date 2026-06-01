@@ -40,6 +40,8 @@ jobs:
         run: |
           mkdir -p _site
           cp -r index.html css js assets PFC_Dashboard_Standalone.html _site/
+          # Second dashboard (TCCC) served under /tccc/
+          cp -r tccc _site/
           # Disable Jekyll processing — we serve the files exactly as-is.
           touch _site/.nojekyll
 

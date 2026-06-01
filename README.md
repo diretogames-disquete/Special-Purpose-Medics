@@ -1,4 +1,30 @@
-# PFC · Prolonged Casualty Care Scenarios Dashboard
+# Special-Purpose-Medics · Training Dashboards
+
+This repository hosts **two** interactive medical-training dashboards, each
+unpacked from a single-file artifact into a clean, structured website with
+separated CSS, self-hosted fonts, modular scripts, a **high-end WebGL ambient
+background** (condition-tinted, with a glass/transparency mode), and an offline
+single-file build — every original feature preserved.
+
+| Dashboard | Path | Live URL |
+|-----------|------|----------|
+| **PFC** · Prolonged Casualty Care (23 scenarios) | `/` | `…github.io/special-purpose-medics/` |
+| **TCCC** · Patient Treatment Dashboard (6-patient live trauma sim) | `/tccc/` | `…github.io/special-purpose-medics/tccc/` |
+
+Each has its own offline standalone you can download and double-click:
+`PFC_Dashboard_Standalone.html` and `tccc/TCCC_Dashboard_Standalone.html`.
+
+The **TCCC** dashboard (in [`tccc/`](tccc/)) is a real-time Tactical Combat
+Casualty Care simulation: front/back body-diagram injury maps, live vitals with
+an animated ECG, a treatment engine (TX / MEDS / DRIP / BLOOD / REF) with
+scoring, a survival-probability readout, decision log and debrief. Its WebGL
+background tracks the patient's **live acuity** — green (likely survives) →
+amber (guarded) → red (likely dies / cardiac arrest) — straight from the
+survival probability, with the trace tempo following heart rate.
+
+---
+
+## PFC · Prolonged Casualty Care Scenarios Dashboard
 
 An interactive **Special-Purpose-Medics** training dashboard covering 23
 Prolonged Casualty Care (PCC) scenarios (2002–2025): a live monitor view with

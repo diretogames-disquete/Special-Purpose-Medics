@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <title>TCCC · Patient Treatment Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="TCCC Patient Treatment Dashboard — interactive Tactical Combat Casualty Care trauma simulation with live vitals, casualty diagrams, and treatment scoring.">
+  <meta name="color-scheme" content="dark light">
+
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/webgl.css">
+</head>
+<body>
+  <!-- High-end WebGL ambient background. Decorative; pointer-events disabled
+       in CSS so it never intercepts dashboard interaction. -->
+  <canvas id="webgl-bg" aria-hidden="true"></canvas>
+
+  <noscript>
+    <div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+                background:#07090a;color:#9aa3a6;font:14px/1.5 system-ui,sans-serif;text-align:center;z-index:9999;padding:24px;">
+      This dashboard requires JavaScript to display.
+    </div>
+  </noscript>
+
+  <div id="root"></div>
+
+  <!-- ── Vendor runtime (React + in-browser JSX transform) ───────────── -->
+  <script src="js/vendor/react.development.js"></script>
+  <script src="js/vendor/react-dom.development.js"></script>
+  <script src="js/vendor/babel.min.js"></script>
+
+  <!-- ── Resource map (body-diagram images) + WebGL background ───────── -->
+  <script src="js/resources.js"></script>
+  <script src="js/webgl-background.js"></script>
+
+  <!-- ── Application data + audio engine (plain globals) ─────────────── -->
+  <script src="js/data/scenarios.js"></script>
+  <script src="js/sound.js"></script>
+
+  <!-- ── React components (JSX, transformed by Babel in load order) ──── -->
+  <script type="text/babel" src="js/components/tweaks-panel.jsx"></script>
+  <script type="text/babel" src="js/components/engine.jsx"></script>
+  <script type="text/babel" src="js/components/casualty-panel.jsx"></script>
+  <script type="text/babel" src="js/components/vitals-panel.jsx"></script>
+  <script type="text/babel" src="js/components/treatments-panel.jsx"></script>
+  <script type="text/babel" src="js/components/app.jsx"></script>
+</body>
+</html>
