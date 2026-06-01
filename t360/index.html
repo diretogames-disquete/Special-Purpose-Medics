@@ -12,11 +12,26 @@
   <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/dashboard.css">
   <link rel="stylesheet" href="css/webgl.css">
+  <style>
+    /* Back-to-hub tab — fixed to the left edge, theme-independent so it reads on
+       any dashboard. Hosted pages only (the landing page is the hub). */
+    .hub-link{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:99999;
+      display:flex;align-items:center;gap:6px;padding:9px 11px 9px 9px;
+      font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+      font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+      color:#cdd6d9;text-decoration:none;background:rgba(12,16,17,.68);
+      border:1px solid rgba(255,255,255,.12);border-left:0;border-radius:0 9px 9px 0;
+      -webkit-backdrop-filter:blur(10px) saturate(1.2);backdrop-filter:blur(10px) saturate(1.2);
+      box-shadow:0 8px 26px -12px rgba(0,0,0,.75);transition:background .15s,color .15s,padding .15s;}
+    .hub-link:hover{background:rgba(22,28,30,.92);color:#fff;padding-left:14px;}
+    .hub-link .hl-x{font-size:13px;line-height:1;}
+  </style>
 </head>
 <body>
   <!-- WebGL ambient field (decorative; pointer-events disabled). Its colour
        tracks the casualty's acuity and reads through the glass chrome. -->
   <canvas id="webgl-bg" aria-hidden="true"></canvas>
+  <a class="hub-link" href="../" title="Back to dashboard hub" aria-label="Back to dashboard hub"><span class="hl-x">‹</span><span>Hub</span></a>
 
   <div id="root"></div>
 
