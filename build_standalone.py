@@ -66,7 +66,7 @@ def main():
          '<html lang="en" data-theme="dark">',
          '<head>',
          '<meta charset="utf-8">',
-         '<title>PFC · Prolonged Casualty Care Scenarios</title>',
+         '<title>Special-Purpose-Medic_direct</title>',
          '<meta name="viewport" content="width=device-width, initial-scale=1">',
          '<meta name="color-scheme" content="dark light">',
          '<style>\n' + fonts_css + '\n</style>',
