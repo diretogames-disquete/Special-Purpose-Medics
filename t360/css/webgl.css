@@ -1,0 +1,149 @@
+/* =====================================================================
+ * WebGL ambient field + glass chrome + Drip/Dosage box
+ * Loaded after dashboard.css.
+ * ===================================================================== */
+
+#webgl-bg {
+  position: fixed; inset: 0; width: 100%; height: 100%;
+  display: block; z-index: 0; pointer-events: none;
+  background: var(--bg-0);
+}
+
+/* ── Glass chrome — translucent surfaces so the state-tinted field reads
+   through the dashboard. Surface design tokens are re-pointed at translucent
+   colours per theme; large surfaces get a frosted backdrop. ── */
+body.glass { --glass-alpha: 0.56; }
+
+[data-theme="tactical"] body.glass {
+  --bg-0: rgba(10, 12, 13, var(--glass-alpha));
+  --bg-1: rgba(16, 19, 21, var(--glass-alpha));
+  --bg-2: rgba(22, 26, 29, var(--glass-alpha));
+  --bg-3: rgba(29, 34, 38, var(--glass-alpha));
+}
+[data-theme="day"] body.glass {
+  --bg-0: rgba(241, 243, 245, var(--glass-alpha));
+  --bg-1: rgba(255, 255, 255, var(--glass-alpha));
+  --bg-2: rgba(233, 236, 239, var(--glass-alpha));
+  --bg-3: rgba(221, 226, 230, var(--glass-alpha));
+}
+[data-theme="paper"] body.glass {
+  --bg-0: rgba(244, 239, 225, var(--glass-alpha));
+  --bg-1: rgba(251, 248, 238, var(--glass-alpha));
+  --bg-2: rgba(236, 231, 217, var(--glass-alpha));
+  --bg-3: rgba(228, 223, 208, var(--glass-alpha));
+}
+
+/* Columns become transparent so the field shows in the gutters; the inner
+   panels stay (translucent) and get frosted for legibility. */
+body.glass .col { background: transparent; }
+body.glass .panel,
+body.glass .topbar,
+body.glass .roster,
+body.glass .statusbar {
+  -webkit-backdrop-filter: blur(11px) saturate(1.15);
+  backdrop-filter: blur(11px) saturate(1.15);
+}
+body.glass #root { background: transparent; }
+
+/* =====================================================================
+ * DRIP & DOSAGE — floating launcher + glass calculator box
+ * ===================================================================== */
+.dd-fab {
+  position: fixed; right: 18px; bottom: 40px; z-index: 60;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 14px; cursor: pointer;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: #06120c; background: var(--accent, var(--op));
+  border: 1px solid var(--accent, var(--op)); border-radius: 6px;
+  box-shadow: 0 6px 24px -8px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06) inset;
+  transition: transform 140ms ease, filter 140ms ease;
+}
+.dd-fab:hover { transform: translateY(-1px); filter: brightness(1.08); }
+.dd-fab.open { background: transparent; color: var(--accent, var(--op)); }
+.dd-fab-ic { font-size: 13px; }
+
+.dd-box {
+  position: fixed; right: 18px; bottom: 84px; z-index: 61;
+  width: 380px; max-width: calc(100vw - 36px); max-height: calc(100vh - 130px);
+  display: flex; flex-direction: column; overflow: hidden;
+  background: color-mix(in oklab, var(--bg-1) 82%, transparent);
+  -webkit-backdrop-filter: blur(20px) saturate(1.25);
+  backdrop-filter: blur(20px) saturate(1.25);
+  border: 1px solid var(--line-2);
+  border-radius: 10px;
+  box-shadow: 0 24px 60px -20px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.04) inset;
+  animation: dd-in 160ms ease;
+}
+@keyframes dd-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.dd-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 14px; border-bottom: 1px solid var(--line);
+}
+.dd-title {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; color: var(--fg-0);
+}
+.dd-tick { width: 6px; height: 6px; border-radius: 1px; background: var(--accent, var(--op)); box-shadow: 0 0 8px var(--accent, var(--op)); }
+.dd-teach-toggle {
+  margin-left: auto; cursor: pointer;
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.12em;
+  padding: 4px 8px; border-radius: 4px;
+  color: var(--fg-2); background: transparent; border: 1px solid var(--line-2);
+}
+.dd-teach-toggle.on { color: #06120c; background: var(--info); border-color: var(--info); }
+.dd-x {
+  cursor: pointer; width: 24px; height: 24px; line-height: 1;
+  font-size: 18px; color: var(--fg-2); background: transparent; border: 1px solid var(--line-2); border-radius: 4px;
+}
+.dd-x:hover { color: var(--fg-0); border-color: var(--fg-2); }
+
+.dd-modes { display: flex; gap: 4px; padding: 10px 14px 0; }
+.dd-modes button {
+  flex: 1; cursor: pointer; padding: 7px 6px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--fg-2); background: var(--bg-2); border: 1px solid var(--line); border-radius: 5px 5px 0 0;
+}
+.dd-modes button.on { color: var(--accent, var(--op)); border-color: var(--accent, var(--op)); border-bottom-color: transparent; background: color-mix(in oklab, var(--accent, var(--op)) 10%, transparent); }
+
+.dd-body { padding: 12px 14px 14px; overflow-y: auto; }
+.dd-calc { display: flex; flex-direction: column; gap: 11px; }
+.dd-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.dd-field { display: flex; flex-direction: column; gap: 5px; }
+.dd-flabel { font-family: var(--mono); font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-2); display: flex; gap: 6px; align-items: baseline; }
+.dd-hint { font-style: normal; color: var(--fg-3); letter-spacing: 0.1em; }
+.dd-box input, .dd-box select {
+  width: 100%; font-family: var(--mono); font-size: 13px; color: var(--fg-0);
+  background: var(--bg-0); border: 1px solid var(--line-2); border-radius: 5px; padding: 7px 8px;
+}
+.dd-box input[readonly] { color: var(--fg-2); background: color-mix(in oklab, var(--bg-0) 60%, transparent); }
+.dd-box input:focus, .dd-box select:focus { outline: none; border-color: var(--accent, var(--op)); }
+.dd-inline { display: flex; gap: 5px; }
+.dd-inline input { flex: 1; }
+.dd-inline select { flex: 1.15; }
+.dd-note { font-family: var(--mono); font-size: 10px; line-height: 1.5; color: var(--fg-2); margin-top: -4px; }
+
+.dd-seg { display: flex; gap: 4px; }
+.dd-seg button {
+  flex: 1; cursor: pointer; padding: 6px 4px;
+  font-family: var(--mono); font-size: 10px; color: var(--fg-2);
+  background: var(--bg-0); border: 1px solid var(--line-2); border-radius: 5px;
+}
+.dd-seg button.on { color: #06120c; background: var(--accent, var(--op)); border-color: var(--accent, var(--op)); }
+
+.dd-out { border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; background: color-mix(in oklab, var(--accent, var(--op)) 6%, transparent); }
+.dd-big { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 8px; }
+.dd-big > div { display: flex; align-items: baseline; gap: 6px; }
+.dd-num { font-family: var(--mono); font-size: 30px; font-weight: 600; color: var(--accent, var(--op)); line-height: 1; font-variant-numeric: tabular-nums; }
+.dd-u { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-2); }
+.dd-line { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--mono); font-size: 11px; color: var(--fg-2); padding: 3px 0; border-top: 1px dashed var(--line); }
+.dd-line:first-of-type { border-top: 0; }
+.dd-line b { color: var(--fg-0); font-weight: 500; }
+
+.dd-teach { margin-top: 4px; border-left: 2px solid var(--info); background: color-mix(in oklab, var(--info) 8%, transparent); padding: 9px 12px; border-radius: 0 6px 6px 0; }
+.dd-teach-h { font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--info); margin-bottom: 6px; }
+.dd-teach-l { font-family: var(--mono); font-size: 10.5px; line-height: 1.7; color: var(--fg-1); }
+
+.dd-foot { padding: 9px 14px; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 9px; letter-spacing: 0.08em; color: var(--fg-3); }
+
+@media (prefers-reduced-motion: reduce) { #webgl-bg { will-change: auto; } .dd-box { animation: none; } }
