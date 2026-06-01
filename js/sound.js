@@ -193,5 +193,8 @@ window.PCC_TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "ecgWave": true,
   "pulseHeart": true,
   "density": "regular",
-  "showStudentNotes": true
+  "showStudentNotes": true,
+  "glassPanels": true,
+  "glassOpacity": 62,
+  "bgCondition": true
 }/*EDITMODE-END*/;

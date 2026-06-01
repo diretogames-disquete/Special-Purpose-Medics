@@ -51,6 +51,18 @@ function PCCTweaks({ tweaks, setTweak, currentVitals }) {
     window.PCC_SOUND.setLubDub(!!tweaks.lubDub);
   }, [tweaks.lubDub]);
 
+  // Glass panels — translucent chrome so the WebGL field shows through
+  useEffect(() => {
+    document.body.classList.toggle('glass', !!tweaks.glassPanels);
+    if (window.PFC_BG) window.PFC_BG.setGlass(!!tweaks.glassPanels);
+  }, [tweaks.glassPanels]);
+
+  // Glass opacity — drives --glass-alpha (panel translucency)
+  useEffect(() => {
+    const a = (tweaks.glassOpacity ?? 62) / 100;
+    document.body.style.setProperty('--glass-alpha', String(a));
+  }, [tweaks.glassOpacity]);
+
   return (
     <TweaksPanel title="TWEAKS · PFC">
       <TweakSection label="Display" />
@@ -94,6 +106,25 @@ function PCCTweaks({ tweaks, setTweak, currentVitals }) {
         min={0} max={100} step={5}
         unit="%"
         onChange={v => setTweak('soundVolume', v)}
+      />
+
+      <TweakSection label="Background · WebGL" />
+      <TweakToggle
+        label="Glass panels"
+        value={tweaks.glassPanels}
+        onChange={v => setTweak('glassPanels', v)}
+      />
+      <TweakSlider
+        label="Glass opacity"
+        value={tweaks.glassOpacity ?? 62}
+        min={30} max={95} step={1}
+        unit="%"
+        onChange={v => setTweak('glassOpacity', v)}
+      />
+      <TweakToggle
+        label="Tint to patient condition"
+        value={tweaks.bgCondition !== false}
+        onChange={v => setTweak('bgCondition', v)}
       />
 
       <TweakSection label="Content" />

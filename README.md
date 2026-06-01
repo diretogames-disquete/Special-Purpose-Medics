@@ -49,10 +49,22 @@ paints behind the entire dashboard:
 - a **travelling ECG pulse trace**, and
 - a soft **vignette + film grain**.
 
+The dominant colour **tracks the patient's condition** — derived from the
+scenario priority (green = stable, amber = urgent, red = life-threat) — and the
+heartbeat tempo of the trace follows the patient's heart rate. The React app
+drives this through a tiny global API (`window.PFC_BG.setCondition(...)`).
+
+**Glass mode** (on by default) makes the panels translucent with a frosted
+backdrop blur so the condition-coloured field reads through the chrome. From the
+**Tweaks** panel → *Background · WebGL* you can:
+
+- toggle **Glass panels** on/off,
+- adjust **Glass opacity** (panel translucency), and
+- toggle **Tint to patient condition** (off = calm green regardless of acuity).
+
 It is engineered to stay out of the way of the application:
 
 - the canvas is `pointer-events: none`, so **no interaction is affected**;
-- panels stay fully opaque — the shader reads as ambient glow in the gutters;
 - it is **theme-aware** (re-tints live when you switch dark/light in Tweaks);
 - it caps device-pixel-ratio, **pauses when the tab is hidden**, renders a
   single static frame under `prefers-reduced-motion`, and **falls back

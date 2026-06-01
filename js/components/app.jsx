@@ -241,6 +241,20 @@ function App() {
   const idx = data.findIndex(d => d.ctl === activeCtl);
   const s = data[idx];
 
+  // Drive the WebGL background colour from the current patient's condition
+  // (scenario priority → stable / urgent / critical) and the heartbeat
+  // tempo from their heart rate. Disabled when "Tint to condition" is off.
+  useEffect(() => {
+    if (!window.PFC_BG || !s) return;
+    const level = t.bgCondition === false
+      ? 'stable'
+      : s.priority === 0 ? 'critical'
+      : s.priority === 1 ? 'urgent'
+      : 'stable';
+    const hr = s.vitalsParsed ? +s.vitalsParsed.hr || 0 : 0;
+    window.PFC_BG.setCondition(level, { hr });
+  }, [s && s.ctl, t.bgCondition]);
+
   const onPrev = useCallback(() => {
     if (idx > 0) setActiveCtl(data[idx - 1].ctl);
   }, [idx, data]);
