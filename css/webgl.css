@@ -1,0 +1,61 @@
+/* =====================================================================
+ * WebGL ambient layer + integration overrides
+ * Loaded AFTER dashboard.css so these rules win the cascade.
+ * ===================================================================== */
+
+/* Full-viewport canvas pinned behind the entire dashboard. It never
+   receives pointer events, so all existing interactions are untouched. */
+#webgl-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+  pointer-events: none;
+  /* fallback tint shown before the GL context paints its first frame */
+  background: var(--bg-0);
+}
+
+/* Let the living WebGL field show through the gutters between panels.
+   The body keeps a solid colour as a graceful fallback if WebGL fails;
+   when the canvas is active it simply sits on top of this colour. */
+body {
+  background: var(--bg-0);
+}
+
+/* The app shell rides above the canvas. Panels remain fully opaque, so
+   the shader reads as ambient glow around and between the cards rather
+   than washing out any content. */
+.app {
+  position: relative;
+  z-index: 1;
+}
+
+/* Give the opaque chrome a touch of depth now that it floats over the
+   animated field — subtle, theme-neutral, and purely cosmetic. */
+.topbar,
+.panel,
+.hero,
+.foot-strip {
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.02) inset,
+              0 10px 30px -18px rgba(0, 0, 0, 0.7);
+  backdrop-filter: saturate(1.05);
+}
+
+:root[data-theme="light"] .topbar,
+:root[data-theme="light"] .panel,
+:root[data-theme="light"] .hero,
+:root[data-theme="light"] .foot-strip {
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset,
+              0 10px 30px -20px rgba(20, 40, 60, 0.35);
+}
+
+/* Floating overlays (tweaks panel, sound prompt) must stay above the app. */
+.sound-prompt { z-index: 1200; }
+
+/* Honour reduced-motion: the JS already renders a single static frame,
+   this just guarantees no residual CSS animation churns underneath. */
+@media (prefers-reduced-motion: reduce) {
+  #webgl-bg { will-change: auto; }
+}
