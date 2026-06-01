@@ -30,6 +30,10 @@ body {
 .app {
   position: relative;
   z-index: 1;
+  /* TCCC's .app paints its own opaque radial-gradient background, which would
+     sit over the canvas and hide the field. Clear it so the WebGL ambient
+     (and, in glass mode, the field behind the translucent panels) shows. */
+  background: transparent !important;
 }
 
 /* Give the opaque chrome a touch of depth now that it floats over the
