@@ -113,21 +113,30 @@
     '  float glow = smoothstep(0.16, 0.0, d);',
     '  float core = smoothstep(0.012, 0.0, d);',
     '  float scan = smoothstep(0.55, 0.5, abs(uv.y - 0.5));',
-    '  col += u_c1 * glow * 0.12 * scan;',
-    '  col += u_c1 * core * 0.60 * scan;',
+    '  float ecgAmt = (glow * 0.12 + core * 0.60) * scan;',
+    // Dark mode: the trace glows additively. Light mode: it draws as ink,
+    // darkening toward the condition colour so it stays visible on paper.
+    '  vec3 ecgDark  = col + u_c1 * ecgAmt;',
+    '  vec3 ecgLight = mix(col, u_c1, clamp(ecgAmt, 0.0, 1.0));',
+    '  col = mix(ecgDark, ecgLight, u_theme);',
 
-    '  col += u_c1 * smoothstep(0.9, 0.0, length(uv - vec2(0.08, 1.05))) * 0.07;',
-    '  col += u_c2 * smoothstep(0.9, 0.0, length(uv - vec2(1.05, -0.05))) * 0.05;',
+    // Corner glows are additive, so they only read on the dark background.
+    '  col += u_c1 * smoothstep(0.9, 0.0, length(uv - vec2(0.08, 1.05))) * 0.07 * (1.0 - u_theme);',
+    '  col += u_c2 * smoothstep(0.9, 0.0, length(uv - vec2(1.05, -0.05))) * 0.05 * (1.0 - u_theme);',
 
     '  col = mix(u_bg, col, u_gain);',           // intensity / glass boost
 
+    // Vignette — gentle in light mode so the paper background stays clean.
     '  float vig = smoothstep(1.25, 0.25, length(uv - 0.5));',
-    '  col *= mix(0.55, 1.0, vig);',
+    '  col *= mix(mix(0.55, 0.82, u_theme), 1.0, vig);',
 
+    // Film grain (lighter in light mode).
     '  float g = hash(gl_FragCoord.xy + fract(t)) - 0.5;',
-    '  col += g * 0.02;',
+    '  col += g * mix(0.02, 0.012, u_theme);',
 
-    '  col = mix(col, mix(u_bg, col, 0.5) + 0.04, u_theme);',
+    // In light mode the deep background is near-white, so the condition
+    // colour already mixes IN as saturated clouds on paper — no extra wash,
+    // which is what kept it invisible behind the translucent panels before.
 
     '  gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);',
     '}'
