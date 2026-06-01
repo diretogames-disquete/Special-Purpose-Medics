@@ -273,10 +273,13 @@ window.TqModal = TqModal;
    Reads a structured MIST-style brief of the current patient using the
    browser's built-in Web Speech API. No external service required.
    ============================================================ */
-function PatientBrief({ scenario, rate = 1.0 }) {
+function PatientBrief({ scenario, rate = 1.0, enhanced, onEnhanced }) {
   const supported = typeof window !== "undefined" && "speechSynthesis" in window;
   const [speaking, setSpeaking] = React.useState(false);
   const [paused, setPaused] = React.useState(false);
+  const [tone, setTone] = React.useState("calm");
+  const [enhancing, setEnhancing] = React.useState(false);
+  const [err, setErr] = React.useState("");
 
   // Stop any in-flight narration when the scenario changes.
   React.useEffect(() => {
@@ -284,6 +287,7 @@ function PatientBrief({ scenario, rate = 1.0 }) {
     window.speechSynthesis.cancel();
     setSpeaking(false);
     setPaused(false);
+    setErr("");
   }, [scenario.id]);
 
   // Strip mid-sentence interpunct/bullet glyphs, lightly expand a few common
@@ -307,7 +311,7 @@ function PatientBrief({ scenario, rate = 1.0 }) {
     .replace(/\s+/g, " ")
     .trim();
 
-  const buildBrief = () => {
+  const buildRaw = () => {
     const m = scenario.moi || {};
     const sex = scenario.sex === "M" ? "male" : scenario.sex === "F" ? "female" : "";
     const lines = [
@@ -322,13 +326,36 @@ function PatientBrief({ scenario, rate = 1.0 }) {
       m.findings ? `Findings on arrival: ${m.findings}.` : "",
       `Working diagnosis: ${scenario.diagnosis}.`
     ];
-    return speakable(lines.filter(Boolean).join(" "));
+    return lines.filter(Boolean).join(" ");
+  };
+  // Narrate the LLM-enhanced brief when present, else the raw structured brief.
+  const speakText = () => speakable(enhanced || buildRaw());
+
+  // Call the serverless proxy (which holds the Claude key) to rewrite the brief
+  // in the chosen tone. Falls back gracefully when no proxy is configured.
+  const proxyCfg = () => (window.NARRATION_RESOLVE ? window.NARRATION_RESOLVE() : { url: "", token: "" });
+  const enhance = async () => {
+    const { url, token } = proxyCfg();
+    if (!url) { setErr("Add your proxy URL in js/narration-config.js (see proxy/README)."); return; }
+    setEnhancing(true); setErr("");
+    try {
+      const headers = { "content-type": "application/json" };
+      if (token) headers["x-narration-token"] = token;
+      const r = await fetch(url, { method: "POST", headers, body: JSON.stringify({ brief: buildRaw(), tone }) });
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok || !data.text) throw new Error(data.error || ("HTTP " + r.status));
+      onEnhanced && onEnhanced(data.text);
+    } catch (e) {
+      setErr(String((e && e.message) || e));
+    } finally {
+      setEnhancing(false);
+    }
   };
 
   const start = () => {
     if (!supported) return;
     window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(buildBrief());
+    const u = new SpeechSynthesisUtterance(speakText());
     u.rate = rate;
     u.pitch = 1.0;
     u.volume = 1.0;
@@ -358,35 +385,38 @@ function PatientBrief({ scenario, rate = 1.0 }) {
     setPaused(false);
   };
 
-  if (!supported) {
-    return (
-      <div className="brief-bar disabled" title="Web Speech API not available in this browser">
-        🔇 BRIEF · unavailable
-      </div>);
-  }
-
   return (
-    <div className="brief-bar">
-      {!speaking ?
-        <button className="brief-btn primary" onClick={start} title="Narrate patient brief">
-          ▶ BRIEF
-        </button> :
-        <>
-          <button className="brief-btn" onClick={togglePause} title={paused ? "Resume" : "Pause"}>
-            {paused ? "▶ RESUME" : "❚❚ PAUSE"}
-          </button>
-          <button className="brief-btn danger" onClick={stop} title="Stop narration">
-            ■ STOP
-          </button>
-          <span className="brief-status">{paused ? "PAUSED" : "NARRATING…"}</span>
-        </>
-      }
+    <div className="brief-controls">
+      <div className="brief-bar">
+        <select className="brief-tone" value={tone} onChange={e => setTone(e.target.value)} title="Brief tone">
+          <option value="calm">Calm</option>
+          <option value="urgent">Urgent</option>
+          <option value="instructor">Instructor</option>
+        </select>
+        <button className="brief-btn enhance" onClick={enhance} disabled={enhancing}
+          title="Rewrite this brief in the selected tone (Claude, via your proxy)">
+          {enhancing ? "⏳ Enhancing…" : enhanced ? "↻ Re-tone" : "✨ Enhance"}
+        </button>
+        {supported && (!speaking ?
+          <button className="brief-btn primary" onClick={start} title="Narrate brief">▶ BRIEF</button> :
+          <>
+            <button className="brief-btn" onClick={togglePause} title={paused ? "Resume" : "Pause"}>{paused ? "▶" : "❚❚"}</button>
+            <button className="brief-btn danger" onClick={stop} title="Stop">■</button>
+            <span className="brief-status">{paused ? "PAUSED" : "NARRATING…"}</span>
+          </>)}
+        {!supported && <span className="brief-status">read-aloud n/a</span>}
+        {enhanced && <span className="brief-chip" title="Spoken brief uses the enhanced tone">✨ {tone}</span>}
+      </div>
+      {err && <div className="brief-err">⚠ {err}</div>}
     </div>);
 }
 
 window.PatientBrief = PatientBrief;
 
 function CasualtyPanel({ scenario, vitals, taken, tqStates, elapsedSec, onTqApply, onTqConvert, briefRate }) {
+  // LLM-enhanced brief for the current patient (reset when the patient changes)
+  const [briefEnhanced, setBriefEnhanced] = React.useState(null);
+  React.useEffect(() => { setBriefEnhanced(null); }, [scenario.id]);
   // active injury tool (display only)
   const [tool, setTool] = useState("gsw");
   // editable name + last4 overrides, keyed by scenario id so each patient retains its own edits
@@ -433,9 +463,18 @@ function CasualtyPanel({ scenario, vitals, taken, tqStates, elapsedSec, onTqAppl
         <div className="mech-card">
           <div className="mech-head">
             <div className="mech-lbl">Mechanism · {scenario.diagnosis}</div>
-            <PatientBrief scenario={scenario} rate={briefRate || 1.0} />
+            <PatientBrief scenario={scenario} rate={briefRate || 1.0}
+              enhanced={briefEnhanced} onEnhanced={setBriefEnhanced} />
           </div>
           <div className="mech-narrative">{scenario.mechanism}</div>
+          {briefEnhanced &&
+          <div className="brief-enhanced">
+              <div className="be-head"><span className="be-spark">✨</span> Enhanced brief · spoken handoff
+                <button className="be-x" title="Discard enhanced brief" onClick={() => setBriefEnhanced(null)}>×</button>
+              </div>
+              <div className="be-body">{briefEnhanced}</div>
+            </div>
+          }
           {scenario.moi &&
           <div className="moi-grid">
               <div className="moi-row"><span className="moi-k">Event</span><span className="moi-v">{scenario.moi.event}</span></div>
