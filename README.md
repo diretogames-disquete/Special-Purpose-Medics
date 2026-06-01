@@ -10,6 +10,17 @@ single-file build — every original feature preserved.
 |-----------|------|----------|
 | **PFC** · Prolonged Casualty Care (23 scenarios) | `/` | `…github.io/special-purpose-medics/` |
 | **TCCC** · Patient Treatment Dashboard (6-patient live trauma sim) | `/tccc/` | `…github.io/special-purpose-medics/tccc/` |
+| **Humanoid** · Casualty Reach (3D field brief) | `/humanoid/` | `…github.io/special-purpose-medics/humanoid/` |
+
+The **Humanoid · Casualty Reach** presentation (in [`humanoid/`](humanoid/)) is
+a cinematic field brief: a live **3D humanoid casualty** (Spline/WebGL) beside a
+narrative on robotic medical-reach teammates, with editable vitals/triage. Its
+WebGL ambient field shows as **glass motion behind the text panel** that tracks
+the patient's state — green (stable) → amber (guarded) → red (critical), with
+the field tempo following heart rate. The brief is contextualized with an
+**Innovation Front** section drawn from real autonomous-systems programs
+(next-gen UAS, subsea autonomy, swarm UAVs, EW-resilient ISR, AMRs, and more).
+Offline standalone: `humanoid/Humanoid_Standalone.html`.
 
 Each has its own offline standalone you can download and double-click:
 `PFC_Dashboard_Standalone.html` and `tccc/TCCC_Dashboard_Standalone.html`.

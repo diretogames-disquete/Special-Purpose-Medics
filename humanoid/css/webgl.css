@@ -1,0 +1,88 @@
+/* =====================================================================
+ * WebGL ambient field + glass text panel + innovation front
+ * Loaded after dashboard.css so these rules win.
+ * ===================================================================== */
+
+/* Full-viewport WebGL field, pinned behind the whole composition. It never
+   receives pointer events, so the Spline scene and all controls are untouched.
+   Its colour tracks the patient's state (driven from scene-app.jsx). */
+#webgl-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--bg);
+}
+
+/* ── Glass text panel ──────────────────────────────────────────────
+   Frost the narrative panel so the living, state-tinted field reads
+   through it as motion behind the text. The left edge glows with the
+   current patient state (--glow-color is updated live by the app). */
+.panel {
+  background: linear-gradient(180deg,
+    rgba(var(--surface-rgb), 0.60),
+    rgba(var(--surface-rgb), 0.40)) !important;
+  backdrop-filter: blur(16px) saturate(135%);
+  -webkit-backdrop-filter: blur(16px) saturate(135%);
+  border-left: 1px solid color-mix(in oklab, var(--glow-color, #4ade80) 30%, var(--line));
+  box-shadow: inset 1px 0 0 color-mix(in oklab, var(--glow-color, #4ade80) 22%, transparent);
+  transition: border-color 500ms ease, box-shadow 500ms ease;
+}
+
+/* ── Innovation front (CSV programs) ───────────────────────────────── */
+.innov-lead {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 60ch;
+}
+.innov-lead em, .innov-lead b { color: var(--fg); }
+
+.innov-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+@media (max-width: 1180px) { .innov-grid { grid-template-columns: 1fr; } }
+
+.innov-card {
+  border: 1px solid var(--line);
+  background: rgba(var(--surface-rgb), 0.34);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  border-radius: 7px;
+  padding: 12px 14px;
+  transition: border-color 160ms ease, transform 160ms ease, background 160ms ease;
+}
+.innov-card:hover {
+  border-color: color-mix(in oklab, var(--glow-color, #4ade80) 45%, var(--line));
+  background: rgba(var(--surface-rgb), 0.5);
+  transform: translateY(-1px);
+}
+.ic-head {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+}
+.ic-org { font-weight: 600; color: var(--fg); font-size: 13px; letter-spacing: -0.01em; }
+.ic-tag {
+  font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--mint); white-space: nowrap;
+}
+.ic-focus { font-size: 12px; color: #c9cfcc; margin: 7px 0 9px; line-height: 1.45; }
+:root[data-theme="light"] .ic-focus { color: #3a4140; }
+.ic-caps { display: flex; flex-wrap: wrap; gap: 4px; }
+.ic-cap {
+  font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--muted);
+  border: 1px solid var(--line); border-radius: 999px; padding: 2px 7px;
+}
+.innov-foot {
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--muted); margin-top: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #webgl-bg { will-change: auto; }
+}
