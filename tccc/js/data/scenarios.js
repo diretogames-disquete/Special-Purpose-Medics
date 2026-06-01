@@ -31,8 +31,8 @@ window.SCENARIOS = [
     },
     initialVitals: { hr: 132, sys: 88, dia: 58, rr: 26, spo2: 96, pain: 8, avpu: "V", gcs: 14, temp: 36.4 },
     injuries: [
-      { type: "entry", view: "front", x: 0.58, y: 0.62, label: "Entry R thigh · femoral" },
-      { type: "exit",  view: "back",  x: 0.42, y: 0.62, label: "Exit posterior R thigh · avulsion" }
+      { type: "entry", view: "front", x: 0.42, y: 0.62, label: "Entry R thigh · femoral" },
+      { type: "exit",  view: "back",  x: 0.58, y: 0.62, label: "Exit posterior R thigh · avulsion" }
     ],
     acuteFindings: [],
     untreatedTrajectory: {
