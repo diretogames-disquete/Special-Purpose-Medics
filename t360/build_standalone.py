@@ -41,6 +41,7 @@ def main():
         f'bodyFront:"data:image/png;base64,{b64("assets/img/bodyFront.png")}",'
         f'bodyBack:"data:image/png;base64,{b64("assets/img/bodyBack.png")}"' '};')
     webgl_js = esc(read("js/webgl-background.js"))
+    heart_js = esc(read("js/heart-audio.js"))
     vendor = [esc(read(f"js/vendor/{f}")) for f in
               ("react.development.js", "react-dom.development.js", "babel.min.js")]
     comps = [(f, esc(read(f"js/components/{f}"))) for f in COMPONENTS]
@@ -58,7 +59,8 @@ def main():
          '<canvas id="webgl-bg" aria-hidden="true"></canvas>',
          '<div id="root"></div>',
          '<script>\n' + resources + '\n</script>',
-         '<script>\n' + webgl_js + '\n</script>']
+         '<script>\n' + webgl_js + '\n</script>',
+         '<script>\n' + heart_js + '\n</script>']
     for v in vendor:
         p.append('<script>\n' + v + '\n</script>')
     for name, c in comps:

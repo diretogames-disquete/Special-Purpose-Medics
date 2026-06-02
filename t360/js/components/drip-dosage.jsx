@@ -60,25 +60,30 @@
   }
 
   // ── Live IV drip chamber — drops fall at the computed cadence ─────────────
-  function DripVisual({ gttMin }) {
+  // Fluid runs light blue; a blood product turns it blood-red with a pulsing
+  // BLOOD badge beside the chamber.
+  function DripVisual({ gttMin, blood }) {
     const ok = isFinite(gttMin) && gttMin > 0;
     const sec = ok ? 60 / gttMin : 0;
     // Clamp the animation period for visual sanity; the label shows the true rate.
     const dur = ok ? Math.max(0.28, Math.min(6, sec)) : 0;
     const stream = ok && sec < 0.28; // too fast to read as discrete drops
     return (
-      <div className="ddv" title={ok ? Math.round(gttMin) + " drops/min" : ""}>
-        <div className={"ddv-chamber" + (stream ? " stream" : "")}>
-          <span className="ddv-spike" />
-          {ok && !stream && <span className="ddv-drop" style={{ animationDuration: dur + "s" }} />}
-          {stream && <span className="ddv-stream" />}
-          <span className="ddv-pool" />
+      <div className={"ddv-wrap" + (blood ? " blood" : "")}>
+        <div className="ddv" title={ok ? Math.round(gttMin) + " drops/min" : ""}>
+          <div className={"ddv-chamber" + (stream ? " stream" : "")}>
+            <span className="ddv-spike" />
+            {ok && !stream && <span className="ddv-drop" style={{ animationDuration: dur + "s" }} />}
+            {stream && <span className="ddv-stream" />}
+            <span className="ddv-pool" />
+          </div>
+          <span className="ddv-tube" />
+          <div className="ddv-read">
+            <b>{ok ? Math.round(gttMin) : "—"}</b> gtt/min
+            <span className="ddv-sub">{ok ? (stream ? "continuous stream" : "1 drop / " + sec.toFixed(1) + " s") : "set a dose"}</span>
+          </div>
         </div>
-        <span className="ddv-tube" />
-        <div className="ddv-read">
-          <b>{ok ? Math.round(gttMin) : "—"}</b> gtt/min
-          <span className="ddv-sub">{ok ? (stream ? "continuous stream" : "1 drop / " + sec.toFixed(1) + " s") : "set a dose"}</span>
-        </div>
+        {blood && <span className="ddv-blood"><span className="ddv-blood-dot" />BLOOD</span>}
       </div>
     );
   }
@@ -245,6 +250,8 @@
     const [time, setTime] = useState(20);
     const [timeU, setTimeU] = useState('min');
     const [drops, setDrops] = useState(10);
+    const [fluid, setFluid] = useState('Crystalloid (LR/NS)');
+    const blood = fluid !== 'Crystalloid (LR/NS)';
 
     const r = useMemo(() => {
       const tMin = timeU === 'hr' ? time * 60 : time;
@@ -255,6 +262,15 @@
 
     return (
       <div className="dd-calc">
+        <Field label="Fluid / product">
+          <select value={fluid} onChange={e => setFluid(e.target.value)}>
+            <option>Crystalloid (LR/NS)</option>
+            <option>Whole Blood</option>
+            <option>PRBC</option>
+            <option>Plasma</option>
+            <option>LTOWB</option>
+          </select>
+        </Field>
         <div className="dd-row">
           <Field label="Volume" hint="mL">
             <input type="number" value={vol} onChange={e => setVol(+e.target.value || 0)} />
@@ -278,7 +294,7 @@
           </div>
         </Field>
         <div className="dd-out dd-out-drip">
-          <DripVisual gttMin={r.gttMin} />
+          <DripVisual gttMin={r.gttMin} blood={blood} />
           <div className="dd-out-figs">
             <div className="dd-big">
               <div><span className="dd-num">{round(r.gttMin, 0)}</span><span className="dd-u">gtt / min</span></div>
