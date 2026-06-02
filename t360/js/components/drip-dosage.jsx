@@ -26,6 +26,21 @@
   const DOSE_UNITS = ['mcg/kg/min', 'mcg/kg/hr', 'mg/kg/hr', 'mcg/min', 'mg/hr', 'units/hr'];
   const DROP_SETS = [10, 15, 20, 60];
 
+  // ── Blood delivery model (approximate, for teaching) ─────────────────────
+  // Gravity max flow by catheter gauge (crystalloid, mL/min, ballpark).
+  const GAUGE_FLOW = { 14: 270, 16: 200, 18: 100, 20: 60 };
+  // Blood is more viscous than crystalloid — scale per product.
+  const PRODUCT_VISC = { 'Whole Blood': 0.75, 'LTOWB': 0.78, 'PRBC': 0.5, 'Plasma': 0.7 };
+  // Returns estimated achievable flow in mL/min for the given setup.
+  function bloodFlowMlMin(product, gauge, pressure, warmer) {
+    let f = (GAUGE_FLOW[gauge] || 60) * (PRODUCT_VISC[product] || 0.6);
+    if (pressure) f *= 2.5;                 // ~300 mmHg pressure bag
+    if (warmer === 'inline') f *= 0.9;      // warming set adds mild resistance
+    if (warmer === 'rapid') f = Math.max(f, gauge <= 16 ? 150 : 80); // device-driven floor (needs large bore)
+    return f;
+  }
+  const UNIT_ML = 450; // ~1 unit PRBC/whole blood
+
   // dose → base amount per hour (mcg, or units), given weight
   function dosePerHourBase(doseVal, unit, kg) {
     switch (unit) {
@@ -252,6 +267,10 @@
     const [drops, setDrops] = useState(10);
     const [fluid, setFluid] = useState('Crystalloid (LR/NS)');
     const blood = fluid !== 'Crystalloid (LR/NS)';
+    // Blood-delivery setup (only relevant when giving a blood product).
+    const [gauge, setGauge] = useState(18);
+    const [pressure, setPressure] = useState(false);
+    const [warmer, setWarmer] = useState('none');
 
     const r = useMemo(() => {
       const tMin = timeU === 'hr' ? time * 60 : time;
@@ -259,6 +278,12 @@
       const mlHr = vol / (tMin / 60);
       return { tMin, gttMin, mlHr, sec: 60 / gttMin };
     }, [vol, time, timeU, drops]);
+
+    const bd = useMemo(() => {
+      if (!blood) return null;
+      const mlMin = bloodFlowMlMin(fluid, gauge, pressure, warmer);
+      return { mlMin, mlHr: mlMin * 60, volMin: vol / mlMin, unitMin: UNIT_ML / mlMin };
+    }, [blood, fluid, gauge, pressure, warmer, vol]);
 
     return (
       <div className="dd-calc">
@@ -308,6 +333,54 @@
           `gtt/min = volume × drop set ÷ time = ${vol} × ${drops} ÷ ${r.tMin} = ${round(r.gttMin, 1)} gtt/min`,
           `mL/hr = volume ÷ hours = ${vol} ÷ ${round(r.tMin / 60, 2)} = ${round(r.mlHr, 0)} mL/hr`,
         ]} />
+
+        {blood && bd &&
+        <div className="dd-blood-deliv">
+          <div className="dd-bd-h"><span className="ddv-blood-dot" /> Blood delivery · rapid / bolus</div>
+          <Field label="IV access">
+            <div className="dd-seg">
+              {[14, 16, 18, 20].map(g => (
+                <button key={g} className={g === gauge ? 'on' : ''} onClick={() => setGauge(g)}>{g}G</button>
+              ))}
+            </div>
+          </Field>
+          <div className="dd-row">
+            <Field label="Delivery">
+              <div className="dd-seg">
+                <button className={!pressure ? 'on' : ''} onClick={() => setPressure(false)}>Gravity</button>
+                <button className={pressure ? 'on' : ''} onClick={() => setPressure(true)}>Pressure bag</button>
+              </div>
+            </Field>
+            <Field label="Warmer">
+              <select value={warmer} onChange={e => setWarmer(e.target.value)}>
+                <option value="none">None</option>
+                <option value="inline">Inline warmer</option>
+                <option value="rapid">Rapid infuser-warmer</option>
+              </select>
+            </Field>
+          </div>
+          <div className="dd-out" style={{ background: 'color-mix(in oklab, #ef3b3b 8%, transparent)' }}>
+            <div className="dd-big">
+              <div><span className="dd-num" style={{ color: '#ff6b6b' }}>{round(bd.mlMin, 0)}</span><span className="dd-u">mL / min</span></div>
+              <div><span className="dd-num" style={{ color: '#ff6b6b' }}>{round(bd.mlMin / UNIT_ML * 60, 1)}</span><span className="dd-u">units / hr</span></div>
+            </div>
+            <div className="dd-line"><span>{vol} mL in</span><b>~{round(bd.volMin, 1)} min</b></div>
+            <div className="dd-line"><span>1 unit (~{UNIT_ML} mL) in</span><b>~{round(bd.unitMin, 1)} min</b></div>
+            <div className="dd-line"><span>Equivalent rate</span><b>{round(bd.mlHr, 0)} mL/hr</b></div>
+          </div>
+          <Teach on={teach} lines={[
+            `${fluid}: viscosity ≈ ${Math.round((PRODUCT_VISC[fluid] || 0.6) * 100)}% of crystalloid flow.`,
+            `Access: ${gauge}G ≈ ${GAUGE_FLOW[gauge]} mL/min crystalloid by gravity — bigger bore (16–14G) is dramatically faster than 18–20G.`,
+            pressure ? 'Pressure bag (~300 mmHg) ≈ ×2.5 flow — but watch for hemolysis through small catheters and air embolism as the bag empties.'
+                     : 'Gravity only — raise the bag and fully open the roller clamp for max gravity flow.',
+            warmer === 'rapid' ? 'Rapid infuser-warmer sets the rate and prevents hypothermia, but needs large-bore (≥16G) or central/IO access.'
+              : warmer === 'inline' ? 'Inline warmer prevents the lethal-triad hypothermia; the warming set adds slight resistance (≈ −10%).'
+              : 'No warmer — cold product worsens hypothermia and coagulopathy in massive transfusion. Consider warming.',
+            'Reflection: blood is usually given as a bolus/push in hemorrhagic shock — not a slow maintenance drip. Reassess after each unit.',
+          ]} />
+          <div className="dd-disclaim">Estimates for teaching — real flow varies with product hematocrit, line length, venous pressure and patient factors.</div>
+        </div>
+        }
       </div>
     );
   }
