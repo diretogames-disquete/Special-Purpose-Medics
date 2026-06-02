@@ -219,6 +219,22 @@ tbody tr[role="button"]:focus-visible { outline: 2px solid var(--blue); outline-
   tbody tr, .drug-section-header, .explain-body { transition: none; }
 }
 
+/* PK/PD route selector + modifier overlay caption */
+.pkpd-routes { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+.pkpd-route {
+  cursor: pointer; font-family: var(--mono); font-size: 9px; letter-spacing: .04em;
+  padding: 3px 9px; border-radius: 999px; color: var(--text2);
+  background: var(--bg4); border: 1px solid var(--border); transition: all .15s;
+}
+.pkpd-route:hover { border-color: var(--cyan); color: var(--text); }
+.pkpd-route.on { background: color-mix(in oklab, var(--cyan) 18%, transparent); border-color: var(--cyan); color: var(--cyan); font-weight: 700; }
+.pkpd-route:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.pkpd-modline {
+  margin-top: 6px; font-size: 10px; line-height: 1.5; color: var(--amber);
+  background: var(--amber3); border: 1px solid var(--amber2); border-radius: 5px; padding: 5px 9px;
+}
+.pkpd-modline .pkpd-key { color: var(--text3); font-style: italic; }
+
 </style>
 </head>
 <body>
@@ -925,6 +941,7 @@ function recalc() {
 
 // ═══ EXPLANATION PANEL ═══
 function showExplain(key) {
+  if (selectedDrugKey !== key) pkpdRouteIdx = 0;  // reset route when switching drugs
   selectedDrugKey = key;
   const m = getMods();
   const DB = buildDrugs(m);
@@ -972,66 +989,130 @@ function solveKa(ke, Tmax) {
   for (let i = 0; i < 60; i++) { const mid = Math.sqrt(lo * hi); if (f(mid) > 0) lo = mid; else hi = mid; }
   return Math.sqrt(lo * hi);
 }
-function pkCurve(onsetM, peakM, durM, N) {
-  const Tmax = (peakM && peakM > 0) ? peakM : (onsetM || 1) + (durM || 10) * 0.15;
-  const thalf = Math.max((durM || Tmax * 3) / 3, Tmax * 0.4);
-  const ke = Math.LN2 / thalf;
-  let ka = solveKa(ke, Tmax);
-  if (!isFinite(ka) || ka <= ke) ka = ke * 4;
-  const Tend = Math.max(Tmax * 1.25, ((onsetM || 0) + (durM || Tmax * 2)) * 1.15);
-  const pts = []; let cmax = 0;
-  for (let i = 0; i <= N; i++) {
-    const t = Tend * i / N;
-    const c = (ka / (ka - ke)) * (Math.exp(-ke * t) - Math.exp(-ka * t));
-    pts.push([t, Math.max(0, c)]); if (c > cmax) cmax = c;
-  }
-  return { pts: pts.map(([t, c]) => [t, cmax > 0 ? c / cmax : 0]), Tend, Tmax };
-}
-function pdFromPk(pk) {
-  const EC = 0.2, h = 2; // sigmoid Emax: effect plateaus while concentration is high
-  return { pts: pk.pts.map(([t, c]) => [t, Math.pow(c, h) / (Math.pow(EC, h) + Math.pow(c, h))]), Tend: pk.Tend };
-}
 function fmtT(m) {
   if (m == null) return '—';
   if (m < 1) return Math.round(m * 60) + 's';
   if (m >= 60) return ((m / 60) % 1 === 0 ? (m / 60) : (m / 60).toFixed(1)) + 'h';
   return Math.round(m) + 'm';
 }
-function pkpdHTML(drug) {
-  let row = null;
-  for (const rw of drug.rows) {
-    const o = parseTimeMin(rw.onset), d = parseTimeMin(rw.dur), p = parseTimeMin(rw.peak);
-    if (d != null && (o != null || p != null)) { row = rw; break; }
+// Reduced-clearance factor from the active PK modifiers (cf<1 → slower clearance).
+function clearanceFactor(m) {
+  let cf = 1;
+  if (m.hepatic === 'impaired') cf *= 0.65;
+  if (m.renal === 'impaired') cf *= 0.75;
+  if (m.hypo) cf *= 0.78;
+  if (m.elderly || m.age > 55) cf *= 0.85;
+  if (m.alt === 'moderate') cf *= 0.85; else if (m.alt === 'high') cf *= 0.72;
+  return cf;
+}
+function activeModLabels(m) {
+  const l = [];
+  if (m.hepatic === 'impaired') l.push('hepatic');
+  if (m.renal === 'impaired') l.push('renal');
+  if (m.hypo) l.push('hypothermia');
+  if (m.elderly || m.age > 55) l.push('age>55');
+  if (m.alt === 'moderate') l.push('alt 8–12k'); else if (m.alt === 'high') l.push('alt >12k');
+  return l;
+}
+// Bateman concentration over [0,Tend]; ke scaled by cf (cf<1 = slower elimination).
+function bateman(onsetM, peakM, durM, cf, N, Tend) {
+  const Tmax = (peakM && peakM > 0) ? peakM : (onsetM || 1) + (durM || 10) * 0.15;
+  const thalf = Math.max((durM || Tmax * 3) / 3, Tmax * 0.4);
+  const keBase = Math.LN2 / thalf;
+  const ke = keBase * cf;
+  let ka = solveKa(keBase, Tmax);
+  if (!isFinite(ka) || ka <= ke) ka = ke * 4;
+  const pts = [];
+  for (let i = 0; i <= N; i++) {
+    const t = Tend * i / N;
+    pts.push([t, Math.max(0, (ka / (ka - ke)) * (Math.exp(-ke * t) - Math.exp(-ka * t)))]);
   }
-  if (!row) return `<h3>Pharmacokinetics / Pharmacodynamics</h3><p class="pkpd-note">Continuous infusion / titrated agent — no fixed onset–peak–duration curve. Titrate to clinical effect and monitor.</p>`;
+  return pts;
+}
+function seriesPeak(pts) { return pts.reduce((mx, p) => p[1] > mx ? p[1] : mx, 0); }
+function seriesTmax(pts) { let im = 0; for (let i = 1; i < pts.length; i++) if (pts[i][1] > pts[im][1]) im = i; return pts[im][0]; }
+// Time where the series falls below `frac` of its own peak (after Tmax).
+function offsetTime(pts, frac) {
+  const thr = seriesPeak(pts) * frac; let im = 0;
+  for (let i = 1; i < pts.length; i++) if (pts[i][1] > pts[im][1]) im = i;
+  for (let i = im; i < pts.length; i++) if (pts[i][1] <= thr) return pts[i][0];
+  return pts[pts.length - 1][0];
+}
+
+let pkpdRouteIdx = 0;
+function timedRows(drug) {
+  return drug.rows.map((rw, i) => ({ rw, i })).filter(({ rw }) => {
+    const o = parseTimeMin(rw.onset), d = parseTimeMin(rw.dur), p = parseTimeMin(rw.peak);
+    return d != null && (o != null || p != null);
+  });
+}
+function findDrugByKey(key) {
+  const DB = buildDrugs(getMods()); let found = null;
+  Object.values(DB).forEach(sec => sec.drugs.forEach(d => { if (d.key === key) found = d; }));
+  return found;
+}
+function setPkpdRoute(i) {
+  pkpdRouteIdx = i;
+  const drug = findDrugByKey(selectedDrugKey);
+  if (drug && $('pkpd-block')) $('pkpd-block').innerHTML = pkpdInner(drug);
+}
+function pkpdInner(drug) {
+  const rows = timedRows(drug);
+  if (!rows.length) return `<p class="pkpd-note">Continuous infusion / titrated agent — no fixed onset–peak–duration curve. Titrate to clinical effect and monitor.</p>`;
+  if (pkpdRouteIdx >= rows.length) pkpdRouteIdx = 0;
+  const row = rows[pkpdRouteIdx].rw;
   const onsetM = parseTimeMin(row.onset), peakM = parseTimeMin(row.peak), durM = parseTimeMin(row.dur);
-  const N = 64;
-  const pk = pkCurve(onsetM, peakM, durM, N);
-  const pd = pdFromPk(pk);
-  const W = 168, H = 80, padL = 6, padR = 6, padT = 8, hh = H - padT - 14, w = W - padL - padR;
-  const peakMk = (peakM != null ? peakM : pk.Tmax);
-  function chart(curve, color, title, sub) {
-    const X = t => padL + (curve.Tend > 0 ? Math.min(t, curve.Tend) / curve.Tend : 0) * w;
-    const Y = v => padT + (1 - v) * hh;
-    const d = 'M' + curve.pts.map(([t, v]) => X(t).toFixed(1) + ',' + Y(v).toFixed(1)).join(' L');
-    const area = d + ` L${X(curve.Tend).toFixed(1)},${Y(0).toFixed(1)} L${X(0).toFixed(1)},${Y(0).toFixed(1)} Z`;
-    const mk = (t, lbl, c) => (t == null) ? '' :
-      `<line x1="${X(t).toFixed(1)}" y1="${padT}" x2="${X(t).toFixed(1)}" y2="${padT + hh}" stroke="${c}" stroke-width="0.7" stroke-dasharray="2 2" opacity="0.6"/>` +
-      `<text x="${X(t).toFixed(1)}" y="${H - 3}" font-size="6" fill="${c}" text-anchor="middle">${lbl}</text>`;
+  const m = getMods();
+  const cf = clearanceFactor(m), mods = activeModLabels(m);
+  const hasMod = cf < 0.999 && mods.length > 0;
+  const N = 72;
+  const baseEnd = (onsetM || 0) + (durM || 10);
+  const Tend = Math.max((peakM || (onsetM || 1)) * 1.25, baseEnd * (hasMod ? 1.15 / cf : 1.15));
+  const pkBase = bateman(onsetM, peakM, durM, 1, N, Tend);
+  const pkMod = hasMod ? bateman(onsetM, peakM, durM, cf, N, Tend) : null;
+  const ymax = Math.max(seriesPeak(pkBase), pkMod ? seriesPeak(pkMod) : 0) || 1;
+  const norm = pts => pts.map(p => [p[0], p[1] / ymax]);
+  const pdOf = pts => { const EC = 0.2, h = 2; return pts.map(p => { const cn = p[1] / ymax; return [p[0], Math.pow(cn, h) / (Math.pow(EC, h) + Math.pow(cn, h))]; }); };
+  const peakMk = peakM != null ? peakM : seriesTmax(pkBase);
+  const offBase = offsetTime(pkBase, 0.2), offMod = pkMod ? offsetTime(pkMod, 0.2) : null;
+
+  let chips = '';
+  if (rows.length > 1) chips = '<div class="pkpd-routes" role="tablist" aria-label="Route">' +
+    rows.map((o, i) => `<button class="pkpd-route ${i === pkpdRouteIdx ? 'on' : ''}" role="tab" aria-selected="${i === pkpdRouteIdx}" onclick="setPkpdRoute(${i})">${o.rw.route}</button>`).join('') + '</div>';
+
+  function chart(series, title, sub) {
+    const W = 176, H = 84, padL = 6, padR = 6, padT = 8, hh = H - padT - 14, w = W - padL - padR;
+    const X = t => padL + (Tend > 0 ? Math.min(t, Tend) / Tend : 0) * w, Y = v => padT + (1 - Math.min(v, 1)) * hh;
+    let paths = '';
+    series.forEach(s => {
+      const d = 'M' + s.pts.map(p => X(p[0]).toFixed(1) + ',' + Y(p[1]).toFixed(1)).join(' L');
+      if (s.fill) paths += `<path d="${d} L${X(Tend).toFixed(1)},${Y(0).toFixed(1)} L${X(0).toFixed(1)},${Y(0).toFixed(1)} Z" fill="${s.color}" opacity="0.12"/>`;
+      paths += `<path d="${d}" fill="none" stroke="${s.color}" stroke-width="${s.dash ? 1.2 : 1.6}" ${s.dash ? 'stroke-dasharray="3 2" opacity="0.55"' : ''} stroke-linejoin="round" stroke-linecap="round"/>`;
+    });
+    const mk = (t, lbl, c) => t == null ? '' : `<line x1="${X(t).toFixed(1)}" y1="${padT}" x2="${X(t).toFixed(1)}" y2="${padT + hh}" stroke="${c}" stroke-width="0.7" stroke-dasharray="2 2" opacity="0.55"/><text x="${X(t).toFixed(1)}" y="${H - 3}" font-size="6" fill="${c}" text-anchor="middle">${lbl}</text>`;
     return `<div class="pkpd-chart"><div class="pkpd-ct">${title}</div>
       <svg viewBox="0 0 ${W} ${H}" class="pkpd-svg" role="img" aria-label="${title}: ${sub}">
-        <line x1="${padL}" y1="${padT + hh}" x2="${W - padR}" y2="${padT + hh}" stroke="var(--border2)" stroke-width="0.6"/>
-        <path d="${area}" fill="${color}" opacity="0.13"/>
-        <path d="${d}" fill="none" stroke="${color}" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/>
-        ${mk(onsetM, 'onset', 'var(--text3)')}${mk(peakMk, 'peak', 'var(--text2)')}${mk((onsetM || 0) + (durM || 0), 'end', 'var(--text3)')}
+      <line x1="${padL}" y1="${padT + hh}" x2="${W - padR}" y2="${padT + hh}" stroke="var(--border2)" stroke-width="0.6"/>
+      ${paths}
+      ${mk(onsetM, 'onset', 'var(--text3)')}${mk(offBase, 'end', 'var(--text3)')}${hasMod && offMod ? mk(offMod, '+mod', 'var(--amber)') : ''}
       </svg><div class="pkpd-sub">${sub}</div></div>`;
   }
-  return `<h3>Pharmacokinetics / Pharmacodynamics</h3>
+  const pkSeries = [{ pts: norm(pkBase), color: 'var(--green)', fill: !hasMod, dash: hasMod }];
+  if (hasMod) pkSeries.push({ pts: norm(pkMod), color: 'var(--amber)', fill: true, dash: false });
+  const pdSeries = [{ pts: pdOf(pkBase), color: 'var(--cyan)', fill: !hasMod, dash: hasMod }];
+  if (hasMod) pdSeries.push({ pts: pdOf(pkMod), color: 'var(--amber)', fill: true, dash: false });
+  const durMod = hasMod && durM != null ? durM / cf : null;
+
+  return `${chips}
     <div class="pkpd-wrap">
-      ${chart(pk, 'var(--green)', 'PK · plasma concentration', 'concentration vs time')}
-      ${chart(pd, 'var(--cyan)', 'PD · clinical effect', 'effect vs time')}
+      ${chart(pkSeries, 'PK · plasma concentration', 'concentration vs time')}
+      ${chart(pdSeries, 'PD · clinical effect', 'effect vs time')}
     </div>
-    <div class="pkpd-meta">${row.route} · onset ${fmtT(onsetM)} · peak ${fmtT(peakMk)} · duration ${fmtT(durM)}${drug.rows.length > 1 ? ' · curve shown for first timed route' : ''}</div>`;
+    <div class="pkpd-meta">${row.route} · onset ${fmtT(onsetM)} · peak ${fmtT(peakMk)} · duration ${fmtT(durM)}${rows.length > 1 ? ' · ' + rows.length + ' timed routes' : ''}</div>
+    ${hasMod ? `<div class="pkpd-modline">⚠ ${mods.join(' · ')} → clearance ↓ ~${Math.round((1 - cf) * 100)}%, duration ↑ to ~${fmtT(durMod)} <span class="pkpd-key">(amber = modified · dashed = normal)</span></div>` : ''}`;
+}
+function pkpdHTML(drug) {
+  return `<h3>Pharmacokinetics / Pharmacodynamics</h3><div id="pkpd-block">${pkpdInner(drug)}</div>`;
 }
 
 // ═══ ACCESSIBILITY + FLUIDITY WIRING ═══
