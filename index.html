@@ -204,26 +204,17 @@
 
   /* Tactical combat-medic soundbed — fully synthesized (Web Audio, no files,
      license-free, offline). Atmospheric, not rhythmic: a dark minor drone with
-     slow filter movement, sustained sub-bass swells through an i–VI–V harmony,
-     and a low brass motif — plus the medic
+     slow filter movement and a low brass motif — plus the medic
      signature: an ECG monitor beep with a soft heartbeat. Starts on user click. */
   (function () {
     var ctx, master, noiseBuf, on = false, built = false, timer = null;
     var BPM = 80, SIXT = (60 / BPM) / 4, BAR = (60 / BPM) * 4;
-    var bass = [73.42, 73.42, 58.27, 55.00];        // D2 · D2 · Bb1 · A1 (i i VI V)
     var motif = [220.00, 174.61, 146.83];           // A3 · F3 · D3 — somber descent
     var step = 0, nextT = 0;
 
     function noise() { var s = ctx.createBufferSource(); s.buffer = noiseBuf; return s; }
     function env(g, t, peak, a, d) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + a + d); }
 
-    function bassSwell(t, f, dur) {                  // slow sustained sub (no rhythmic thump)
-      var lp = ctx.createBiquadFilter(), g = ctx.createGain();
-      lp.type = 'lowpass'; lp.frequency.setValueAtTime(150, t); lp.frequency.linearRampToValueAtTime(420, t + dur * 0.4); lp.frequency.linearRampToValueAtTime(150, t + dur); lp.Q.value = 3;
-      g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.12, t + dur * 0.3); g.gain.setValueAtTime(0.10, t + dur * 0.7); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-      lp.connect(g).connect(master);
-      [0, 8].forEach(function (c) { var o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f; o.detune.value = c; o.connect(lp); o.start(t); o.stop(t + dur + 0.05); });
-    }
     function heart(t) {                              // soft lub-dub (medic, paired with beep)
       var o = ctx.createOscillator(), g = ctx.createGain();
       o.type = 'sine'; o.frequency.setValueAtTime(60, t); o.frequency.exponentialRampToValueAtTime(36, t + 0.16);
@@ -246,7 +237,6 @@
 
     function playStep(s, t) {
       var b = s % 16, bar = Math.floor(s / 16);
-      if (b === 0) bassSwell(t, bass[bar % 4], BAR * 0.96);     // one sustained sub per bar
       if (b === 6 || b === 14) tick(t, 0.05);                   // sparse tactical tick
       if (b === 0 || b === 8) { beep(t); heart(t); }            // ECG beep + soft heartbeat (2×/bar)
       if (bar % 4 === 0 && b % 4 === 0 && b / 4 < motif.length) brass(t, motif[b / 4], (60 / BPM) * 1.6);
