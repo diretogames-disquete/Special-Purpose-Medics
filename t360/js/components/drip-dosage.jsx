@@ -59,6 +59,30 @@
     );
   }
 
+  // ── Live IV drip chamber — drops fall at the computed cadence ─────────────
+  function DripVisual({ gttMin }) {
+    const ok = isFinite(gttMin) && gttMin > 0;
+    const sec = ok ? 60 / gttMin : 0;
+    // Clamp the animation period for visual sanity; the label shows the true rate.
+    const dur = ok ? Math.max(0.28, Math.min(6, sec)) : 0;
+    const stream = ok && sec < 0.28; // too fast to read as discrete drops
+    return (
+      <div className="ddv" title={ok ? Math.round(gttMin) + " drops/min" : ""}>
+        <div className={"ddv-chamber" + (stream ? " stream" : "")}>
+          <span className="ddv-spike" />
+          {ok && !stream && <span className="ddv-drop" style={{ animationDuration: dur + "s" }} />}
+          {stream && <span className="ddv-stream" />}
+          <span className="ddv-pool" />
+        </div>
+        <span className="ddv-tube" />
+        <div className="ddv-read">
+          <b>{ok ? Math.round(gttMin) : "—"}</b> gtt/min
+          <span className="ddv-sub">{ok ? (stream ? "continuous stream" : "1 drop / " + sec.toFixed(1) + " s") : "set a dose"}</span>
+        </div>
+      </div>
+    );
+  }
+
   // ── Continuous infusion ──────────────────────────────────────────────────
   function Infusion({ kg, teach }) {
     const [drug, setDrug] = useState('Norepinephrine');
@@ -135,15 +159,18 @@
           </div>
         </Field>
 
-        <div className="dd-out">
-          <div className="dd-big">
-            <div><span className="dd-num">{round(r.mlPerHr, 1)}</span><span className="dd-u">mL / hr</span></div>
-            <div><span className="dd-num">{round(r.gttMin, 0)}</span><span className="dd-u">gtt / min</span></div>
+        <div className="dd-out dd-out-drip">
+          <DripVisual gttMin={r.gttMin} />
+          <div className="dd-out-figs">
+            <div className="dd-big">
+              <div><span className="dd-num">{round(r.mlPerHr, 1)}</span><span className="dd-u">mL / hr</span></div>
+              <div><span className="dd-num">{round(r.gttMin, 0)}</span><span className="dd-u">gtt / min</span></div>
+            </div>
+            <div className="dd-line"><span>1 drop every</span><b>{round(r.secPerGtt, 1)} s</b></div>
+            <div className="dd-line"><span>Bag concentration</span><b>{round(r.concBase, r.concBase < 10 ? 2 : 0)} {r.isUnits ? 'units/mL' : 'mcg/mL'}</b></div>
+            <div className="dd-line"><span>Delivering</span><b>{round(r.perHr, 0)} {r.isUnits ? 'units/hr' : 'mcg/hr'}</b></div>
+            <div className="dd-line"><span>Bag runs ~</span><b>{round(r.bagMin, 0)} min</b></div>
           </div>
-          <div className="dd-line"><span>1 drop every</span><b>{round(r.secPerGtt, 1)} s</b></div>
-          <div className="dd-line"><span>Bag concentration</span><b>{round(r.concBase, r.concBase < 10 ? 2 : 0)} {r.isUnits ? 'units/mL' : 'mcg/mL'}</b></div>
-          <div className="dd-line"><span>Delivering</span><b>{round(r.perHr, 0)} {r.isUnits ? 'units/hr' : 'mcg/hr'}</b></div>
-          <div className="dd-line"><span>Bag runs ~</span><b>{round(r.bagMin, 0)} min</b></div>
         </div>
 
         <Teach on={teach} lines={[
@@ -250,12 +277,15 @@
             ))}
           </div>
         </Field>
-        <div className="dd-out">
-          <div className="dd-big">
-            <div><span className="dd-num">{round(r.gttMin, 0)}</span><span className="dd-u">gtt / min</span></div>
-            <div><span className="dd-num">{round(r.mlHr, 0)}</span><span className="dd-u">mL / hr</span></div>
+        <div className="dd-out dd-out-drip">
+          <DripVisual gttMin={r.gttMin} />
+          <div className="dd-out-figs">
+            <div className="dd-big">
+              <div><span className="dd-num">{round(r.gttMin, 0)}</span><span className="dd-u">gtt / min</span></div>
+              <div><span className="dd-num">{round(r.mlHr, 0)}</span><span className="dd-u">mL / hr</span></div>
+            </div>
+            <div className="dd-line"><span>1 drop every</span><b>{round(r.sec, 1)} s</b></div>
           </div>
-          <div className="dd-line"><span>1 drop every</span><b>{round(r.sec, 1)} s</b></div>
         </div>
         <Teach on={teach} lines={[
           `Time in minutes = ${time} ${timeU}${timeU === 'hr' ? ` × 60 = ${r.tMin} min` : ''}`,

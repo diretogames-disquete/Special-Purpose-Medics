@@ -10,7 +10,11 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "sectionStyle": "tactical",
   "showSparklines": true,
   "showGrid": true,
-  "timeMode": "both"
+  "timeMode": "both",
+  "glassPanels": true,
+  "glassOpacity": 56,
+  "bgCondition": true,
+  "webglField": true
 }/*EDITMODE-END*/;
 
 const DEFAULT_STATE = {
@@ -148,18 +152,28 @@ function App() {
   const activeTQs = Object.values(state.tourniquets).filter(t => t.active).length;
   const lastVital = state.vitals[state.vitals.length - 1] || {};
 
-  // Glass mode so the WebGL field reads through the chrome.
-  React.useEffect(() => { document.body.classList.add('glass'); }, []);
+  // Glass mode + WebGL field controls (driven by Tweaks).
+  React.useEffect(() => {
+    document.body.classList.toggle('glass', t.glassPanels !== false);
+  }, [t.glassPanels]);
+  React.useEffect(() => {
+    document.body.style.setProperty('--glass-alpha', String((t.glassOpacity ?? 56) / 100));
+  }, [t.glassOpacity]);
+  React.useEffect(() => {
+    const c = document.getElementById('webgl-bg');
+    if (c) c.style.display = (t.webglField === false) ? 'none' : 'block';
+  }, [t.webglField]);
 
   // WebGL field tracks patient acuity from the latest vitals; tempo follows HR.
   React.useEffect(() => {
     if (!window.PFC_BG) return;
     const hr = +lastVital.hr, sbp = +lastVital.sbp, spo2 = +lastVital.spo2;
-    const level = ((sbp && sbp < 90) || (spo2 && spo2 < 90) || (hr && (hr > 130 || hr < 40))) ? 'critical'
+    const level = (t.bgCondition === false) ? 'stable'
+      : ((sbp && sbp < 90) || (spo2 && spo2 < 90) || (hr && (hr > 130 || hr < 40))) ? 'critical'
       : ((sbp && sbp < 100) || (spo2 && spo2 < 94) || (hr && (hr > 110 || hr < 50))) ? 'urgent'
       : 'stable';
     window.PFC_BG.setCondition(level, { hr: hr || 0 });
-  }, [lastVital.hr, lastVital.sbp, lastVital.spo2]);
+  }, [lastVital.hr, lastVital.sbp, lastVital.spo2, t.bgCondition]);
 
   return (
     <div className="app">
@@ -459,6 +473,17 @@ function App() {
             { value: 'both',  label: 'Both' },
           ]}
           onChange={(v) => setTweak('timeMode', v)} />
+
+        <TweakSection label="Background · WebGL" />
+        <TweakToggle label="WebGL field" value={t.webglField !== false}
+          onChange={(v) => setTweak('webglField', v)} />
+        <TweakToggle label="Glass panels" value={t.glassPanels !== false}
+          onChange={(v) => setTweak('glassPanels', v)} />
+        <TweakSlider label="Glass opacity" value={t.glassOpacity ?? 56}
+          min={30} max={95} unit=" %"
+          onChange={(v) => setTweak('glassOpacity', v)} />
+        <TweakToggle label="Tint to patient acuity" value={t.bgCondition !== false}
+          onChange={(v) => setTweak('bgCondition', v)} />
       </TweaksPanel>
 
       {/* Separate drip & dosage calculator box (floating, with teaching mode) */}
