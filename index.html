@@ -205,7 +205,7 @@
   /* Tactical combat-medic soundbed — fully synthesized (Web Audio, no files,
      license-free, offline). Atmospheric, not rhythmic: a dark minor drone with
      slow filter movement, sustained sub-bass swells through an i–VI–V harmony,
-     occasional cinematic impacts and a low brass motif — plus the medic
+     and a low brass motif — plus the medic
      signature: an ECG monitor beep with a soft heartbeat. Starts on user click. */
   (function () {
     var ctx, master, noiseBuf, on = false, built = false, timer = null;
@@ -236,10 +236,6 @@
       o.type = 'sine'; o.frequency.value = 920; env(g, t, 0.06, 0.004, 0.07); o.connect(g).connect(master); o.start(t); o.stop(t + 0.1); }
     function tick(t, v) { var n = noise(), hp = ctx.createBiquadFilter(), g = ctx.createGain();
       hp.type = 'highpass'; hp.frequency.value = 8500; env(g, t, v, 0.002, 0.025); n.connect(hp).connect(g).connect(master); n.start(t); n.stop(t + 0.04); }
-    function impact(t) { var n = noise(), lp = ctx.createBiquadFilter(), g = ctx.createGain();
-      lp.type = 'lowpass'; lp.frequency.value = 360; env(g, t, 0.42, 0.005, 0.7); n.connect(lp).connect(g).connect(master); n.start(t); n.stop(t + 0.8);
-      var o = ctx.createOscillator(), og = ctx.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(64, t); o.frequency.exponentialRampToValueAtTime(32, t + 0.55);
-      env(og, t, 0.34, 0.006, 0.6); o.connect(og).connect(master); o.start(t); o.stop(t + 0.65); }
     function brass(t, f, dur) {                      // low somber swell
       var lp = ctx.createBiquadFilter(), g = ctx.createGain();
       lp.type = 'lowpass'; lp.frequency.setValueAtTime(500, t); lp.frequency.linearRampToValueAtTime(1000, t + 0.12); lp.Q.value = 1.5;
@@ -251,7 +247,6 @@
     function playStep(s, t) {
       var b = s % 16, bar = Math.floor(s / 16);
       if (b === 0) bassSwell(t, bass[bar % 4], BAR * 0.96);     // one sustained sub per bar
-      if (bar % 4 === 0 && b === 0) impact(t);                  // cinematic boom every 4 bars
       if (b === 6 || b === 14) tick(t, 0.05);                   // sparse tactical tick
       if (b === 0 || b === 8) { beep(t); heart(t); }            // ECG beep + soft heartbeat (2×/bar)
       if (bar % 4 === 0 && b % 4 === 0 && b / 4 < motif.length) brass(t, motif[b / 4], (60 / BPM) * 1.6);
