@@ -14,7 +14,10 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "glassPanels": true,
   "glassOpacity": 56,
   "bgCondition": true,
-  "webglField": true
+  "webglField": true,
+  "soundOn": false,
+  "soundMode": "lubdub",
+  "soundVolume": 55
 }/*EDITMODE-END*/;
 
 const DEFAULT_STATE = {
@@ -163,6 +166,19 @@ function App() {
     const c = document.getElementById('webgl-bg');
     if (c) c.style.display = (t.webglField === false) ? 'none' : 'block';
   }, [t.webglField]);
+
+  // Heart sound (lub-dub / beep), beating at the patient's heart rate.
+  React.useEffect(() => { window.HeartAudio && window.HeartAudio.setEnabled(!!t.soundOn); }, [t.soundOn]);
+  React.useEffect(() => { window.HeartAudio && window.HeartAudio.setMode(t.soundMode || 'lubdub'); }, [t.soundMode]);
+  React.useEffect(() => { window.HeartAudio && window.HeartAudio.setVolume((t.soundVolume ?? 55) / 100); }, [t.soundVolume]);
+  React.useEffect(() => {
+    if (!window.HeartAudio || !t.soundOn) return;
+    const hr = +lastVital.hr;
+    if (!hr) return;
+    window.HeartAudio.beat();
+    const id = setInterval(() => window.HeartAudio.beat(), 60000 / hr);
+    return () => clearInterval(id);
+  }, [t.soundOn, lastVital.hr]);
 
   // WebGL field tracks patient acuity from the latest vitals; tempo follows HR.
   React.useEffect(() => {
@@ -484,6 +500,22 @@ function App() {
           onChange={(v) => setTweak('glassOpacity', v)} />
         <TweakToggle label="Tint to patient acuity" value={t.bgCondition !== false}
           onChange={(v) => setTweak('bgCondition', v)} />
+
+        <TweakSection label="Heart Sound" />
+        <TweakToggle label="Sound" value={!!t.soundOn}
+          onChange={(v) => {
+            setTweak('soundOn', v);
+            if (window.HeartAudio) { window.HeartAudio.setEnabled(v); if (v) window.HeartAudio.beat(); }
+          }} />
+        <TweakRadio label="Mode" value={t.soundMode || 'lubdub'}
+          options={[
+            { value: 'lubdub', label: 'Lub-Dub' },
+            { value: 'beep',   label: 'Beep' },
+          ]}
+          onChange={(v) => { setTweak('soundMode', v); if (window.HeartAudio) { window.HeartAudio.setMode(v); if (t.soundOn) window.HeartAudio.beat(); } }} />
+        <TweakSlider label="Volume" value={t.soundVolume ?? 55}
+          min={0} max={100} unit=" %"
+          onChange={(v) => setTweak('soundVolume', v)} />
       </TweaksPanel>
 
       {/* Separate drip & dosage calculator box (floating, with teaching mode) */}
