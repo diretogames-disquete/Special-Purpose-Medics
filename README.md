@@ -1,6 +1,6 @@
 # Special-Purpose-Medics · Training Dashboards
 
-This repository hosts **four** interactive medical-training dashboards, each
+This repository hosts **five** interactive medical-training dashboards, each
 unpacked from a single-file artifact into a clean, structured website with
 separated CSS, self-hosted fonts, modular scripts, a **high-end WebGL ambient
 background** (condition-tinted, with a glass/transparency mode), and an offline
@@ -14,6 +14,7 @@ the site root links them all.
 | **TCCC 360°** · Tactical Casualty (DD-1380 + drip calc) | `/t360/` | `…github.io/special-purpose-medics/t360/` |
 | **TCCC** · Patient Treatment Dashboard (6-patient live trauma sim) | `/tccc/` | `…github.io/special-purpose-medics/tccc/` |
 | **Humanoid** · Casualty Reach (3D field brief) | `/humanoid/` | `…github.io/special-purpose-medics/humanoid/` |
+| **Pharmacology** · Tiered drug reference (PK/PD graphs) | `/pharm/` | `…github.io/special-purpose-medics/pharm/` |
 
 The **TCCC 360°** dashboard (in [`t360/`](t360/)) is a DD-1380 tactical casualty
 card: injury map with front/back body diagrams, mechanism + acute findings, a

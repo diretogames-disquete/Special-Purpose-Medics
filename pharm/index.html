@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<title>Pharmacology Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="Tiered tactical/prolonged-care pharmacology reference with weight-based dosing, PK modifiers, and pharmacokinetic / pharmacodynamic graphs for each medication.">
+<meta name="color-scheme" content="dark light">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/webgl.css">
+</head>
+<body>
+<canvas id="webgl-bg" aria-hidden="true"></canvas>
+<a class="hub-link" href="../" title="Back to dashboard hub" aria-label="Back to dashboard hub"><span class="hl-x">‹</span><span>Hub</span></a>
+
+<div class="app">
+<div class="header">
+  <h1><span>Pharmacology</span> Dashboard</h1>
+  <div class="header-right">
+    <span class="tier-label">TIER:</span>
+    <button class="tier-btn active" data-tier="1" onclick="setTier(1)">1 · Student</button>
+    <button class="tier-btn" data-tier="2" onclick="setTier(2)">2 · Operational</button>
+    <button class="tier-btn" data-tier="3" onclick="setTier(3)">3 · PFC Provider</button>
+    <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">🌙 Night</button>
+    <div class="disclaimer">⚠ STUDY AID — Verify against published TCCC/JTS CPGs</div>
+  </div>
+</div>
+
+<div class="sidebar">
+  <div class="panel">
+    <div class="panel-title"><span class="dot" style="background:var(--green)"></span>Patient</div>
+    <div class="weight-display"><div class="big" id="wt-display">100</div><div class="sub">kg</div></div>
+    <div class="field"><label for="weight">Weight (kg)</label><input type="range" id="weight" min="40" max="150" value="100" oninput="recalc()"><div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text3)"><span>40</span><span>150</span></div></div>
+    <div class="field-row">
+      <div class="field"><label for="age">Age</label><input type="number" id="age" value="30" min="18" max="80" oninput="recalc()"></div>
+      <div class="field"><label for="sex">Sex</label><select id="sex" onchange="recalc()"><option value="M">Male</option><option value="F">Female</option></select></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title"><span class="dot" style="background:var(--amber)"></span>Clinical State</div>
+    <div class="field"><label for="hemo">Hemodynamic status</label><select id="hemo" onchange="recalc()"><option value="stable">Stable</option><option value="compensated">Compensated shock</option><option value="decompensated">Decompensated shock</option></select></div>
+    <div class="field"><label for="airway">Airway</label><select id="airway" onchange="recalc()"><option value="patent">Patent</option><option value="at_risk">At risk</option><option value="secured">Secured (cric/ETT)</option></select></div>
+    <div class="field"><label for="pain">Pain context</label><select id="pain" onchange="recalc()"><option value="mild">Mild — able to fight</option><option value="moderate">Moderate</option><option value="severe">Severe / in shock</option><option value="procedural">Procedural sedation</option></select></div>
+    <div class="toggle-row"><div class="toggle"><input type="checkbox" id="tbi" onchange="recalc()"><span class="track"></span><span class="thumb"></span></div><label for="tbi">TBI suspected</label></div>
+    <div class="toggle-row"><div class="toggle"><input type="checkbox" id="burns" onchange="recalc()"><span class="track"></span><span class="thumb"></span></div><label for="burns">Burn patient</label></div>
+    <div class="toggle-row"><div class="toggle"><input type="checkbox" id="pregnancy" onchange="recalc()"><span class="track"></span><span class="thumb"></span></div><label for="pregnancy">Pregnancy</label></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title"><span class="dot" style="background:var(--purple)"></span>PK Modifiers</div>
+    <div class="field"><label for="hepatic">Hepatic function</label><select id="hepatic" onchange="recalc()"><option value="normal">Normal</option><option value="impaired">Impaired (−25-40%)</option></select></div>
+    <div class="field"><label for="renal">Renal function</label><select id="renal" onchange="recalc()"><option value="normal">Normal</option><option value="impaired">Impaired (−25-35%)</option></select></div>
+    <div class="field"><label for="opioid_tol">Opioid tolerance</label><select id="opioid_tol" onchange="recalc()"><option value="naive">Naive</option><option value="tolerant">Tolerant (+30%)</option></select></div>
+    <div class="toggle-row"><div class="toggle"><input type="checkbox" id="hypothermic" onchange="recalc()"><span class="track"></span><span class="thumb"></span></div><label for="hypothermic">Hypothermic (&lt;35°C)</label></div>
+    <div class="toggle-row"><div class="toggle"><input type="checkbox" id="elderly" onchange="recalc()"><span class="track"></span><span class="thumb"></span></div><label for="elderly">Age &gt;55</label></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title"><span class="dot" style="background:var(--orange)"></span>Environment</div>
+    <div class="field"><label for="altitude">Altitude</label><select id="altitude" onchange="recalc()"><option value="low">&lt;8,000 ft</option><option value="moderate">8,000–12,000 ft</option><option value="high">&gt;12,000 ft</option></select></div>
+    <div class="field"><label for="dropfactor">Drop factor (gtt/mL)</label><select id="dropfactor" onchange="recalc()"><option value="10">10 (macro — blood)</option><option value="15" selected>15 (macro — standard)</option><option value="20">20 (macro)</option><option value="60">60 (micro)</option></select></div>
+    <div class="toggle-row"><div class="toggle"><input type="checkbox" id="cbrn" onchange="recalc()"><span class="track"></span><span class="thumb"></span></div><label for="cbrn">CBRN exposure</label></div>
+  </div>
+</div>
+
+<div class="main" id="main">
+  <div class="alerts" id="alerts" aria-live="polite"></div>
+  <div class="zone-bar-wrap">
+    <div class="zone-bar-label">Ketamine IV zones — <span id="zone-wt">100</span> kg</div>
+    <div class="zone-bar">
+      <div class="zone za"><span class="zl">Analgesia</span><span class="zd" id="z-a">10–20 mg</span></div>
+      <div class="zone zs"><span class="zl">⛔ Stay out</span><span class="zd" id="z-s">30–80 mg</span></div>
+      <div class="zone zp"><span class="zl">Procedural</span><span class="zd" id="z-p">100–200 mg</span></div>
+    </div>
+    <div class="zone-markers"><span>0.1 mg/kg</span><span>0.3 ──── 0.8 mg/kg</span><span>1–2 mg/kg</span></div>
+  </div>
+  <div id="drug-tables"></div>
+  <div class="drip-section" id="drip-section" style="display:none">
+    <div class="drug-section-header" style="color:var(--purple)"><span class="icon" style="background:var(--purple)"></span>Active drip rates — <span id="drip-factor-label">15</span> gtt/mL set</div>
+    <div class="drip-grid" id="drip-grid"></div>
+  </div>
+  <div class="explain-panel" id="explain-panel">
+    <div class="explain-header" id="explain-toggle" role="button" tabindex="0" aria-expanded="true" aria-controls="explain-body">📋 Drug detail — click any drug row above</div>
+    <div class="explain-body" id="explain-body"><div class="explain-empty">Select a drug row to see clinical context, dosing rationale, PK/PD curves, modifiers applied, contraindications, and evidence references.</div></div>
+  </div>
+</div>
+</div>
+
+<noscript><div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#0B0E14;color:#94A3B8;font:14px/1.5 system-ui,sans-serif;text-align:center;z-index:9999;padding:24px;">This dashboard requires JavaScript to display.</div></noscript>
+
+<script src="js/webgl-background.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
