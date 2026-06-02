@@ -1,0 +1,76 @@
+/* =====================================================================
+ * WebGL ambient field + glass chrome + PK/PD charts + a11y
+ * Loaded after styles.css.
+ * ===================================================================== */
+
+#webgl-bg {
+  position: fixed; inset: 0; width: 100%; height: 100%;
+  display: block; z-index: 0; pointer-events: none; background: var(--bg);
+}
+/* Content rides above the field. */
+.app { position: relative; z-index: 1; }
+
+/* ── Glass: translucent surface tokens so the tier-tinted field shows
+   through the chrome. The field colour tracks the active tier. ── */
+body.glass {
+  --bg2: rgba(17, 22, 32, 0.62);
+  --bg3: rgba(23, 29, 42, 0.58);
+  --bg4: rgba(30, 37, 56, 0.62);
+}
+body.glass.light {
+  --bg2: rgba(255, 255, 255, 0.62);
+  --bg3: rgba(248, 250, 252, 0.58);
+  --bg4: rgba(226, 232, 240, 0.66);
+}
+body.glass .header,
+body.glass .sidebar,
+body.glass .panel,
+body.glass .drug-section,
+body.glass .zone-bar-wrap,
+body.glass .drip-section,
+body.glass .explain-panel {
+  -webkit-backdrop-filter: blur(11px) saturate(1.15);
+  backdrop-filter: blur(11px) saturate(1.15);
+}
+
+/* ── Back-to-hub tab (matches the other dashboards) ── */
+.hub-link {
+  position: fixed; left: 0; top: 50%; transform: translateY(-50%); z-index: 99999;
+  display: flex; align-items: center; gap: 6px; padding: 9px 11px 9px 9px;
+  font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+  color: #cdd6d9; text-decoration: none; background: rgba(12, 16, 17, .68);
+  border: 1px solid rgba(255, 255, 255, .12); border-left: 0; border-radius: 0 9px 9px 0;
+  -webkit-backdrop-filter: blur(10px) saturate(1.2); backdrop-filter: blur(10px) saturate(1.2);
+  box-shadow: 0 8px 26px -12px rgba(0, 0, 0, .75); transition: background .15s, color .15s, padding .15s;
+}
+.hub-link:hover { background: rgba(22, 28, 30, .92); color: #fff; padding-left: 14px; }
+.hub-link .hl-x { font-size: 13px; line-height: 1; }
+
+/* ── Fluidity: smoother interactions, collapsible categories ── */
+tbody tr { transition: background .15s ease, box-shadow .15s ease; }
+.drug-section-header { cursor: pointer; transition: background .15s ease; }
+.drug-section-header:hover { background: var(--bg3); }
+.drug-section.collapsed table { display: none; }
+.drug-section.collapsed .drug-section-header { opacity: .8; }
+.explain-body { transition: max-height .3s ease, padding .3s ease, opacity .2s ease; }
+.explain-body.collapsed { max-height: 0 !important; padding-top: 0; padding-bottom: 0; opacity: 0; overflow: hidden; }
+
+/* ── Accessibility: visible focus ── */
+.tier-btn:focus-visible, .theme-btn:focus-visible, .hub-link:focus-visible,
+.field input:focus-visible, .field select:focus-visible,
+.drug-section-header:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+tbody tr[role="button"]:focus-visible { outline: 2px solid var(--blue); outline-offset: -2px; }
+
+/* ── PK / PD charts (drug detail panel) ── */
+.pkpd-wrap { display: flex; gap: 10px; flex-wrap: wrap; margin: 4px 0 2px; }
+.pkpd-chart { flex: 1 1 150px; min-width: 150px; background: var(--bg3); border: 1px solid var(--border); border-radius: 6px; padding: 8px 8px 6px; }
+.pkpd-ct { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--text2); }
+.pkpd-svg { width: 100%; height: auto; display: block; margin: 4px 0 2px; }
+.pkpd-sub { font-size: 8px; color: var(--text3); letter-spacing: .3px; }
+.pkpd-meta { font-family: var(--mono); font-size: 9px; color: var(--text3); margin-top: 2px; }
+.pkpd-note { font-size: 10px; color: var(--text3); }
+
+@media (prefers-reduced-motion: reduce) {
+  #webgl-bg { will-change: auto; }
+  tbody tr, .drug-section-header, .explain-body { transition: none; }
+}
