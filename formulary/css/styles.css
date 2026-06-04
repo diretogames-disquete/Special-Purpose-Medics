@@ -210,8 +210,46 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
   .main{max-height:none}
   .brand span{display:none}
 }
+/* ===== Interactive vital signs ===== */
+.vitals-int{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.vi{font-family:var(--mono);font-size:.72rem;line-height:1.3;padding:5px 9px;border-radius:6px}
+.vi-txt{color:var(--cyan);background:var(--bg4);border:1px solid var(--border)}
+.vi-hr,.vi-bp{cursor:pointer;background:var(--bg4);color:var(--white);transition:.15s;display:inline-flex;align-items:center;gap:6px}
+.vi-hr{border:1px solid var(--red)}
+.vi-hr .vi-ico{color:var(--red);display:inline-block}
+.vi-hr .vi-play{color:var(--red);font-size:.6rem}
+.vi-hr:hover{background:var(--red-dim)}
+.vi-hr.beating{box-shadow:0 0 0 2px var(--red-dim)}
+.vi-hr.beating .vi-ico{animation:heartbeat .55s ease-in-out infinite}
+@keyframes heartbeat{0%,100%{transform:scale(1)}28%{transform:scale(1.4)}}
+.vi-bp{border:1px solid var(--cyan)}
+.vi-bp .vi-ico{color:var(--cyan)}
+.vi-bp:hover{background:var(--cyan-dim)}
+.vi-map{font-size:.6rem;padding:1px 7px;border-radius:10px;background:var(--cyan-dim);color:var(--cyan);opacity:.5;transition:.15s}
+.vi-bp.on .vi-map{opacity:1;font-weight:700}
+
+/* ===== Blurred diagnosis (peek on hover, click to reveal) ===== */
+.dx-head{display:flex;align-items:center;gap:10px}
+.dx-toggle{font-family:var(--mono);font-size:.54rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:5px;
+  border:1px solid var(--cc,var(--phos));background:transparent;color:var(--cc,var(--phos));cursor:pointer;transition:.15s}
+.dx-toggle:hover{background:color-mix(in srgb,var(--cc,var(--phos)) 14%,transparent)}
+.dx-blur{filter:blur(6px);transition:filter .25s;cursor:help;user-select:none}
+.dx-blur:hover{filter:blur(1.5px)}
+.dx-blur.revealed{filter:none;user-select:text;cursor:auto}
+
+/* ===== Quiz level badge ===== */
+.q-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.q-head .q-cat{margin-bottom:0}
+.q-level{font-family:var(--mono);font-size:.56rem;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:12px;font-weight:700;white-space:nowrap}
+.q-level.l1{background:color-mix(in srgb,var(--go) 16%,transparent);color:var(--go)}
+.q-level.l2{background:var(--amber-dim);color:var(--amber)}
+.q-level.l3{background:var(--red-dim);color:var(--nogo)}
+
+@media (prefers-reduced-motion: reduce){ .vi-hr.beating .vi-ico{animation:none} }
+
 @media(max-width:560px){
   .topbar{gap:9px;padding:9px 12px}
   .seg button{padding:7px 9px}
   .disclaimer{display:none}
+  .vi{font-size:.66rem}
 }
