@@ -1,6 +1,6 @@
 # Special-Purpose-Medics · Training Dashboards
 
-This repository hosts **five** interactive medical-training dashboards, each
+This repository hosts **six** interactive medical-training dashboards, each
 unpacked from a single-file artifact into a clean, structured website with
 separated CSS, self-hosted fonts, modular scripts, a **high-end WebGL ambient
 background** (condition-tinted, with a glass/transparency mode), and an offline
@@ -15,6 +15,7 @@ the site root links them all.
 | **TCCC** · Patient Treatment Dashboard (6-patient live trauma sim) | `/tccc/` | `…github.io/special-purpose-medics/tccc/` |
 | **Humanoid** · Casualty Reach (3D field brief) | `/humanoid/` | `…github.io/special-purpose-medics/humanoid/` |
 | **Pharmacology** · Tiered drug reference (PK/PD graphs) | `/pharm/` | `…github.io/special-purpose-medics/pharm/` |
+| **Prompt Library** · SOF Medic AI prompts (200, MARCH PAWS sort) | `/prompts/` | `…github.io/special-purpose-medics/prompts/` |
 
 The **TCCC 360°** dashboard (in [`t360/`](t360/)) is a DD-1380 tactical casualty
 card: injury map with front/back body diagrams, mechanism + acute findings, a
@@ -46,6 +47,17 @@ scoring, a survival-probability readout, decision log and debrief. Its WebGL
 background tracks the patient's **live acuity** — green (likely survives) →
 amber (guarded) → red (likely dies / cardiac arrest) — straight from the
 survival probability, with the trace tempo following heart rate.
+
+The **Prompt Library** (in [`prompts/`](prompts/)) is a searchable catalogue of
+**200 engineered AI prompts** for the SOF medic: **100 training scenarios** (each
+tagged to a MARCH PAWS phase and built around a modern model-extraction technique
+— chain-of-thought, decision-matrix, red-team-the-plan, etc., tuned per model),
+**50 text-to-image** and **50 image-to-video** generation prompts. Filter by
+category, search full text, copy any prompt in one click, and toggle a **MARCH
+PAWS sort** that regroups the scenarios into the trauma algorithm (Massive
+hemorrhage → Airway → Respiration → Circulation → Hypothermia/Head → Pain →
+Antibiotics → Wounds → Splinting). Offline standalone:
+`prompts/SOFMedic_Prompts_Standalone.html`.
 
 ---
 
