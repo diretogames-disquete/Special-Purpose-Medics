@@ -1,6 +1,6 @@
 # Special-Purpose-Medics · Training Dashboards
 
-This repository hosts **seven** interactive medical-training dashboards, each
+This repository hosts **eight** interactive medical-training dashboards, each
 unpacked from a single-file artifact into a clean, structured website with
 separated CSS, self-hosted fonts, modular scripts, a **high-end WebGL ambient
 background** (condition-tinted, with a glass/transparency mode), and an offline
@@ -17,6 +17,7 @@ the site root links them all.
 | **Pharmacology** · Tiered drug reference (PK/PD graphs) | `/pharm/` | `…github.io/special-purpose-medics/pharm/` |
 | **Prompt Library** · SOF Medic AI prompts (200, MARCH PAWS sort) | `/prompts/` | `…github.io/special-purpose-medics/prompts/` |
 | **Special Purpose Medic Drug Box** · Robust drug reference + quiz (165 drugs) | `/formulary/` | `…github.io/special-purpose-medics/formulary/` |
+| **See the COCOMs** · Regional SOF scenarios by Combatant Command (100 cases) | `/cocom/` | `…github.io/special-purpose-medics/cocom/` |
 
 The **TCCC 360°** dashboard (in [`t360/`](t360/)) is a DD-1380 tactical casualty
 card: injury map with front/back body diagrams, mechanism + acute findings, a
@@ -70,6 +71,17 @@ diagnosis, GO/NO-GO duty status, cognitive impact, field considerations). It inc
 **3-level tiered quiz** (495 questions — Recall / Application / Clinical Reasoning,
 covering every drug, filterable by category and level) and optional **UI click sounds**.
 Offline standalone: `formulary/SPM_DrugBox_Standalone.html`.
+
+The **See the COCOMs** dashboard (in [`cocom/`](cocom/)) merges regional SOF medical
+training scenario sets by **Combatant Command** behind one switcher — **AFRICOM** and
+**CENTCOM**, 50 character-driven cases each (100 total). Every case has full clinical
+work-ups (character/environment, OPQRST, vitals, exam), a **reveal-on-demand differential**,
+**answer-keyed Socratic questions**, critical actions, clinical pearls, a resolution, and
+current evidence with live references. Tap a theater to switch; search, tag-filter, expand,
+and "show all answers" scope to the active COCOM. Given the standard SPM treatment — WebGL
+ambient field tinted per theater, glass mode, theme + click sounds, PDF export, back-to-hub —
+and the training-use banners removed. Offline standalone:
+`cocom/SPM_COCOM_Scenarios_Standalone.html`.
 
 ---
 
