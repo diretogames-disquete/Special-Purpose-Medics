@@ -5,3 +5,8 @@ Thumbs.db
 
 # local server / logs
 *.log
+
+# transient build/agent scratch dirs (not part of the shipped site)
+_src/
+_audit/
+_gen/
