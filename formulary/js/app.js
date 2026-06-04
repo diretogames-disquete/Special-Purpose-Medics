@@ -125,6 +125,39 @@
   function boldify(s) {
     return esc(s).replace(/(Onset:|Provocation:|Quality:|Radiation:|Severity:|Time:|Signs\/Symptoms:|Allergies:|Medications:|Past Pertinent History:|Last Oral Intake:|Events:)/g, '<b>$1</b>');
   }
+  function parseVitals(str) {
+    var hr = /Heart Rate:\s*(\d+)/i.exec(str), bp = /Blood Pressure:\s*(\d+)\s*\/\s*(\d+)/i.exec(str);
+    return { hr: hr ? +hr[1] : null, sys: bp ? +bp[1] : null, dia: bp ? +bp[2] : null };
+  }
+  // Interactive vital-signs row: tap HR for a lub-dub heartbeat at that rate,
+  // tap BP to reveal the MAP and hear a pressure pulse.
+  function buildVitalsCell(str) {
+    var v = parseVitals(str), wrap = el('div', 'vitals-int');
+    str.split('|').forEach(function (seg) {
+      seg = seg.trim(); if (!seg) return;
+      if (/heart rate/i.test(seg) && v.hr) {
+        var c = el('button', 'vi vi-hr'); c.type = 'button';
+        c.innerHTML = '<span class="vi-ico">♥</span> ' + esc(seg) + ' <span class="vi-play">▶</span>';
+        c.title = 'Play heartbeat at ' + v.hr + ' bpm';
+        c.addEventListener('click', function () {
+          c.classList.add('beating');
+          if (window.SPM_SOUND) window.SPM_SOUND.heart(v.hr, Math.max(6, Math.round(v.hr / 9)),
+            function (n) { c.classList.toggle('pulse'); }, function () { c.classList.remove('beating', 'pulse'); });
+        });
+        wrap.appendChild(c);
+      } else if (/blood pressure/i.test(seg) && v.sys) {
+        var map = Math.round(v.dia + (v.sys - v.dia) / 3);
+        var c2 = el('button', 'vi vi-bp'); c2.type = 'button';
+        c2.innerHTML = '<span class="vi-ico">🩸</span> ' + esc(seg) + ' <span class="vi-map">MAP ' + map + '</span>';
+        c2.title = 'MAP = ' + map + ' mmHg — tap for a pressure pulse';
+        c2.addEventListener('click', function () { c2.classList.add('on'); if (window.SPM_SOUND) window.SPM_SOUND.bp(v.sys, v.dia); });
+        wrap.appendChild(c2);
+      } else {
+        wrap.appendChild(el('span', 'vi vi-txt', seg));
+      }
+    });
+    return wrap;
+  }
   function scenarioBlock(d) {
     var scs = d.scenarios || []; if (!scs.length) return null;
     var col = catColor(d.cat);
@@ -160,9 +193,28 @@
       }
       sec('Scenario', s.scenario, false);
       sec('Real-World Context', s.context, true);
-      var aTbl = kvTable([['OPQRST', s.opqrst], ['SAMPLE', s.sample], ['Vital Signs', s.vitals, 'vitals-row'], ['Physical Exam', s.exam]]);
-      if (aTbl) { var as = el('div', 'scen-sec'); as.appendChild(el('div', 'scen-sl', 'Assessment')); as.appendChild(aTbl); body.appendChild(as); }
-      sec('Diagnosis', s.diagnosis, false);
+      // Assessment table — vital signs row is interactive (heartbeat + MAP).
+      var aRows = [['OPQRST', s.opqrst, 'b'], ['SAMPLE', s.sample, 'b'], ['Vital Signs', s.vitals, 'vitals'], ['Physical Exam', s.exam, 't']];
+      var aTbl = el('table', 'scen-table'), anyA = false;
+      aRows.forEach(function (r) {
+        if (!r[1]) return; anyA = true;
+        var tr = el('tr'), k = el('td', 'k', r[0]), vtd = el('td');
+        if (r[2] === 'vitals') vtd.appendChild(buildVitalsCell(r[1]));
+        else if (r[2] === 'b') vtd.innerHTML = boldify(r[1]);
+        else vtd.textContent = r[1];
+        tr.appendChild(k); tr.appendChild(vtd); aTbl.appendChild(tr);
+      });
+      if (anyA) { var as = el('div', 'scen-sec'); as.appendChild(el('div', 'scen-sl', 'Assessment')); as.appendChild(aTbl); body.appendChild(as); }
+      // Diagnosis — blurred by default; peek on hover, or click to reveal/hide.
+      if (s.diagnosis) {
+        var ds = el('div', 'scen-sec');
+        var dh = el('div', 'scen-sl dx-head'); dh.appendChild(document.createTextNode('Diagnosis'));
+        var rev = el('button', 'dx-toggle', 'Reveal'); rev.type = 'button'; rev.setAttribute('aria-pressed', 'false');
+        dh.appendChild(rev); ds.appendChild(dh);
+        var dxt = el('div', 'scen-st dx-blur'); dxt.textContent = s.diagnosis;
+        rev.addEventListener('click', function () { var r = dxt.classList.toggle('revealed'); rev.textContent = r ? 'Hide' : 'Reveal'; rev.setAttribute('aria-pressed', String(r)); snd.click(); });
+        ds.appendChild(dxt); body.appendChild(ds);
+      }
       var tTbl = kvTable([['Primary', s.primary], ['Alternative', s.alternative], ['Avoid', s.avoid]]);
       if (tTbl) { var ts = el('div', 'scen-sec'); ts.appendChild(el('div', 'scen-sl', 'Treatment Protocol')); ts.appendChild(tTbl); body.appendChild(ts); }
       var rTbl = kvTable([['Duty Status', s.dutyStatus], ['Onset / Duration', s.onsetDuration], ['Cognitive Impact', s.cognitive], ['Field Considerations', s.field]]);
@@ -283,18 +335,23 @@
     var optAll = el('option', null, 'All categories'); optAll.value = '__all'; catSel.appendChild(optAll);
     Array.from(new Set(DRUGS.map(function (d) { return d.cat; }))).sort(function (a, b) { return catRank(a) - catRank(b); })
       .forEach(function (c) { var o = el('option', null, c); o.value = c; catSel.appendChild(o); });
-    var lenSel = el('select'); lenSel.id = 'quizLen';
-    [['10', '10 questions'], ['20', '20 questions'], ['40', '40 questions'], ['all', 'All in category']].forEach(function (p) { var o = el('option', null, p[1]); o.value = p[0]; lenSel.appendChild(o); });
+    var lvlSel = el('select'); lvlSel.id = 'quizLvl'; lvlSel.setAttribute('aria-label', 'Difficulty level');
+    [['__all', 'All levels'], ['1', 'Level 1 · Recall'], ['2', 'Level 2 · Application'], ['3', 'Level 3 · Reasoning']].forEach(function (p) { var o = el('option', null, p[1]); o.value = p[0]; lvlSel.appendChild(o); });
+    var lenSel = el('select'); lenSel.id = 'quizLen'; lenSel.setAttribute('aria-label', 'Number of questions');
+    [['10', '10 questions'], ['20', '20 questions'], ['40', '40 questions'], ['all', 'All in selection']].forEach(function (p) { var o = el('option', null, p[1]); o.value = p[0]; lenSel.appendChild(o); });
     lenSel.value = '20';
-    ctrl.appendChild(catSel); ctrl.appendChild(lenSel);
-    var start = el('button', 'btn', 'Start Quiz'); start.addEventListener('click', function () { snd.select(); startQuiz(catSel.value, lenSel.value); });
+    ctrl.appendChild(catSel); ctrl.appendChild(lvlSel); ctrl.appendChild(lenSel);
+    var start = el('button', 'btn', 'Start Quiz'); start.addEventListener('click', function () { snd.select(); startQuiz(catSel.value, lenSel.value, lvlSel.value); });
     ctrl.appendChild(start);
     wrap.appendChild(ctrl);
     quizEl.appendChild(wrap);
   }
   function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
-  function startQuiz(cat, len) {
-    var pool = allQuestions().filter(function (x) { return cat === '__all' || x.drug.cat === cat; });
+  function startQuiz(cat, len, level) {
+    var pool = allQuestions().filter(function (x) {
+      var lv = x.q.level || 1;
+      return (cat === '__all' || x.drug.cat === cat) && (!level || level === '__all' || lv === +level);
+    });
     shuffle(pool);
     if (len !== 'all') pool = pool.slice(0, parseInt(len, 10));
     quiz = { pool: pool, idx: 0, score: 0, answered: false };
@@ -310,7 +367,11 @@
     quizEl.appendChild(prog);
     var bar = el('div', 'quiz-bar'); var fill = el('i'); fill.style.width = (quiz.idx / quiz.pool.length * 100) + '%'; bar.appendChild(fill); quizEl.appendChild(bar);
     var card = el('div', 'q-card'); card.style.setProperty('--cc', col);
-    var qc = el('div', 'q-cat'); qc.textContent = d.name + ' · ' + d.cat; qc.style.color = col; card.appendChild(qc);
+    var lvl = q.level || 1;
+    var qhead = el('div', 'q-head');
+    var qc = el('div', 'q-cat', d.name + ' · ' + d.cat); qc.style.color = col;
+    var lb = el('span', 'q-level l' + lvl, 'L' + lvl + ' · ' + (lvl === 1 ? 'Recall' : lvl === 2 ? 'Application' : 'Reasoning'));
+    qhead.appendChild(qc); qhead.appendChild(lb); card.appendChild(qhead);
     card.appendChild(el('div', 'q-text', q.q));
     var choices = el('div', 'q-choices');
     var order = shuffle(q.choices.map(function (c, i) { return { c: c, i: i }; }));
