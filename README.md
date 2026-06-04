@@ -16,7 +16,7 @@ the site root links them all.
 | **Humanoid** · Casualty Reach (3D field brief) | `/humanoid/` | `…github.io/special-purpose-medics/humanoid/` |
 | **Pharmacology** · Tiered drug reference (PK/PD graphs) | `/pharm/` | `…github.io/special-purpose-medics/pharm/` |
 | **Prompt Library** · SOF Medic AI prompts (200, MARCH PAWS sort) | `/prompts/` | `…github.io/special-purpose-medics/prompts/` |
-| **Field Formulary** · Robust drug reference + quiz (165 drugs) | `/formulary/` | `…github.io/special-purpose-medics/formulary/` |
+| **Special Purpose Medic Drug Box** · Robust drug reference + quiz (165 drugs) | `/formulary/` | `…github.io/special-purpose-medics/formulary/` |
 
 The **TCCC 360°** dashboard (in [`t360/`](t360/)) is a DD-1380 tactical casualty
 card: injury map with front/back body diagrams, mechanism + acute findings, a
@@ -60,16 +60,16 @@ hemorrhage → Airway → Respiration → Circulation → Hypothermia/Head → P
 Antibiotics → Wounds → Splinting). Offline standalone:
 `prompts/SOFMedic_Prompts_Standalone.html`.
 
-The **Field Formulary** (in [`formulary/`](formulary/)) is the robust, encyclopedic
-drug reference — distinct from the hands-on tiered Pharmacology tool. It merges the
-case-based *Tactical Pharmacology* and the structured *Small Unit Care* interactives
-and expands them to **165 medications across 28 categories**, each with mechanism,
-dosing, indications, contraindications, side effects, **international/alternate names**
-(e.g. paracetamol, salbutamol, adrenaline, pethidine), and — where available — a
-**case-based field scenario** (OPQRST/SAMPLE, vitals, GO/NO-GO duty status, cognitive
-impact, field considerations). It includes a built-in **quiz** (180+ questions covering
-every drug, filterable by category) and optional **UI click sounds**. Offline standalone:
-`formulary/SOF_Formulary_Standalone.html`.
+The **Special Purpose Medic Drug Box** (in [`formulary/`](formulary/)) is the robust,
+encyclopedic drug reference and trainer — distinct from the hands-on tiered Pharmacology
+tool. It covers **165 medications across 28 categories**, each with mechanism, dosing,
+indications, contraindications, side effects, **international/alternate names** (e.g.
+paracetamol, salbutamol, adrenaline, pethidine), and a **case-based field scenario**
+(OPQRST/SAMPLE, **interactive vitals** with a lub-dub heartbeat + MAP, a reveal-on-hover
+diagnosis, GO/NO-GO duty status, cognitive impact, field considerations). It includes a
+**3-level tiered quiz** (495 questions — Recall / Application / Clinical Reasoning,
+covering every drug, filterable by category and level) and optional **UI click sounds**.
+Offline standalone: `formulary/SOF_Formulary_Standalone.html`.
 
 ---
 
