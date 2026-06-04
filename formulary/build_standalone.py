@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""Build a self-contained, offline single-file SOF Field Formulary.
+"""Build a self-contained, offline single-file Special Purpose Medic Drug Box.
 
 Inlines styles.css, webgl.css, webgl-background.js, sound.js, the drug
 dataset, and app.js into index.html. (The webfont link is kept; offline it
 falls back to the system mono/sans/serif stack declared in the CSS.)
 
-Usage:  python3 build_standalone.py   ->  SOF_Formulary_Standalone.html
+Usage:  python3 build_standalone.py   ->  SPM_DrugBox_Standalone.html
 """
 import os
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, "SOF_Formulary_Standalone.html")
+OUT = os.path.join(HERE, "SPM_DrugBox_Standalone.html")
 
 
 def read(rel):

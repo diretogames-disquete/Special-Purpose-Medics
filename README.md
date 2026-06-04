@@ -69,7 +69,7 @@ paracetamol, salbutamol, adrenaline, pethidine), and a **case-based field scenar
 diagnosis, GO/NO-GO duty status, cognitive impact, field considerations). It includes a
 **3-level tiered quiz** (495 questions — Recall / Application / Clinical Reasoning,
 covering every drug, filterable by category and level) and optional **UI click sounds**.
-Offline standalone: `formulary/SOF_Formulary_Standalone.html`.
+Offline standalone: `formulary/SPM_DrugBox_Standalone.html`.
 
 ---
 

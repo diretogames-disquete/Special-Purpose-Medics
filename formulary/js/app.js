@@ -1,5 +1,5 @@
 /* =====================================================================
- * SOF Field Formulary — app logic (vanilla JS, no deps)
+ * Special Purpose Medic Drug Box — app logic (vanilla JS, no deps)
  *   Robust drug reference: category sidebar, search/filter, per-drug
  *   reference + case scenarios, a full quiz engine (every drug), UI click
  *   sounds, theme/glass tweaks, and a category-tinted WebGL field.
@@ -327,7 +327,7 @@
   function buildQuizSetup() {
     quizEl.innerHTML = '';
     var wrap = el('div', 'quiz-setup');
-    wrap.appendChild(el('h2', null, 'Formulary Quiz'));
+    wrap.appendChild(el('h2', null, 'Drug Box Quiz'));
     var total = allQuestions().length;
     wrap.appendChild(el('p', null, total + ' questions across ' + DRUGS.length + ' medications. Choose a category and length.'));
     var ctrl = el('div', 'quiz-controls');

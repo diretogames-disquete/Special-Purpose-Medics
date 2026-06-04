@@ -1,5 +1,5 @@
 /* =====================================================================
- * SOF Medic Prompts — WebGL ambient background
+ * Special Purpose Medic Drug Box — WebGL ambient background
  * ---------------------------------------------------------------------
  * A self-contained, dependency-free WebGL layer that renders behind the
  * whole dashboard: a slow domain-warped "aurora" field, a faint scrolling
