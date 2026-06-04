@@ -1,659 +1,3762 @@
 /* =====================================================================
- * SOF Medic — Prompt Library data (200 prompts)
- *   100 training scenarios (type "sc", tagged by MARCH PAWS phase)
- *   50 text-to-image (type "t2i")
- *   50 image-to-video (type "i2v")
- * Each carries: n, type, march, cat, model, technique, text.
- * Assembled by _assemble.py from js/data/_parts/*.
+ * SOF Medic — Prompt Library data
+ *   100 training scenarios (type "sc"), each MARCH PAWS-tagged and carrying
+ *     an aligned media set: media.t2i / media.i2v / media.t2v
+ *   50 aligned imagery sets (type "img"): t2i (the still) + i2v (animates
+ *     that still) + t2v (text-to-video of the same scene)
+ *   Media prompts are written in universal, tool-agnostic language for
+ *   Nano Banana / Midjourney / Flux (image) and Veo / Sora / Kling /
+ *   Runway / Luma / Pika (video).
  * ===================================================================== */
 window.PROMPTS_DATA = [
-// --- core_sc.js ---
-{n:1,title:"Multi-Axis Ambush — Split Casualty Field",type:"sc",march:"hemorrhage",cat:"SCENARIO",model:"Claude",technique:"Tree-of-Thought",text:`You are the senior 18D on a 12-man ODA that has been ambushed from three directions in a forested valley. Comms are down. The team is split into two elements separated by 200m of open ground under fire. Element 1 has 2 casualties: one with bilateral penetrating chest wounds (sucking), one with a traumatic amputation below the right knee with tourniquet. Element 2 has 1 casualty: a TBI with GCS 7 and expanding scalp hematoma. You are with Element 1 and your junior medic is with Element 2. You can communicate by hand signals only.
-
-Think step by step and branch your reasoning — for each major fork, name the two options and the deciding factor before you commit. Walk through the first 20 minutes: (1) What orders do you signal to your junior medic for the TBI casualty? (2) Triage and treatment sequence for your two casualties — who gets attention first and why? (3) The chest wound casualty has bilateral tension developing — you have 2 NDC kits and 1 chest seal remaining. Allocation strategy? (4) The amputation casualty's tourniquet is slipping — you cannot reach it while treating the chest wounds. What do you tell the nearest operator to do with zero medical training? (5) Fire suppression allows a 90-second window to cross the open ground — what do you carry, what do you leave? (6) Both elements consolidate — you now have 3 casualties, 2 medics, limited supplies. Build your CCP priority list.`},
-{n:2,title:"Contested CASEVAC — 14-Hour Hold",type:"sc",march:"circulation",cat:"PFC SCENARIO",model:"ChatGPT",technique:"Time-Blocked Plan",text:`Your TACEVAC helicopter was shot down attempting extraction. All crew survived but your original casualty — an operator with an open abdominal wound, temporary closure, and 4 units of whole blood already transfused — is now stranded with you in a damaged structure. Estimated time to next extraction attempt: 14 hours. Enemy is within 500m. It is December, ambient temp -8°C.
-
-You have: Ventway Sparrow ventilator, i-STAT with 3 CG4+ cartridges and 2 CHEM8+, 2 remaining units LTOWB, ketamine vials, ertapenem, one IV fluid bag (1L LR), HPMK, BATDOK tablet (no connectivity). Based on JTS CPG 91 (Prolonged Casualty Care), structure your answer as a 2-hour-block timeline table (columns: block, monitoring, interventions, decision gates): (1) Build the full 14-hour care plan, (2) Your patient's abdomen is distending — suspect re-bleeding from the temporary closure. You cannot operate. What CAN you do? (3) i-STAT management: you have 5 cartridges for 14 hours — when do you run each one for maximum information yield? (4) Hypothermia prevention at -8°C with one HPMK and a damaged structure — creative solutions, (5) Your patient becomes increasingly confused at hour 6 — differential: sepsis vs re-bleed vs hypothermia vs TBI you missed. Diagnostic approach with available tools, (6) BATDOK is offline — paper documentation protocol for eventual handoff.`},
-{n:3,title:"Walking Blood Bank Under Fire — Ethical Dilemma",type:"sc",march:"circulation",cat:"ETHICS / DCR",model:"Claude",technique:"Ethical Decision-Matrix",text:`Mass casualty event: convoy IED plus complex ambush. 7 casualties, 2 critical (expected), 3 urgent, 2 minimal. You are the only medic. Your 2 critical patients both need blood NOW. You have 2 units LTOWB remaining and 15 pre-screened walking blood bank donors among the uninjured operators.
-
-Here is the dilemma: activating the WBB means pulling fighters off the perimeter during an active engagement. The team leader says he cannot spare more than 2 donors without compromising security, and the draw will take 15-20 minutes per donor. Meanwhile, one critical patient (the team leader's best friend) has a survivable injury IF he gets blood in the next 30 minutes. The other critical has a 50/50 chance even WITH blood.
-
-Lay out your reasoning as an explicit decision matrix (options × criteria: survival probability, resource cost, security risk, time) before you recommend. (1) How do you triage when probability of survival conflicts with resource allocation during active combat? (2) Make the case for each decision: give both units to the high-probability survivor vs split them, (3) The team leader pressures you to prioritize his friend — how do you handle command influence on medical decisions? (4) You activate WBB for 2 donors — screening shortcuts you can and cannot take under fire, (5) A donor faints during the draw and hits his head — GCS 14 — you now have 8 casualties. Recalculate, (6) What does TCCC say about this scenario and where does the doctrine leave gaps that require judgment?`},
-{n:4,title:"Submarine Rescue — Confined-Space MCI",type:"sc",march:"respiration",cat:"MARITIME / MCI",model:"Gemini",technique:"Constraint Puzzle",text:`You are a SARC (Special Amphibious Reconnaissance Corpsman) responding to a disabled submarine with 12 casualties in a space roughly the size of a school bus. Atmosphere: confirmed low O₂ (16%), elevated CO₂ (4.5%), unknown toxic gas exposure. Casualties range from unresponsive to ambulatory. You enter through a 26-inch diameter hatch with one other corpsman and can carry what fits in two medical packs.
-
-Treat every physical limit (hatch size, atmosphere, PPE work-time, 2 O₂ cylinders) as a hard constraint and solve within them — state each constraint explicitly, then optimize. (1) Triage in a confined toxic atmosphere where your own PPE limits your work time — how does this change standard SALT? (2) What do you carry through a 26" hatch — build your load list by priority weight, (3) Three patients are unresponsive — differential for low-O₂ environment: simple hypoxia vs CO₂ narcosis vs toxic gas exposure — treatment differs dramatically. How do you differentiate with no labs? (4) You have 2 portable O₂ cylinders — allocation across 12 patients, (5) Extraction sequence: who comes out first and why — sickest first or most salvageable? (6) One patient is seizing — in a 16% O₂ environment with elevated CO₂, your drug choices narrow. What can you give and what is contraindicated?`},
-{n:5,title:"Partner Force Medic — Teach Through a Translator",type:"sc",march:"hemorrhage",cat:"FID / TRAINING",model:"ChatGPT",technique:"Talk-Through Script",text:`You are an 18D advising a partner force in a country where the local medics have EMT-Basic equivalent training. Through a translator, you must talk a local medic through managing a casualty with a junctional inguinal wound that is NOT amenable to tourniquet. The local medic has: gauze (not hemostatic), IV access supplies, normal saline, and basic wound care materials. He has never seen an iTClamp or Combat Gauze.
-
-Write the actual words to say, short enough for a translator to relay in real time, then annotate why each step works. (1) How do you explain wound packing for junctional hemorrhage control when the medic has never done it — what analogies and hand gestures work through a language barrier? (2) The patient needs blood and there is none — what austere resuscitation looks like with only crystalloid and the evidence for why it is inferior, (3) Build a 5-step talk-through that a translator can relay during active hemorrhage, (4) Your translator freezes under stress — backup communication plan, (5) Cultural consideration: the partner force medic believes the patient will die and wants to stop. How do you motivate continued effort? (6) This patient survives. Design a 3-day training curriculum using only locally available supplies.`},
-{n:6,title:"Pediatric Casualty — Dosing Under Pressure",type:"sc",march:"circulation",cat:"PEDIATRIC",model:"Claude",technique:"Show-Your-Math",text:`During a village stability operation, an explosion injures several civilians including a child approximately 4-5 years old (estimated weight 18kg). The child has: a deep scalp laceration with significant bleeding, a deformed left forearm (likely fracture), abdominal rigidity with guarding, HR 160, crying but not making eye contact, capillary refill 4 seconds.
-
-For every dose and rate, show the full calculation (formula, substitution, result with units) so I can check your math. (1) Walk through your assessment using MARCH adapted for an 18kg child, (2) Your tourniquet is designed for adults — what modifications allow hemorrhage control on a small limb? (3) Fluid resuscitation: 20 mL/kg bolus = how much for this child? How fast? What if you only have adult IV tubing with standard drip chambers? (4) Pain management: calculate ketamine dose for an 18kg child across all routes (IV analgesia, IM analgesia, procedural sedation) — show your math, (5) IO access: which EZ-IO needle for this child and where? What if the proximal tibia is inaccessible? (6) The mother is hysterical and interfering with treatment — managing the tactical, medical, and human dimensions simultaneously.`},
-{n:7,title:"Dual-Role Dilemma — Medic as Combatant",type:"sc",march:"hemorrhage",cat:"DIVERGENT",model:"Gemini",technique:"Decision Framework",text:`Your 6-man reconnaissance element is compromised. During the break-contact drill, you — the only medic — are on the SAW providing suppressive fire when the point man goes down 15m ahead in the open. The team leader is calling for fire. If you drop the gun to treat the casualty, the remaining 4 operators lose their base of fire during a critical bounding movement. If you maintain fire, the point man bleeds.
-
-First give me a reusable decision framework (the rule), then apply it to this exact case. (1) Analyze the dual-role tension that defines the SOF medic — when does the medic stop being a shooter? (2) You continue firing for 60 seconds while another operator throws a tourniquet — talk that operator through application over the radio in 4 sentences or less, (3) Fire superiority achieved, you move to the casualty — tourniquet on left thigh, unresponsive. Fastest meaningful neurological check under fire? (4) You need to move him 50m to cover — what MUST happen before movement vs what can wait? (5) Design the pre-mission brief that would have prepared the non-medic team members, (6) Post-mission AAR: what training failures led to the medic being the only operator who could run the SAW? How do you fix this?`},
-{n:8,title:"CBRN Overlap — Chlorine in Underground Hospital",type:"sc",march:"respiration",cat:"CHEM / SCENARIO",model:"ChatGPT",technique:"Layered Triage",text:`Based on the Syrian conflict pattern (311 confirmed chemical attacks, 91.5% chlorine), your team enters a basement medical facility where chlorine gas was deployed. 8 patients who were receiving treatment are now exposed. Chlorine is heavier than air — the basement is the worst possible location. Your team has M50 gas masks but no MOPP suits.
-
-These patients have conventional wounds AND chemical exposure — address both layers and show how they interact. (1) Chlorine at what concentration causes what symptoms? Build a triage matrix by exposure level, (2) Your team's protective posture: M50 masks filter chlorine but skin is exposed — how long can you work? What dermal effects to monitor in your own team? (3) Treatment priorities for chlorine inhalation layered on conventional trauma, (4) Decontamination in a basement with no running water — improvised solutions, (5) One patient is intubated on a ventilator — chlorine entered the circuit. Disconnect and bag, or continue? Both options have lethal risks, (6) Vertical extraction: sequence for moving 8 patients up a stairwell while minimizing continued exposure.`},
-{n:9,title:"Zero-Vis Trauma Care — Role 1 Power Failure",type:"sc",march:"respiration",cat:"DIVERGENT",model:"Claude",technique:"Tactile SOP",text:`You are running a Role 1 BAS when total power failure occurs during a mass casualty event. You have 4 casualties in various stages of treatment. It is night. Your NVGs are 30m away. Only light: 2 headlamps (one red, one white) and a BATDOK screen glow.
-
-For each task, classify it as "tactile-only OK" or "requires light" and justify, then build the workflow around that. (1) What skills transition to tactile-only and which require light? Prioritize 2 light sources across 4 patients, (2) You were mid-needle-decompression on Patient 1 when lights died — needle partially inserted. Complete by feel or stabilize and redirect light? (3) Patient 3 is on a ketamine drip — the IV pump stopped. Convert to gravity drip in the dark — calculate manual drip rate for 750mg/250mL at 135 mL/hr and the tactile method for counting drops, (4) Patient 2 is post-cric with EtCO₂ monitoring now dark — confirm tube placement without capnography? (5) Generator is 50m outside — sending someone means losing hands for 5 minutes. Decision matrix, (6) Design a Role 1 SOP for power failure that prevents this chaos.`},
-{n:10,title:"HALO Freefall Injury — Triple Pathology",type:"sc",march:"hypothermia",cat:"AIRBORNE / SCENARIO",model:"Gemini",technique:"Differential Threads",text:`During a HALO insertion from 25,000 feet, an operator's O₂ system fails at 22,000 feet. He loses consciousness, deploys reserve chute late, impacts hard on rocky terrain at 8,500 feet. Presents with: severe headache, confusion, visual disturbances, left wrist deformity, pain with inspiration on right side.
-
-Separate the tangled pathologies like threads — name each, rank by lethality, and show how you would tease them apart at the bedside. (1) Triple pathology — hypoxic brain injury + possible barotrauma + blunt impact. Which kills first? (2) How many seconds of useful consciousness at 22,000 feet after O₂ failure? What damage during unconscious freefall? (3) Headache/confusion: residual hypoxia vs HACE vs closed head injury — differentiation pathway, (4) Inspiratory pain + rocky landing = rib fractures ± pneumothorax. POCUS vs clinical assessment, (5) He must walk 4km to the ORP — can he? Go/no-go criteria, (6) Prevention: O₂ system checks and contingency protocols for the next jump.`},
-{n:11,title:"Maritime Fentanyl Exposure — 3 Operators Down",type:"sc",march:"respiration",cat:"MARITIME / CBRN",model:"ChatGPT",technique:"Pharmacology Brief",text:`Your VBSS team boards a drug vessel. Upon breaching a cargo hold, 3 operators collapse within 90 seconds from aerosolized fentanyl. You're topside. CASEVAC boat is 10 minutes out. You have naloxone, 8 remaining operators who refuse to enter.
-
-Lead with a 3-sentence pharmacology brief, then act on it. (1) Why fentanyl aerosol is different: pharmacology in 3 sentences, (2) PPE for entry — is your M50 sufficient? (3) Naloxone dose escalation: 5× 2mg IN + 3× 0.4mg IV across 3 apneic patients. Allocation, (4) ONE medic, THREE patients needing ventilatory support simultaneously — triage and resource allocation, (5) Naloxone wears off faster than fentanyl — re-sedation monitoring protocol, (6) Decontamination before CASEVAC arrival.`},
-{n:12,title:"Hospital Surge — Parking-Garage Trauma Station",type:"sc",march:"circulation",cat:"MCI / DIVERGENT",model:"Claude",technique:"Compare/Contrast",text:`Your SOF medical element is attached to a civilian hospital receiving 40 mass casualties. The trauma bay holds 6. The surgeon asks your 4-medic team to take over a parking garage overflow area.
-
-Build a two-column compare/contrast of military-tactical vs civilian-hospital capability, then synthesize a combined plan from the overlap. (1) What capabilities does your team bring that hospital staff don't, and vice versa? (2) Build a parking garage trauma station layout, (3) TCCC vs civilian trauma protocols — where do they critically differ? (4) Your i-STAT vs their overwhelmed lab (4-hour turnaround) — how to support civilian triage with tactical diagnostics, (5) An aggressive family member — managing hostile civilians without military ROE, (6) The surgeon asks you to scrub in — scope of practice implications.`},
-{n:13,title:"Arctic Submersion — Cold-Water Drowning",type:"sc",march:"hypothermia",cat:"ENVIRONMENTAL",model:"Gemini",technique:"CPG-Anchored",text:`Operator falls through lake ice in Norway. Water 2°C, submersion 4 minutes. Recovered: GCS 6, agonal respirations 4/min, pulse 38, estimated core temp 30°C. Ambient -15°C. Dry suit kept body dry but hands and head submerged.
-
-Anchor every answer to JTS CPG 64 (Drowning) and JTS hypothermia guidance — cite the principle, then apply it. (1) Cold water drowning — explain the mammalian dive reflex and "not dead until warm and dead," (2) Below 32°C the heart is irritable and jostling can trigger VF — handling precautions, (3) Rewarming: core vs peripheral sequence — why peripheral-first causes lethal afterdrop, (4) Intubation at -15°C with a 30°C patient — how hypothermia alters RSI drug metabolism, (5) He arrests at 33°C, VF on monitor — defibrillate or wait? (6) ROSC at 34°C — the next 6 hours of PFC protocol.`},
-{n:14,title:"Embedded Journalist — Competing Priorities",type:"sc",march:"hemorrhage",cat:"CIVILIAN / DIVERGENT",model:"ChatGPT",technique:"Plain-Language",text:`An embedded journalist takes shrapnel. Penetrating right flank wound with evisceration, deep right hand laceration (arterial), facial lacerations. She's screaming, has no training, no armor, and is photographing her own injuries.
-
-Give two layers for each step: the clinical action, and the exact plain-language words to say to a terrified civilian. (1) First 60 seconds — what you do, what you say, (2) Explain evisceration management to a terrified person looking at her own intestines, (3) Arterial hand wound, no small tourniquets — improvised hemorrhage control, (4) She's going into shock and STILL using her phone — balance compliance with dignity, (5) MEDEVAC for a civilian with a military unit — what changes? (6) Her photos will become public — documentation implications.`},
-{n:15,title:"Parallel Care Across a River — Zero Comms",type:"sc",march:"respiration",cat:"DIVERGENT",model:"Claude",technique:"Visual Signaling Design",text:`Platoon split by a failed river crossing. Both sides have casualties and one medic. Radios are waterlogged. 100m line of sight only. Your casualty: open pneumo + femur fracture. Junior medic's casualty: facial blast + compromised airway + burned hands.
-
-Design a concrete, unambiguous visual signaling system first (define each gesture/panel signal), then run the scenario through it. (1) Design a pre-established visual medical signaling system for 100m, (2) Sequencing: open pneumo vs femur traction — which first? (3) You can see Medic 2 struggling with the airway — visual guidance from across a river, (4) Rope crossing possible — pack a kit bag for Medic 2's patient, (5) One helicopter, lands only on Medic 2's side — decision framework, (6) Post-mission training event to prevent this.`},
-{n:16,title:"Thermobaric Blast — Primary Blast Lung",type:"sc",march:"respiration",cat:"BLAST / DIVERGENT",model:"Gemini",technique:"Mechanism-First",text:`Three operators near the edge of a thermobaric strike. No external injuries. All have: dyspnea, hemoptysis, TM rupture. One has a rigid belly. Primary blast injury only.
-
-Explain the underlying mechanism before each management decision, so the "why" drives the "what." (1) Thermobaric sustained overpressure vs conventional blast — why blast lung is more severe, (2) The lethal trap: positive-pressure ventilation can cause air embolism in blast lung — explain the mechanism, (3) Rigid belly = blast bowel (hollow viscus rupture). Field management? (4) TM rupture as a predictor of internal blast severity — the evidence, (5) All walking and talking now but blast lung deteriorates 12-48h. Monitoring protocol, (6) Altitude change on helicopter worsens blast lung — MEDEVAC precautions.`},
-{n:17,title:"Combat Working Dog — K9 TCCC",type:"sc",march:"hemorrhage",cat:"VETERINARY / DIVERGENT",model:"ChatGPT",technique:"Cross-Species Mapping",text:`Your MWD (Belgian Malinois, 30kg) takes a GSW to the left shoulder during compound clearance. Handler panicking. Dog whimpering, non-weight-bearing, moderate hemorrhage, no exit wound.
-
-For each step, explicitly map the human TCCC standard to the canine equivalent and flag where they diverge. (1) Translate human MARCH to canine — what's different? (2) CAT Gen 7 on a canine forelimb — does it work? Modifications? (3) Ketamine dosing: canine = 5-10 mg/kg IM (vs human 0.5-1) — calculate for 30kg, (4) No exit wound = retained bullet — field wound care for an animal that will chew the bandage, (5) Cephalic vein IV access — technique differences, (6) Handler management: this dog is a teammate. Psychological first aid.`},
-{n:18,title:"Mass Burn MCI — Marketplace VBIED",type:"sc",march:"wounds",cat:"BURNS / MCI",model:"Claude",technique:"Leader-Lens",text:`VBIED in a crowded marketplace. 25-30 casualties visible. Fires still burning, fuel leak, secondary device threat. 2 medics, 8 operators, 3 CLS bags.
-
-Answer as the on-scene medical LEADER, not the hands-on provider — your job is allocation and tempo, not individual treatment. (1) The impulse is to run in. Why that's wrong. First 5 minutes as a leader: security, assessment, resource allocation, (2) SALT triage adapted for burn MCI — half have flash-burned corneas and can't see. Modification? (3) You can meaningfully treat 8-10 with available supplies; 25-30 need help. Who gets marked expectant and how you live with it, (4) ISR Rule of 10s for rapid fluid calculation — but not enough fluid for everyone. Allocation protocol, (5) Secondary device threat vs patient movement — security/medical balance, (6) Civilians self-evacuating and worsening injuries — crowd management as medical intervention.`},
-{n:19,title:"Missed Injury — Blast Bowel at Hour 8",type:"sc",march:"circulation",cat:"ASSESSMENT / DIVERGENT",model:"Gemini",technique:"Error Reconstruction",text:`You treated an operator after a blast 8 hours ago. Found: superficial forearm laceration + left TM rupture. Categorized minimal, returned to duty. Now at hour 8: increasing abdominal pain, rigid abdomen, HR 112 (was 78), BP 98/64, vomited twice.
-
-Reconstruct the chain of decisions backwards from this outcome to find the exact failure point, then fix the system. (1) Blast bowel presents in a delayed fashion — explain the pathophysiology, (2) Reconstruct your error: what should the initial assessment have caught? (3) 8+ hours from surgery — PFC bridging? (4) POCUS: FAST findings vs a negative FAST with a screaming clinical picture, (5) Septic abdomen vs hemorrhagic shock — fluid strategy differs, (6) Write the self-critique AAR. What systematic change prevents this?`},
-{n:20,title:"Sniper Hide — Remote Treatment Direction",type:"sc",march:"airway",cat:"REMOTE MEDICINE",model:"ChatGPT",technique:"Radio-Script",text:`Sniper/spotter 800m away. Spotter radios: sniper hit by ricochet fragment to Zone II neck, significant bleeding, gurgling. Spotter has a CLS kit only. You can't reach them for 30 minutes.
-
-Produce verbatim radio scripts (short, jargon-free, read-aloud ready) plus the clinical reasoning behind each line. (1) Remote-direction medicine — what info do you NEED in 30 seconds? Script the radio report, (2) Walk the spotter through Zone II neck wound packing — no jargon, (3) Airway compromise from blood, no suction, no cric kit, no NPA — improvised solutions in a hide site, (4) Sniper unconscious — teach GCS over radio in 10 seconds, (5) "He stopped breathing" — talk a CLS through a surgical cric with a knife and pen barrel? Under what conditions is this the call? (6) Design a CLS upgrade package for isolated 2-man elements.`},
-// --- sc_a.js ---
-{n:21,title:"High Inguinal Blast — Junctional Hemorrhage",type:"sc",march:"hemorrhage",cat:"JUNCTIONAL",model:"Claude",technique:"Chain-of-Thought",text:`You are the senior 18D on a split ODA conducting a vehicle interdiction in a high-desert wadi. An RPG strike has thrown an operator clear of the truck. He has a high inguinal blast wound at the groin crease, proximal to where a limb tourniquet can seat, with pulsatile bright-red bleeding soaking the ground. Estimated 700-900 mL lost (estimate). Radial pulse weak, RR 28, mentating but agitated. You have a junctional tourniquet, combat gauze, an iTClamp, and TXA in your aid bag. CASEVAC is 40 minutes out.\n\nThink step by step and show your full reasoning BEFORE you give the final answer. Reason aloud through wound location, why a limb CAT will fail here, packing mechanics, and device choice, then commit.\n\n(1) What is your exact sequence for the first 90 seconds of hemorrhage control? (2) How do you confirm the junctional device has actually occluded inflow? (3) When and how do you give TXA here, and what is the window? (4) If bleeding continues after packing plus junctional device, what is your next escalation? (5) What do you document on the casualty card? (6) What single reassessment will you repeat every 5 minutes en route?`},
-{n:22,title:"Maritime Axillary Gunshot — Pitching Deck",type:"sc",march:"hemorrhage",cat:"MARITIME",model:"ChatGPT",technique:"Structured Output",text:`You are the lead medic on a maritime interdiction team that has just taken a vessel. During the assault one operator was shot through the left axilla; the round tracked into the chest wall. There is heavy dark bleeding from the axilla and the arm is cold. You are on a pitching deck, salt spray everywhere, casualty supine on a non-slip mat. Vitals: HR 130, BP unobtainable by palpation at radial, SpO2 reads 88 percent but the probe is unreliable when wet. You have wound packing gauze, an SAM junctional device, pressure dressings, and a single unit of cold-stored whole blood in the team cooler.\n\nReturn your entire answer as a markdown table with columns: Step | Action | Rationale | Failure-Mode-to-Watch. Order the rows by time priority. After the table, add one short paragraph titled CONTINGENCY describing what changes if we must move him down a ladder well to the small boat.\n\n(1) How do you control axillary bleeding that is too high to tourniquet? (2) How do you decide whether this is also a chest problem? (3) When do you commit the single blood unit? (4) How do you protect the airway if he deteriorates on a moving deck? (5) What do you hand off to the receiving ship's medical officer? (6) What is your trigger to abort the casualty's movement and treat in place? (7) How do you prevent hypothermia in a wet maritime casualty?`},
-{n:23,title:"Pediatric Blast Amputation — Tiny Limb",type:"sc",march:"hemorrhage",cat:"PEDIATRIC",model:"Gemini",technique:"Role + Constraints",text:`Act as a deployed Special Forces medic with pediatric trauma experience advising over a poor satellite link. A 6-year-old local child has a mangled lower leg from a UXO blast, with a partial traumatic amputation mid-tibia and ongoing arterial bleeding. You estimate weight at 20 kg (estimate). You have applied an adult CAT but it does not seat well on the small limb and bleeding persists. No pediatric tourniquet on hand. RR 40, cap refill 4 seconds, child crying then becoming quiet.\n\nConstraints you MUST honor in your answer: assume austere supplies only (no IV pump, no pediatric blood), keep all drug doses weight-based and show the math, and flag anything that is an estimate. Do not suggest interventions requiring a hospital.\n\n(1) How do you achieve hemorrhage control on a limb too small for a standard CAT? (2) What is your weight-based TXA dose and route, with the calculation shown? (3) How do you recognize decompensated shock in a child versus an adult? (4) What improvised volume resuscitation is acceptable here and what are the limits? (5) How do you keep this child normothermic? (6) What are your handoff priorities to a host-nation hospital?`},
-{n:24,title:"Arctic Femur Fracture — Frozen Exposure",type:"sc",march:"hemorrhage",cat:"ARCTIC",model:"Claude",technique:"Red-Team the Plan",text:`You are the troop medic on an over-snow infiltration at minus 25 C with wind chill near minus 40 C. An operator caught a snowmobile rollover and has an open mid-thigh femur fracture with a deep laceration bleeding steadily through layered cold-weather clothing. You cannot easily expose the wound without inducing hypothermia. He is shivering, HR 120, alert. Tourniquet, hemostatic gauze, hypothermia prevention kit, and one unit of whole blood (currently cold, needs warming) are available. Exfil is 3 hours by ground.\n\nFirst give your complete hemorrhage-and-cold plan. THEN switch roles and red-team your own plan as a skeptical senior medic: attack every assumption (clothing removal in extreme cold, tourniquet over bulky layers, blood warming without a fluid warmer, fracture splinting). Finally, revise the plan to address the strongest critiques.\n\n(1) How do you expose and control the bleed without freezing the patient? (2) Does a tourniquet seat reliably over thick clothing, and what do you do about it? (3) How do you warm cold whole blood in the field? (4) How do you splint a femur for a 3-hour sled movement? (5) What hypothermia rewarming sequence applies? (6) Which decision could kill this patient fastest and how do you guard against it?`},
-{n:25,title:"Market Bombing — Mass Casualty Triage",type:"sc",march:"hemorrhage",cat:"MASS CASUALTY",model:"ChatGPT",technique:"Decision-Matrix",text:`You are the sole medic responding to a market bombing in a partner-force town. There are 9 casualties with bleeding injuries and 2 host-nation medics with basic training under your direction. Among the wounded: two with extremity arterial bleeds, one with a junctional groin wound, one scalp laceration bleeding briskly but stable, one with a pelvic crush and signs of internal hemorrhage, and four walking wounded. You have 6 CATs, 4 packs of hemostatic gauze, 1 pelvic binder, 3 units of LTOWB, and TXA.\n\nProduce a decision matrix as a table: Casualty | Injury | Triage Category | Immediate Action | Who Performs | Resource Used. Then state, in priority order, how you task the two host-nation medics. Justify any casualty you categorize as expectant.\n\n(1) Who gets a tourniquet first and why? (2) How do you allocate only 3 units of blood across competing critical patients? (3) How do you manage the pelvic hemorrhage with one binder? (4) What do you delegate versus keep yourself? (5) How do you prevent over-triaging the dramatic scalp bleed? (6) What is your reassessment loop as resources free up?`},
-{n:26,title:"Working Dog Down — Canine Hindlimb Bleed",type:"sc",march:"hemorrhage",cat:"K9",model:"Gemini",technique:"Few-Shot Anchoring",text:`Act as an 18D cross-trained in tactical K9 care. Your multi-purpose canine took a gunshot to the right hindlimb during a compound assault. There is brisk bleeding from the thigh, the dog is panting heavily, mucous membranes pale-pink, and he is still trying to work but won't bear weight. Estimated weight 32 kg (estimate). You have a CAT, hemostatic gauze, a muzzle, and canine-appropriate analgesia in the K9 kit.\n\nBefore answering, study these two anchor examples of good K9 reasoning and match their structure: Example A: tourniquet placed high-and-tight on a canine forelimb, then reassessed for mucous membrane color and capillary refill. Example B: hemostatic packing of a canine axillary wound with continuous direct pressure for 3 minutes by the clock. Now reason in that same style for THIS case.\n\n(1) Where and how do you place a tourniquet on a canine hindlimb? (2) How do you safely restrain and muzzle a painful working dog before treatment? (3) What canine-specific signs tell you he is decompensating? (4) What analgesia and dosing are appropriate (show estimate)? (5) How do you package him for transport? (6) What do you communicate to the veterinary team on handoff?`},
-{n:27,title:"High-Altitude Impalement — Six-Hour Hold",type:"sc",march:"hemorrhage",cat:"HIGH ALTITUDE",model:"Claude",technique:"Step-Back Reasoning",text:`You are the medic on a high-altitude observation post at 4,200 m. An operator slipped on scree and impaled his forearm on rebar, producing a deep laceration with steady venous and some arterial bleeding. He is hypoxic at baseline (SpO2 reads 84 percent at this altitude, which may be normal here), cold, and the nearest helicopter cannot reach this altitude until weather clears in an estimated 6 hours.\n\nBefore solving, take a STEP BACK: state the general principles of hemorrhage control, the physiology of bleeding at altitude, and how prolonged field care changes priorities. Only after laying out those principles should you apply them to this specific casualty.\n\n(1) Direct pressure, packing, or tourniquet for a forearm wound near a joint, and why? (2) How does high altitude change your interpretation of his vitals and SpO2? (3) What is your plan for a 6-hour prolonged hold? (4) How do you balance rebleeding risk against tourniquet conversion? (5) What hypothermia and analgesia steps apply? (6) How do you document a trending picture so the aircrew arrives oriented? (7) What is your abort/self-evac threshold for the whole team?`},
-{n:28,title:"Urban CQB — Frag Under Fire",type:"sc",march:"hemorrhage",cat:"URBAN CQB",model:"ChatGPT",technique:"Self-Critique Loop",text:`You are the assault element medic during room-clearing in a dense urban block. An operator stacking on a doorway took fragmentation to both thighs from a grenade; he has multiple bleeding wounds on the left thigh and a single deep wound on the right, all venous-to-arterial mix. You are in a narrow hallway, still taking sporadic fire from an upper floor, casualty must be dragged to a casualty collection point 30 m back.\n\nUse a self-critique loop: write your initial plan, then under a heading CRITIQUE list every weakness or risky assumption, then write FINAL PLAN incorporating fixes. Be honest in the critique.\n\n(1) Care-under-fire priorities: what do you do in the hallway versus at the CCP? (2) Two tourniquets versus packing for multiple thigh wounds? (3) How do you move him under fire without losing hemorrhage control? (4) What is the role of indirect/self-aid here? (5) When do you reassess and convert tourniquets? (6) How do you communicate casualty status to the ground force commander mid-fight?`},
-{n:29,title:"Tourniquet Conversion — Eighteen-Hour Delay",type:"sc",march:"hemorrhage",cat:"PROLONGED FIELD CARE",model:"Gemini",technique:"Rubric-Graded",text:`Act as a JTS-published Prolonged Field Care subject-matter expert. I will give you a casualty and my draft plan; grade it. Casualty: operator with a thigh tourniquet placed 2 hours ago for a now-controlled bleed, awaiting a CASEVAC delayed an estimated 18 hours by weather. He is otherwise stable, HR 90, alert. I want to attempt tourniquet conversion to a pressure dressing to save the limb.\n\nGrade against a rubric you state explicitly first (criteria such as: conversion eligibility, time-since-application limits, wound reassessment, monitoring plan, rebleed contingency, documentation). Score each criterion 1-5 with justification, then give an overall pass/fail and the top three fixes.\n\n(1) Is this tourniquet a candidate for conversion at 2 hours, and what disqualifies a conversion? (2) What is the step-by-step safe conversion procedure? (3) What do you monitor in the 30 minutes after conversion? (4) What is your rebleed contingency over an 18-hour hold? (5) How do you manage the limb if conversion fails and the tourniquet must stay on for many hours? (6) What labs/signs would you track if you had a point-of-care analyzer?`},
-{n:30,title:"MOPP 4 Evisceration — Cholinergic Crisis",type:"sc",march:"hemorrhage",cat:"CBRN",model:"Claude",technique:"Tree-of-Thought",text:`You are the team medic operating in MOPP 4 after a suspected chemical attack near a contaminated objective. An operator has a penetrating abdominal wound with evisceration and moderate ongoing bleeding, AND he is showing early cholinergic signs (drooling, miosis, fasciculations). You are gloved, hooded, and your dexterity is severely limited. Decon is not yet available. You have hemostatic gauze, occlusive dressings, atropine/pralidoxime autoinjectors, and water for irrigation that may itself be contaminated.\n\nUse Tree-of-Thought: generate at least three distinct courses of action (e.g., treat-then-decon, decon-then-treat, simultaneous), branch out the likely consequences of each, prune the weak branches, and select the best path with reasoning shown.\n\n(1) Do you treat the hemorrhage, the chemical exposure, or both first, and in what order? (2) How do you manage an abdominal evisceration through a contaminated suit? (3) How many autoinjectors and on what trigger? (4) How do you protect yourself from cross-contamination while packing a wound? (5) What is the decon-while-bleeding compromise? (6) What do you warn the decon line and receiving facility about?`},
-{n:31,title:"Shattered Mandible — Bleeding Airway",type:"sc",march:"airway",cat:"FACIAL TRAUMA",model:"ChatGPT",technique:"Chain-of-Thought",text:`You are the senior medic at a casualty collection point. An operator took a gunshot to the lower face; the mandible is shattered, the tongue and soft tissue are bleeding into the airway, and he is making gurgling sounds while trying to sit forward. SpO2 falling through 90 percent, agitated, blood in the oropharynx. You have suction (manual and battery), NPAs, a surgical cric kit, and supraglottic devices. CASEVAC 25 minutes out.\n\nThink step by step and externalize your reasoning before committing. Reason through why positioning matters, why an SGA may fail with this anatomy, and the indications that push you to a surgical airway.\n\n(1) What is your immediate positioning and suction strategy for a bleeding facial wound? (2) Why might an NPA or supraglottic device be inadequate here? (3) What are your specific go/no-go criteria for a surgical cricothyrotomy? (4) Walk the cric procedure landmarks and steps. (5) How do you secure the tube and confirm placement without capnography if it fails? (6) What do you monitor en route to prevent dislodgement?`},
-{n:32,title:"Vehicle Fire — Inhalation Airway Edema",type:"sc",march:"airway",cat:"BURN/INHALATION",model:"Gemini",technique:"Step-Back Reasoning",text:`Act as a deployed medic experienced in burn airway management. An operator was caught in a vehicle fire; he has facial burns, singed nasal hair, carbonaceous sputum, a hoarse voice, and progressive stridor. He is currently maintaining his own airway but worsening. Estimated 25 percent TBSA burns (estimate). You have an intubation kit, a bougie, a surgical airway kit, and oxygen.\n\nFirst step back and explain the natural history of inhalation-injury airway edema and why the timing of intervention is the central problem. Lay out the general principle of early definitive airway before solving this case.\n\n(1) What clinical signs tell you this airway will close, and how fast? (2) Should you secure the airway now while you still can, or wait? Defend the call. (3) If you intubate, what tube size and why, given anticipated swelling? (4) What is your surgical-airway backup plan if edema obscures the cords? (5) How do you begin fluid resuscitation for the burn without worsening airway edema? (6) What do you hand off about the airway timeline to the next provider? (7) What is your escalation trigger if no advanced airway is available?`},
-{n:33,title:"Pediatric Head Injury — No Surgical Airway",type:"sc",march:"airway",cat:"PEDIATRIC",model:"Claude",technique:"Role + Constraints",text:`You are an 18D managing a host-nation child injured in crossfire. A 4-year-old (estimated 16 kg) has a depressed level of consciousness from a head injury, snoring respirations, and pooling secretions. He will not tolerate an oral airway when awake but is becoming obtunded. You have pediatric NPAs, suction, a pediatric supraglottic device, and a pediatric surgical airway is NOT recommended at this age.\n\nConstraints you MUST honor: weight-based everything with the math shown, no adult-sized hardware, acknowledge that a surgical airway is contraindicated in a small child and explain the alternative, and flag estimates.\n\n(1) How do you size and place an NPA in a 4-year-old, and what is the sizing rule? (2) How do you position a small child's airway differently from an adult's, and why? (3) When does a supraglottic device become appropriate and what size? (4) Since surgical cric is contraindicated, what is your rescue if you cannot ventilate? (5) What weight-based sedation, if any, is acceptable in this austere setting? (6) What are your handoff priorities to a pediatric-capable facility?`},
-{n:34,title:"Near-Drowning — Vomiting on Rough Seas",type:"sc",march:"airway",cat:"MARITIME",model:"ChatGPT",technique:"Red-Team the Plan",text:`You are the medic on a fast boat extracting a casualty in 1.5 m swells. A recovered swimmer was submerged, is unconscious, vomiting seawater, with a weak gag and gurgling breaths. He is soaked, cold, and the deck is heaving. You have suction, NPAs, a supraglottic airway, oxygen, and a hypothermia kit. The transit to the ship is 20 minutes of rough water.\n\nGive your airway plan first. Then red-team it as an adversarial senior corpsman: attack assumptions about aspiration risk, device placement on a pitching deck, the vomiting patient, and cold-induced laryngospasm. Then deliver a revised final plan.\n\n(1) How do you manage an airway in a vomiting, semi-conscious near-drowning casualty? (2) Does a supraglottic device protect against aspiration here, and what are the limits? (3) How do you secure and suction on a heaving deck without losing the airway? (4) How does hypothermia change airway reactivity and your approach? (5) What position do you transport him in and why? (6) What do you tell the receiving team about aspiration and water exposure?`},
-{n:35,title:"Jungle Sepsis — Twelve-Hour Airway Watch",type:"sc",march:"airway",cat:"REMOTE MEDICINE",model:"Gemini",technique:"Socratic Tutor",text:`Act as a Socratic airway tutor for a junior medic. Do NOT give me answers directly at first; instead ask me guiding questions that force me to reason, then confirm or correct. The case: a casualty 12 hours from evacuation in a remote jungle clinic has a decreasing level of consciousness from sepsis, with increasing secretions and an unprotected airway, but is still breathing spontaneously. We have an SGA, suction, NPAs, and limited oxygen.\n\nRun the session as: you ask a question, wait for my reasoning, then probe deeper. After 5-6 exchanges, summarize the correct prolonged-airway plan.\n\n(1) What questions should I be asking to decide if this airway needs intervention now? (2) How do I decide between watchful positioning and placing a device? (3) What are the risks of an SGA over a 12-hour hold? (4) How do I monitor an unintubated obtunded patient with no capnography? (5) What triggers would push me to a definitive airway? (6) How do I prevent aspiration over many hours of care?`},
-{n:36,title:"Penetrating TBI — Threatened Airway",type:"sc",march:"airway",cat:"TBI",model:"Claude",technique:"Decision-Matrix",text:`You are the troop medic managing an operator with a penetrating head wound after a sniper engagement. GCS is 6, he has irregular respirations, intermittent vomiting, and a blown right pupil. The airway is currently patent but threatened. You have an intubation kit with limited drugs, a supraglottic device, suction, and a surgical airway kit. You are 50 minutes from a Role 2.\n\nProduce a decision matrix as a table: Airway Option | Indication | Pros | Cons | When-I-Choose-It, covering NPA, SGA, endotracheal intubation, and surgical cric for THIS TBI patient. Then state your selection and the one parameter that would change it.\n\n(1) How does the goal of avoiding hypoxia and hypotension drive airway choice in TBI? (2) Does this GCS mandate a definitive airway, and what are the trade-offs? (3) How do you avoid spikes in intracranial pressure during airway placement? (4) What end-tidal/ventilation targets matter for TBI and how do you approximate them without capnography? (5) How do you manage vomiting and aspiration risk? (6) What head-of-bed and positioning steps apply?`},
-{n:37,title:"Collapse Triage — One Surgical Kit",type:"sc",march:"airway",cat:"MASS CASUALTY",model:"ChatGPT",technique:"Structured Output",text:`You are the only advanced provider triaging airway problems at a building-collapse mass casualty. Five patients have airway concerns: (A) snoring obtunded crush victim, (B) penetrating neck wound with expanding hematoma and voice change, (C) facial burns with early stridor, (D) conscious patient with a foreign-body partial obstruction coughing forcefully, (E) agonal breathing in an entrapped patient you cannot reach. You have limited NPAs, one surgical airway kit, suction, and two minimally trained helpers.\n\nReturn the answer as a markdown table: Patient | Airway Threat | Triage Priority | Intervention | Performed By | Reassess-Interval. Then a one-paragraph note on which patient you would NOT spend the single surgical kit on and why.\n\n(1) Rank the five by airway urgency and justify the top two. (2) Which airway can be solved by positioning alone? (3) Where does the expanding-hematoma neck wound fall and why is it time-critical? (4) How do you delegate to minimally trained helpers safely? (5) What is the role of the forcefully coughing foreign-body patient in your priorities? (6) How do you make the resource-allocation call on the single surgical kit?`},
-{n:38,title:"Partner-Force Neck Wound — Remote Coaching",type:"sc",march:"airway",cat:"PARTNER FORCE",model:"Gemini",technique:"Few-Shot Anchoring",text:`Act as an 18D advising a partner-force medic through an interpreter. Their soldier has a neck wound from a knife attack with a hoarse voice, subcutaneous emphysema over the larynx, and rising work of breathing; air seems to bubble from the wound. The partner medic has basic skills, an NPA, a supraglottic device, and you are coaching remotely with a 10-minute response delay on comms.\n\nFirst study two anchor examples of clear cross-language coaching: Example A: short imperative steps, one instruction per message, confirm-back required. Example B: anatomy described by surface landmarks the partner can feel, not by jargon. Match that style.\n\n(1) How do you coach airway assessment of a laryngotracheal injury across a language barrier? (2) Why might an SGA be dangerous with a tracheal disruption, and what do you say instead? (3) Can the wound itself be used as an airway, and how would you describe that? (4) How do you structure instructions for a 10-minute comms delay? (5) What confirm-backs do you require before each step? (6) What do you tell them to monitor while awaiting evac?`},
-{n:39,title:"Nerve Agent — Drowning in Secretions",type:"sc",march:"airway",cat:"CBRN",model:"Claude",technique:"Self-Critique Loop",text:`You are the medic after a nerve-agent release; multiple casualties have copious secretions, bronchospasm, and airway compromise from cholinergic crisis. Your priority casualty is unconscious with frothing secretions, miosis, and labored breathing. You are in MOPP gear with degraded dexterity. You have atropine/pralidoxime autoinjectors, suction, NPAs, an SGA, and a BVM, all to be used through contamination.\n\nUse a self-critique loop: write your INITIAL airway plan, then a CRITIQUE section listing every flawed assumption (suctioning endless secretions, placing devices in MOPP gloves, when antidote fixes the airway versus when hardware is needed), then a FINAL PLAN.\n\n(1) How does atropine change the airway picture, and how much do you give and when? (2) Is securing a device futile until secretions are dried, or do you act now? (3) How do you suction effectively through a contaminated airway? (4) How do you ventilate a bronchospastic patient with a BVM in MOPP 4? (5) How do you protect yourself from secretions during airway care? (6) What is your decon-versus-treat sequencing for the airway?`},
-{n:40,title:"Cave Hide Tube — Sixteen-Hour Ventilation",type:"sc",march:"airway",cat:"PROLONGED FIELD CARE",model:"ChatGPT",technique:"Rubric-Graded",text:`Act as a Prolonged Field Care airway subject-matter expert grading my plan. Casualty: an operator I intubated 4 hours ago after a blast injury; CASEVAC is now an estimated 16 hours away. I must manage a tube, sedation, and ventilation in a cave hide site with limited oxygen and no ventilator. Here is my draft plan, which you will score.\n\nState your grading rubric explicitly first (tube security, sedation strategy, ventilation targets, monitoring, contingency for dislodgement, oxygen conservation, documentation). Score each 1-5 with reasoning, give pass/fail, and list the top three fixes.\n\n(1) How do I confirm and maintain tube position over 16 hours without capnography? (2) What sedation/analgesia approach keeps him from self-extubating in austere conditions? (3) What manual ventilation rate and tidal targets do I use, and how do I conserve oxygen? (4) What is my immediate plan if the tube dislodges in a confined hide? (5) How do I monitor for tube blockage by secretions? (6) What rolling documentation does the next provider need?`},
-{n:41,title:"Failing Chest Seal — Tension Physiology",type:"sc",march:"respiration",cat:"TENSION PNEUMO",model:"Gemini",technique:"Chain-of-Thought",text:`You are the senior medic at a CCP. An operator with a penetrating left chest wound is now in extremis: severe respiratory distress, absent breath sounds on the left, tracheal deviation to the right, distended neck veins, SpO2 78 percent and falling, HR 140. You placed a vented chest seal 10 minutes ago but he is deteriorating. You have 14-gauge needles, a finger-thoracostomy capability, and a chest tube kit. CASEVAC 30 minutes out.\n\nThink step by step and show your reasoning before acting. Reason through why the seal alone is failing and why this is now a tension physiology problem.\n\n(1) What is your immediate intervention and exact landmark for needle decompression? (2) How do you confirm the decompression worked? (3) If the needle fails or kinks, what is your next step? (4) When is finger thoracostomy indicated over a needle here? (5) How do you manage the original chest seal during and after decompression? (6) What reassessment loop catches a re-accumulating tension en route?`},
-{n:42,title:"Sucking Chest Wound — Burp the Seal",type:"sc",march:"respiration",cat:"OPEN PNEUMO",model:"Claude",technique:"Step-Back Reasoning",text:`You are the medic treating an operator with a large open sucking chest wound on the right anterolateral chest from shrapnel. Air audibly moves through the wound with each breath; he is tachypneic at 32, SpO2 90 percent, anxious. You have vented and non-vented chest seals, occlusive dressings, and a needle-decompression setup. Evac is 45 minutes out.\n\nStep back first: explain the physiology of an open versus tension pneumothorax and why the choice of seal and the burping technique matter. Establish the principles, then apply them.\n\n(1) Which seal do you apply and why does venting matter for this wound? (2) How do you prepare the skin for a seal that will actually adhere on a bloody, hairy chest? (3) What is the burping technique if a non-vented seal causes rising tension? (4) What signs tell you an open pneumo is converting to a tension pneumo? (5) How do you position him to optimize ventilation? (6) What is your decompression plan if tension develops? (7) What do you monitor and document over the 45-minute evac?`},
-{n:43,title:"HAPE at 4,500m — Descend or Treat",type:"sc",march:"respiration",cat:"HIGH ALTITUDE",model:"ChatGPT",technique:"Decision-Matrix",text:`You are the medic at a 4,500 m observation post. An operator with no trauma develops progressive dyspnea, a dry then productive cough with pink frothy sputum, crackles, SpO2 70 percent on exertion, and fatigue overnight. You suspect high-altitude pulmonary edema (HAPE). You have oxygen (limited), nifedipine, a portable hyperbaric (Gamow) bag, and the option to descend, though descent is hazardous in darkness.\n\nProduce a decision matrix as a table: Intervention | Mechanism | When-Indicated | Risk | Priority-Rank covering descent, oxygen, nifedipine, and the Gamow bag for THIS patient. Then state your chosen sequence and the single factor that would override it.\n\n(1) How do you differentiate HAPE from pneumonia or a cardiac cause in the field? (2) Why is descent the definitive treatment and how far must he go? (3) How do you ration limited oxygen for a multi-hour hold? (4) What is the role and dosing logic of nifedipine here (label estimates)? (5) How do you use a Gamow bag and what are its limits? (6) What is your trigger to force a risky night descent anyway?`},
-{n:44,title:"Pediatric Pneumothorax — Decompression Landmarks",type:"sc",march:"respiration",cat:"PEDIATRIC",model:"Gemini",technique:"Role + Constraints",text:`Act as an 18D treating a host-nation child after a building strike. A 5-year-old (estimated 18 kg) has chest trauma with rapid shallow breathing, RR 50, intercostal retractions, decreased breath sounds on the right, and SpO2 84 percent. You suspect a pneumothorax. You have pediatric needle-decompression equipment, oxygen, and pediatric-sized airway adjuncts.\n\nConstraints you MUST honor: weight-based dosing with math shown, pediatric anatomy landmarks (not adult), explicit flags on any estimate, and austere supplies only.\n\n(1) How does a child's chest wall and physiology change your read of respiratory distress? (2) What are the pediatric landmarks and needle/catheter size for decompression, and how do they differ from adults? (3) How do you avoid over- or under-treating given a child's compensatory reserve? (4) How do you deliver oxygen to a frightened child effectively? (5) What signs warn of impending respiratory arrest in a child? (6) What are your handoff priorities to a pediatric facility?`},
-{n:45,title:"Tunnel Blast Lung — Silent Hypoxia",type:"sc",march:"respiration",cat:"BLAST LUNG",model:"Claude",technique:"Self-Critique Loop",text:`You are the medic after a confined-space explosion in a tunnel. An operator without obvious external chest trauma develops worsening hypoxia, hemoptysis, dyspnea, and crackles within an hour; you suspect primary blast lung injury. SpO2 82 percent on oxygen, RR 30. You have oxygen, a BVM, and limited ability to provide positive-pressure support. CASEVAC delayed an estimated 2 hours.\n\nUse a self-critique loop: write your INITIAL management, then a CRITIQUE listing risky assumptions (aggressive positive pressure causing air embolism, fluid overload, missing a co-existing pneumothorax), then a FINAL PLAN.\n\n(1) How do you recognize blast lung when external signs are minimal? (2) Why can aggressive positive-pressure ventilation be dangerous here, and how do you ventilate safely? (3) How do you manage fluids to avoid worsening pulmonary edema? (4) What co-injuries must you actively rule out? (5) How do you position and oxygenate for the 2-hour hold? (6) What deterioration signs trigger escalation, and to what?`},
-{n:46,title:"Mortar Strike — Four Failing Lungs",type:"sc",march:"respiration",cat:"MASS CASUALTY",model:"ChatGPT",technique:"Structured Output",text:`You are the lead medic at a mortar strike on a patrol base with four breathing-compromised casualties: (A) tension pneumo signs, (B) open sucking chest wound, (C) flail chest with paradoxical movement and hypoxia, (D) anxious hyperventilating soldier with no injury. You have two vented chest seals, three needle-decompression kits, oxygen for one patient at a time, and one assistant.\n\nReturn a markdown table: Casualty | Problem | Priority | Intervention | Resource | Who. Then a paragraph on how you allocate the single oxygen source and the psychological casualty.\n\n(1) Order the four by respiratory urgency and justify the top two. (2) Which interventions can be done simultaneously by you and the assistant? (3) How do you manage the flail chest without a ventilator? (4) How do you keep the hyperventilating soldier from consuming critical resources? (5) When do you reallocate oxygen between patients? (6) What is your reassessment loop as the situation evolves?`},
-{n:47,title:"Blunt Chest at Sea — Can't Auscultate",type:"sc",march:"respiration",cat:"MARITIME",model:"Gemini",technique:"Red-Team the Plan",text:`You are the medic in a small boat returning a casualty with blunt chest trauma from a fall against a gunwale. He has bruising over the left ribs, splinting respirations, RR 28, SpO2 89 percent, and decreasing breath sounds on the left in a loud, wet, pitching environment where auscultation is nearly impossible. You have needle-decompression kits, oxygen, and chest seals. Transit is 25 minutes of rough seas.\n\nGive your plan, then red-team it as a skeptical senior provider: attack the reliability of breath-sound assessment at sea, the risk of decompressing a simple pneumothorax unnecessarily, and the difficulty of monitoring on a moving boat. Then revise.\n\n(1) How do you assess for tension pneumo when you cannot reliably auscultate? (2) What objective signs replace breath sounds in this environment? (3) When is empiric needle decompression justified versus harmful? (4) How do you secure the patient and monitor trend on a pitching deck? (5) How do you manage pain-related splinting to improve ventilation? (6) What do you hand off to the ship about your uncertainty?`},
-{n:48,title:"Chlorine Gas — Upwind or Decon",type:"sc",march:"respiration",cat:"CBRN",model:"Claude",technique:"Tree-of-Thought",text:`You are the medic after a chlorine-gas release at an industrial objective. Several operators have coughing, chest tightness, wheezing, and worsening hypoxia from chemical pneumonitis. Your worst casualty has SpO2 80 percent, audible wheeze, and a sense of suffocation. You are in protective gear; the area is not yet decontaminated. You have oxygen, a BVM, bronchodilators, and the option to move casualties upwind.\n\nUse Tree-of-Thought: generate at least three courses of action (treat-in-place upwind, rapid evac through contamination, stage-and-decon-first), branch the consequences, prune, and select with reasoning shown.\n\n(1) What is the first action for a chlorine-exposed hypoxic casualty? (2) How does moving upwind versus decontaminating change priorities? (3) What is the role of bronchodilators and oxygen here? (4) Why is aggressive positive pressure a double-edged tool with chemical lung injury? (5) How do you protect yourself and avoid spreading contamination during respiratory care? (6) What delayed deterioration must you warn the receiving facility about?`},
-{n:49,title:"Jungle Pneumonia — Fourteen-Hour Watch",type:"sc",march:"respiration",cat:"JUNGLE/REMOTE",model:"ChatGPT",technique:"Socratic Tutor",text:`Act as a Socratic respiratory tutor for a junior medic in a remote jungle setting. Do NOT hand me the plan; ask guiding questions first, let me reason, then correct. Case: an operator 14 hours from evac develops fever, productive cough, right-sided pleuritic pain, RR 26, SpO2 90 percent, suspected pneumonia possibly with a developing effusion. We have oral and limited IV antibiotics, oxygen, and basic monitoring.\n\nRun 5-6 Socratic exchanges, then summarize the correct prolonged respiratory-care plan.\n\n(1) What questions distinguish pneumonia from a traumatic or embolic cause in this setting? (2) How do I decide which antibiotic and route in an austere hold? (3) How do I monitor respiratory trend over 14 hours without advanced tools? (4) What signs tell me an effusion or empyema is developing? (5) When does this become a needle-or-evac-now decision? (6) How do I conserve limited oxygen while keeping him safe?`},
-{n:50,title:"Field Chest Drain — Twenty-Hour Hold",type:"sc",march:"respiration",cat:"PROLONGED FIELD CARE",model:"Gemini",technique:"Rubric-Graded",text:`Act as a Prolonged Field Care subject-matter expert grading my respiratory plan. Casualty: an operator with a treated pneumothorax now managed with a finger thoracostomy converted to a chest tube I placed 3 hours ago; CASEVAC is an estimated 20 hours out. I must manage the tube, drainage, and ventilation in a remote hide with no suction unit and limited oxygen. Grade my draft.\n\nState your rubric first (tube security and patency, drainage/seal management without wall suction, ongoing assessment, infection prevention, oxygen conservation, contingency for re-accumulation, documentation). Score each 1-5, give pass/fail, and list the top three fixes.\n\n(1) How do I maintain a functioning chest drain without wall suction over 20 hours? (2) How do I improvise and monitor a water-seal in the field? (3) What signs tell me the tube is occluded or the lung is re-collapsing? (4) How do I prevent and recognize empyema over a long hold? (5) How do I conserve oxygen while keeping him oxygenated? (6) What rolling documentation does the surgical team need?`},
-{n:51,title:"Walking Blood Bank — Ambush Resuscitation",type:"sc",march:"circulation",cat:"WALKING BLOOD BANK",model:"Claude",technique:"Chain-of-Thought",text:`You are the senior 18D after a complex ambush. One operator is in hemorrhagic shock: HR 140, weak radial pulse, pale, agitated, controlled extremity bleed but ongoing internal losses suspected. You have 2 units of cold-stored LTOWB and 10 pre-screened walking-blood-bank donors among the uninjured. CASEVAC is 60 minutes out.\n\nThink step by step and show your reasoning before acting. Reason through transfusion triggers, the limits of 2 prepacked units, and when to activate a fresh whole blood draw from donors.\n\n(1) What clinical triggers tell you to start transfusing now versus waiting? (2) How do you sequence the 2 units of LTOWB against suspected ongoing loss? (3) When do you activate the walking blood bank, and how do you select and draw from donors safely in the field? (4) What is your role of TXA and calcium in this resuscitation, and timing? (5) How do you avoid the lethal triad while transfusing? (6) What endpoints tell you resuscitation is working? (7) What do you hand off about volumes given and donor IDs?`},
-{n:52,title:"Unstable Pelvis — Hidden Internal Bleed",type:"sc",march:"circulation",cat:"PELVIC FRACTURE",model:"ChatGPT",technique:"Step-Back Reasoning",text:`You are the medic for an operator thrown by a blast with an unstable pelvis: severe pelvic pain, leg-length discrepancy, hypotension with no major external bleeding, HR 130, cool clammy skin. You suspect massive internal pelvic hemorrhage. You have a pelvic binder, 1 unit of whole blood, TXA, and a litter. Evac is 50 minutes out.\n\nStep back first: explain the mechanism of pelvic-ring hemorrhage and why circulatory collapse can occur with little external blood. Establish principles, then apply.\n\n(1) How and where exactly do you place a pelvic binder, and what is the most common placement error? (2) How do you handle and move an unstable pelvis to avoid worsening bleeding? (3) What are your transfusion triggers with only 1 unit available? (4) How do you use TXA and permissive hypotension here? (5) What signs tell you the binder is or is not controlling the bleed? (6) What do you communicate to the surgical team that changes their plan?`},
-{n:53,title:"Crush Syndrome — Hyperkalemia on Release",type:"sc",march:"circulation",cat:"CRUSH SYNDROME",model:"Gemini",technique:"Decision-Matrix",text:`You are the medic at a building collapse. An operator has been pinned under rubble by the legs for 3 hours; extraction is imminent. You anticipate crush syndrome with hyperkalemia and shock on release. He is alert, legs numb and tense, no major external bleed. You have IV fluids, calcium, sodium bicarbonate, and limited monitoring; CASEVAC 40 minutes after extraction.\n\nProduce a decision matrix as a table: Intervention | Timing (pre- vs post-release) | Mechanism | Risk | Priority. Cover fluids, calcium, bicarbonate, and tourniquet-before-release. Then state your sequence and the single most dangerous moment.\n\n(1) What do you do BEFORE the crushing weight is lifted, and why is timing critical? (2) How do fluids before release change the outcome? (3) What ECG or clinical signs hint at hyperkalemia without a lab? (4) What is the role and risk of a pre-release tourniquet? (5) How do calcium and bicarbonate fit, with dosing logic (label estimates)? (6) How do you monitor for sudden arrest at the moment of release?`},
-{n:54,title:"Pediatric Shock — Late Hypotension",type:"sc",march:"circulation",cat:"PEDIATRIC",model:"Claude",technique:"Role + Constraints",text:`Act as an 18D resuscitating a host-nation child in shock after a blast. A 7-year-old (estimated 22 kg) has tachycardia at 160, cap refill 4 seconds, mottled skin, and lethargy, with a controlled extremity wound but suspected internal bleeding. You have IV/IO access capability, crystalloid, a small amount of whole blood, TXA, and calcium.\n\nConstraints you MUST honor: all doses weight-based with the math shown, pediatric shock parameters (not adult), explicit flags on estimates, and austere supplies.\n\n(1) How does pediatric shock present differently and why is hypotension a late finding? (2) What is your IO access plan and site for a 7-year-old? (3) What are weight-based volumes for crystalloid and blood, with math shown? (4) When and how much TXA, weight-based? (5) What endpoints tell you resuscitation is adequate in a child? (6) How do you keep this child warm and prevent the lethal triad? (7) What do you hand off to the pediatric surgical team?`},
-{n:55,title:"Arctic Shock — Cold Blood Dilemma",type:"sc",march:"circulation",cat:"ARCTIC",model:"ChatGPT",technique:"Self-Critique Loop",text:`You are the medic on an arctic patrol at minus 30 C. An operator in hemorrhagic shock from a controlled thigh bleed is now profoundly cold: shivering stopped, HR 50 and slowing, confused. You suspect combined shock and severe hypothermia. You have whole blood (cold, needs warming), a hypothermia rewarming kit, warmed IV fluids if you can heat them, and a 3-hour evac.\n\nUse a self-critique loop: write your INITIAL plan, then a CRITIQUE listing risky assumptions (transfusing cold blood into a cold patient, aggressive rewarming causing afterdrop, rough handling triggering arrhythmia), then a FINAL PLAN.\n\n(1) How do you prioritize hemorrhagic shock versus severe hypothermia when they conflict? (2) Why is transfusing cold blood dangerous here and how do you warm it? (3) How do you rewarm without causing afterdrop or arrhythmia? (4) Why must you handle a severely hypothermic patient gently? (5) What are your resuscitation endpoints when cold blunts normal signs? (6) What do you tell the receiving team about the rewarming timeline?`},
-{n:56,title:"IED Mass Casualty — Three Units, Four Bleeds",type:"sc",march:"circulation",cat:"MASS CASUALTY",model:"Gemini",technique:"Structured Output",text:`You are the only medic at an IED strike with four shock casualties competing for limited blood: (A) traumatic amputation, hemorrhage controlled, class III shock; (B) penetrating abdomen, distended, class IV shock; (C) chest trauma with shock and hypoxia; (D) elderly bystander with shock and a do-not-resuscitate dilemma. You have 3 units of LTOWB, TXA, calcium, and one assistant.\n\nReturn a markdown table: Casualty | Shock Class | Priority | Blood Allocation | Other Tx | Who. Then a short paragraph justifying any casualty you deprioritize and the ethics involved.\n\n(1) How do you allocate only 3 units across four shocked patients? (2) Which casualty has the best chance per unit of blood, and how do you reason that? (3) How do TXA and calcium factor across the group? (4) What do you delegate to the assistant? (5) How do you handle the bystander/DNR dilemma in a combat setting? (6) What is your reassessment loop as blood runs out or more arrives?`},
-{n:57,title:"Maritime Transfusion — Lines on a Heaving Deck",type:"sc",march:"circulation",cat:"MARITIME",model:"Claude",technique:"Red-Team the Plan",text:`You are the medic on a fast boat with an operator in hemorrhagic shock from a controlled junctional wound, transiting 30 minutes of rough seas. HR 135, radial thready, agitated. You have 2 units of cold whole blood in a cooler, a pressure infuser, TXA, calcium, and a hypothermia kit, all on a heaving deck where IV access is hard and lines get yanked.\n\nGive your resuscitation plan, then red-team it as a skeptical senior corpsman: attack IV/IO security on a pitching deck, the risk of cold blood plus sea-spray hypothermia, and transfusion-reaction monitoring in chaos. Then revise.\n\n(1) How do you secure reliable access (IV vs IO) on a moving boat? (2) What is your sequence for the 2 units, and your transfusion triggers? (3) How do you warm blood and prevent hypothermia in a wet maritime environment? (4) How do you monitor for a transfusion reaction in a loud, chaotic setting? (5) When do you add TXA and calcium, and why calcium with whole blood? (6) What do you hand off to the receiving ship about volumes and timeline?`},
-{n:58,title:"Radiological Shrapnel — Decon Versus Blood",type:"sc",march:"circulation",cat:"CBRN",model:"ChatGPT",technique:"Tree-of-Thought",text:`You are the medic with a casualty in hemorrhagic shock from shrapnel who is ALSO contaminated after a radiological dispersal device. Controlled extremity bleed, HR 140, hypotensive, but the wound and skin carry radioactive particulate. You are in protective gear; decon is delayed. You have whole blood, IV access gear, TXA, and decon supplies; CASEVAC 45 minutes out.\n\nUse Tree-of-Thought: generate at least three approaches (resuscitate-then-decon, decon-then-resuscitate, simultaneous-with-containment), branch the consequences for both the patient and your own exposure, prune, and pick the best with reasoning shown.\n\n(1) Does life-threatening shock or contamination take precedence, and how do you justify it? (2) How do you establish vascular access through or around contaminated skin? (3) How do you transfuse without spreading contamination to yourself and gear? (4) How does external contamination actually threaten the patient versus the team? (5) What is the minimum decon needed before transport? (6) What do you warn the decon line and receiving facility?`},
-{n:59,title:"Prolonged Resuscitation — Twenty-Four-Hour Endpoints",type:"sc",march:"circulation",cat:"PROLONGED FIELD CARE",model:"Gemini",technique:"Rubric-Graded",text:`Act as a Prolonged Field Care resuscitation subject-matter expert grading my plan. Casualty: an operator I resuscitated for hemorrhagic shock with 2 units of whole blood; bleeding is controlled but CASEVAC is now an estimated 24 hours away. I must manage ongoing resuscitation, fluid balance, and monitoring in a remote hide with no lab and limited supplies. Grade my draft.\n\nState your rubric first (resuscitation endpoints, fluid strategy over time, electrolyte/calcium management, monitoring without labs, recognizing re-bleed, urine-output tracking, documentation). Score each 1-5, give pass/fail, and list the top three fixes.\n\n(1) What resuscitation endpoints do I target over a 24-hour hold (mentation, pulse character, urine output)? (2) How do I manage fluids after the initial blood without causing dilutional problems? (3) How do I monitor for and respond to re-bleeding over many hours? (4) How do I track and support calcium and acid-base without a lab? (5) How do I measure and interpret urine output as a resuscitation guide? (6) What rolling documentation does the surgical team need on arrival?`},
-{n:60,title:"Flank Gunshot — ATLS Versus 18D Debate",type:"sc",march:"circulation",cat:"PARTNER FORCE",model:"Claude",technique:"Persona Debate",text:`Act as TWO experts debating my circulation plan, then converge. Persona A is a conventional ATLS-trained ER physician favoring measured crystalloid; Persona B is a battle-hardened 18D favoring early whole blood and permissive hypotension. Case: a partner-force soldier in hemorrhagic shock from a gunshot to the flank with suspected retroperitoneal bleeding, HR 130, hypotensive, controlled external component. I have 1 unit of whole blood, crystalloid, TXA, and a 70-minute evac, advising a partner medic through an interpreter.\n\nHave the two personas argue each major decision (fluid choice, blood pressure target, TXA, timing), then reconcile into a single field-ready plan I can relay across a language barrier.\n\n(1) Crystalloid versus the single blood unit: when do A and B agree and disagree? (2) What blood-pressure target balances perfusion against re-bleeding? (3) How and when do you give TXA in this window? (4) How do you simplify the plan into clear steps for a partner medic via interpreter? (5) What endpoints tell the partner medic it is working? (6) What single instruction matters most if comms drop?`},
-// --- sc_b.js ---
-{n:61,title:"Hindu Kush Hypothermia — Shivering Stopped",type:"sc",march:"hypothermia",cat:"ENVIRONMENTAL",model:"Claude",technique:"Chain-of-Thought",text:`You are a flight surgeon advising a SOF medical team over a high-frequency radio link during a winter mountain extraction in the Hindu Kush. Ambient -22C, wind 30 km/h, altitude 3,800 m. Your patient is an operator who spent an estimated 90 minutes immobile after a fall down a couloir. He presents: GCS 11, shivering has STOPPED, pale, slurred speech, HR 46, RR 8, SpO2 reads erratically at 84-90 percent, palpable radial pulse weak. Estimated core temp 29-30C (no thermometer below 34C on hand). You have a hypothermia wrap kit, one chemical heat blanket, warm IV fluid in a thermos, and a 6-hour evac window.
-
-Think step by step and show your full reasoning BEFORE giving the plan. Reason through: cessation of shivering as a severity marker, why afterdrop and rescue collapse threaten this patient, gentle handling to avoid VF, the limited role of active external rewarming in the field, and fluid warming.
-
-1) What Swiss staging classifies this patient and why?
-2) How do we move him without triggering arrest?
-3) Active vs passive rewarming priorities with this kit?
-4) What is the danger of giving cold IV fluid here?
-5) How aggressively do we manage the airway at GCS 11?
-6) What thresholds change the evac decision?
-7) What is the single most likely thing to kill him in the next hour?`},
-{n:62,title:"VBIED Blast TBI — Cushing's Triad",type:"sc",march:"hypothermia",cat:"TBI",model:"ChatGPT",technique:"Structured Output",text:`Act as a JTS Prolonged Field Care subject-matter expert. Scenario: blast-injured operator in a compromised hide site, 8 hours from evac. Mechanism was a close VBIED. Findings: GCS dropped from 14 to 9 over 40 minutes, left pupil 5 mm and sluggish, right 3 mm reactive, clear fluid from the right ear, vomited once, BP 168/95, HR 52, RR 10 and irregular. No CT, no neurosurgery. You carry hypertonic saline 3 percent, TXA, basic airway kit, and a SpO2 monitor.
-
-Return your answer ONLY as a markdown table with columns: Finding | Likely Mechanism | Immediate Action | Target/Threshold | Rationale. Add one row per key issue (Cushing response, pupillary change, possible CSF leak, hypoxia/hypotension avoidance, hypertonic use, TXA timing). After the table, give a 3-line "if it gets worse" addendum.
-
-1) What MAP and SpO2 targets prevent secondary brain injury here?
-2) Is hyperventilation ever justified, and when only?
-3) How does the Cushing triad change my urgency?
-4) Dose and indication for 3 percent saline in this case?
-5) Does TXA help and within what window?
-6) What positioning do I use?
-7) What findings force me to call a higher-risk immediate evac?`},
-{n:63,title:"Cold-Water Drowning — Warm and Dead",type:"sc",march:"hypothermia",cat:"DROWNING",model:"Gemini",technique:"Step-Back Reasoning",text:`You are a dive medical officer advising by satellite phone. A combat swimmer is pulled from 6C coastal water after an estimated 12-minute submersion during a maritime infil. On recovery: unresponsive, GCS 3, agonal breaths 3/min, carotid pulse 30 and faint, cyanotic, vomited seawater. Air temp 4C, on a heaving small boat. You have a BVM, oxygen, supraglottic airway, AED, and blankets.
-
-Before answering, STEP BACK and state the governing principle first: in cold-water drowning, what does "not dead until warm and dead" actually mean physiologically, and how does the mammalian dive reflex change my approach? Then derive the specific plan from that principle.
-
-1) Do I start CPR now or is the slow pulse a reason to withhold compressions?
-2) How do rough seas and cold change airway management priorities?
-3) What is the AED's role at this core temperature?
-4) How do I rewarm on a small boat with what I have?
-5) What is the realistic rewarming-then-resuscitate sequence?
-6) When, if ever, would I stop efforts?
-7) What do I tell the receiving facility to prep?`},
-{n:64,title:"Frozen Feet Dilemma — Refreeze Risk",type:"sc",march:"hypothermia",cat:"FROSTBITE",model:"Claude",technique:"Decision-Matrix",text:`You are a wilderness and military cold-injury specialist consulting remotely. An operator on a 5-day winter surveillance task reports both feet are white, waxy, hard, and numb after his boots got wet on day 2. Now day 4, ambient -18C. Toes will not blanch; he reports they felt "wooden" then stopped hurting. Evac is at least 30 hours out. He has a stove, dry socks, ibuprofen, and a buddy.
-
-Build a DECISION MATRIX as a markdown table: Option (rewarm now vs keep frozen vs partial) | Pros | Cons | Refreeze Risk | Recommended When. Then commit to one recommendation with justification.
-
-1) Is field rewarming safe given a 30-hour evac and refreeze risk?
-2) If we rewarm, what water temperature and duration?
-3) What is the role of ibuprofen and is aspirin better here?
-4) How do we manage blisters if they form?
-5) Should he walk on frozen feet to self-extract?
-6) What signs would upgrade this to a true emergency evac?
-7) What documentation does the surgeon need at handoff?`},
-{n:65,title:"Avalanche Burial — Asphyxia or Cold?",type:"sc",march:"hypothermia",cat:"AVALANCHE",model:"ChatGPT",technique:"Red-Team the Plan",text:`Act as an alpine rescue physician. A teammate is dug out of an avalanche after an estimated 35 minutes of burial during a ski-borne movement. On extraction: unresponsive, no obvious trauma, a clear air pocket was present, GCS 3, no detectable breathing, faint carotid pulse possibly present at ~25, estimated core temp 28C, ambient -12C. You have a BVM, oxygen, AED, and an insulated wrap.
-
-First give your resuscitation and rewarming plan. THEN red-team your own plan as a skeptical examiner: attack every assumption (Was there really an air pocket? Is the pulse real or perceived? Could asphyxia not hypothermia be the cause? Am I over- or under-resuscitating?). Then revise into a final plan.
-
-1) How does burial time plus air pocket change survival prognosis?
-2) Does suspected asphyxia override the cold-protection logic?
-3) How long do I check for a pulse before compressions in deep hypothermia?
-4) Number of AED shocks before warming?
-5) How do I prevent afterdrop during transport?
-6) What confounders make my pulse check unreliable?
-7) What is my termination-of-efforts logic out here?`},
-{n:66,title:"Temple Gunshot — The Lucid Interval",type:"sc",march:"hypothermia",cat:"TBI",model:"Gemini",technique:"Socratic Tutor",text:`You are a Socratic neurocritical-care mentor. Do not give me the plan outright. Scenario: a host-nation soldier took a low-velocity round to the left temple during a partnered raid. He is talking but confused, GCS 13 (E4 V4 M5), left pupil now 4 mm and slow, bleeding controlled with a pressure dressing, BP 150/88, HR 58, SpO2 96 percent. 5 hours from a facility with CT. I have TXA, 3 percent saline, ketamine, and oxygen.
-
-Tutor me by asking ME guiding questions one at a time, waiting for my reasoning, then correcting it, on: penetrating TBI priorities, the lucid-interval trap, blood pressure and oxygen targets, whether ketamine is safe in TBI, and when to escalate. Begin by asking your first question.
-
-1) Why is the "talking and deteriorating" pattern dangerous here?
-2) What MAP and SpO2 do I protect and why?
-3) Is ketamine analgesia contraindicated in this TBI?
-4) What is hypertonic saline's role and dose?
-5) How do I track deterioration without a CT?
-6) What handoff data matters most to the neurosurgeon?
-7) What single trend would make me push the evac timeline?`},
-{n:67,title:"Desert Heat Stroke — Cool First",type:"sc",march:"hypothermia",cat:"HEAT INJURY",model:"Claude",technique:"Rubric-Graded",text:`You are a SOF preventive-medicine and critical-care advisor. During a desert direct-action workup, an operator collapses after a loaded movement in 46C heat. Findings: altered, combative then drowsy, hot skin, core temp 41.2C rectal, HR 150, BP 95/60, RR 30, seizing briefly once. You have cold water, ice sheets, IV fluids, a fan/misting setup, and benzodiazepines.
-
-Grade my proposed plan against an explicit RUBRIC you create first (criteria: recognition speed, cooling method/target, target temperature and rate, fluid strategy, seizure and airway management, monitoring, evac trigger). Score each 0-2 and tell me where I lose points. My plan: "Pour water on him, give 2 L saline fast, drive to the FOB."
-
-1) What cooling method achieves the fastest safe drop and to what target temp?
-2) When do I STOP active cooling to avoid overshoot?
-3) How much fluid, how fast, given his BP?
-4) How do I manage recurrent seizures and the airway?
-5) What labs/signs flag rhabdomyolysis and organ injury?
-6) What disqualifies "drive to the FOB" as adequate?
-7) What are the red flags for multi-organ failure en route?`},
-{n:68,title:"4,900m Ridge — HAPE Versus HACE",type:"sc",march:"hypothermia",cat:"ALTITUDE",model:"ChatGPT",technique:"Tree-of-Thought",text:`Act as a high-altitude medicine consultant on a radio relay. On a 4,900 m ridge objective, an operator develops a dry cough turning productive and pink, severe dyspnea at rest, ataxia, and confusion over 6 hours. HR 130, RR 36, SpO2 61 percent on room air, crackles bilaterally, mild fever absent. You have dexamethasone, nifedipine, acetazolamide, a portable hyperbaric (Gamow) bag, and limited oxygen. Descent is weather-blocked for ~8 hours.
-
-Use Tree-of-Thought: lay out at least three branching hypotheses (HAPE vs HACE vs combined HAPE+HACE vs pneumonia), evaluate the evidence for each branch, prune the unlikely ones, and converge on the working diagnosis and treatment.
-
-1) Which condition or combination best fits, and why prune the others?
-2) Drug choices and doses for HAPE vs HACE here?
-3) How do I use the Gamow bag and oxygen when descent is blocked?
-4) Is exertion (self-descent) helpful or harmful right now?
-5) What is the single most effective intervention if I can only do one?
-6) What deterioration forces a weather-risk descent anyway?
-7) What do I monitor to confirm I am on the right branch?`},
-{n:69,title:"Litter in the Rain — Lethal Triad",type:"sc",march:"hypothermia",cat:"ENVIRONMENTAL",model:"Gemini",technique:"Self-Critique Loop",text:`You are a prolonged field care instructor. A casualty with a junctional hemorrhage controlled by a junctional tourniquet has now been on the ground 5 hours in cold rain at 6C, soaked, on a litter. He has the lethal-triad setup: estimated core temp 34C, on his third unit of cold-stored fluid, and his blood is oozing from previously dry wounds. HR 124, BP 88/54, GCS 14. You have a hypothermia prevention kit, a fluid warmer, calcium, and TXA.
-
-Give your management plan, then run a SELF-CRITIQUE LOOP: list what could be wrong with your plan, revise, and repeat once more before finalizing. Explicitly tie hypothermia to coagulopathy.
-
-1) How does hypothermia drive the coagulopathy I am seeing?
-2) Why is warming fluids and the patient now a hemostatic intervention?
-3) Where does calcium fit (citrate, transfusion) and what dose?
-4) Is more crystalloid helping or worsening the triad?
-5) What is my rewarming sequence on a litter in the rain?
-6) How do I balance permissive hypotension against rewarming perfusion?
-7) What endpoint tells me the triad is breaking favorably?`},
-{n:70,title:"Open Femur in Hide — Able to Fight",type:"sc",march:"pain",cat:"ANALGESIA",model:"Claude",technique:"Chain-of-Thought",text:`You are a SOF anesthesia provider advising over radio. A 80 kg operator has an open mid-shaft femur fracture from a fall, hemorrhage controlled, in a hide site 4 hours from evac. He is in severe pain (9/10), HR 118, BP 102/64, RR 18, SpO2 97 percent, fully alert and able to fight if needed. You carry ketamine, fentanyl OTFC lozenges, morphine, midazolam, and ondansetron, plus monitoring.
-
-Think step by step and show your dosing math before recommending. Per TCCC analgesia options, walk through the "able to fight" pathway versus IV/IO options.
-
-1) Is the TCCC "mild to moderate pain, able to fight" option (meloxicam + acetaminophen combat pill pack) appropriate, or is he past it?
-2) If using ketamine analgesia, what is the IV dose (0.2-0.3 mg/kg) and IM dose (0.5-1 mg/kg) for him?
-3) How do I titrate and re-dose ketamine while keeping him able to participate?
-4) When is OTFC fentanyl (800 mcg buccal) preferable and what are the monitoring needs?
-5) What antiemetic and at what dose?
-6) How does his BP influence opioid vs ketamine choice?
-7) What endpoints tell me I have adequate analgesia without oversedation?`},
-{n:71,title:"Dusky Foot Reduction — Field Sedation",type:"sc",march:"pain",cat:"PROCEDURAL SEDATION",model:"ChatGPT",technique:"Structured Output",text:`Act as a critical-care provider supervising a procedural sedation by radio. I must reduce a grossly dislocated ankle with neurovascular compromise (dusky foot, weak pulse) on a 70 kg casualty during prolonged field care, 10 hours from evac. Available: ketamine, midazolam, fentanyl, ondansetron, oxygen, BVM, pulse oximetry, no capnography.
-
-Return a structured plan with these exact sections: PRE-SEDATION CHECK, DRUG + DOSE + ROUTE, MONITORING PLAN, AIRWAY RESCUE STEPS, REDUCTION ENDPOINT, POST-REDUCTION CARE. Give numeric ketamine dissociative dose (1-2 mg/kg IV / 4-5 mg/kg IM) and timing.
-
-1) What is my dissociative ketamine dose for him and why that route?
-2) Do I add midazolam, and what is the emergence-reaction tradeoff?
-3) How do I monitor ventilation without capnography?
-4) What is my plan if he develops laryngospasm or apnea?
-5) How will I confirm successful reduction and restored perfusion?
-6) What is the re-dose plan if reduction fails on first attempt?
-7) What recovery criteria let me declare him safe post-sedation?`},
-{n:72,title:"Scalded Child — Weight-Based Analgesia",type:"sc",march:"pain",cat:"PEDIATRIC",model:"Gemini",technique:"Few-Shot Anchoring",text:`You are a pediatric emergency and austere-care expert advising a medic. During a stability operation a child (estimated 5 years, estimated 18 kg) has a partial-thickness scald to one arm and chest and is screaming, terrified, HR 150, otherwise stable. You have ketamine, intranasal fentanyl, oral acetaminophen, a MAD atomizer, and a parent present. No IV yet.
-
-I will anchor you with the pattern: for adults we weight-base ketamine analgesia at 0.2-0.3 mg/kg IV. Apply the SAME weight-based reasoning to this child and SHOW the per-kilogram calculations explicitly for each option you propose, citing pediatric ranges.
-
-1) What is the intranasal fentanyl dose for an 18 kg child (~1.5 mcg/kg) and max volume per nostril?
-2) What is a pediatric ketamine analgesic dose IM if IN fails, with the math?
-3) How do I dose acetaminophen for him?
-4) How does involving the parent reduce drug requirement?
-5) What monitoring is mandatory after IN fentanyl or IM ketamine in a child?
-6) What weight-estimation method should I trust without a scale?
-7) What signs of oversedation are different or subtler in children?`},
-{n:73,title:"Forearm GSW Under Threat — Pill Pack Only",type:"sc",march:"pain",cat:"ANALGESIA",model:"Claude",technique:"Role + Constraints",text:`You are a TCCC instructor. CONSTRAINTS: assume no IV access yet, a casualty actively engaged minutes ago, and that I have only the combat pill pack and OTFC fentanyl available right now. The casualty is a 90 kg operator with a through-and-through forearm gunshot, bleeding controlled by a tourniquet, alert, oriented, pain 7/10, HR 96, BP 128/80, SpO2 98 percent, still armed and we may need to move under threat.
-
-Work strictly within those constraints. Do not propose drugs I did not list. If a constraint makes a choice unsafe, say so and stop.
-
-1) Given he may still need to fight, is OTFC fentanyl (800 mcg transbuccal) appropriate or does it risk sedation in a tactical setting?
-2) What does the combat pill pack contain and is meloxicam plus acetaminophen sufficient here?
-3) How do I secure the OTFC lozenge so it is not aspirated if he goes down?
-4) What re-dosing interval and ceiling apply to OTFC?
-5) What monitoring can I realistically do while moving under threat?
-6) When would I abandon the "able to fight" pathway?
-7) What do I document for the next provider about doses and timing?`},
-{n:74,title:"Bucking the Tube — Flight Sedation Budget",type:"sc",march:"pain",cat:"SEDATION",model:"ChatGPT",technique:"Red-Team the Plan",text:`Act as an aeromedical critical-care nurse. I have an intubated, ventilated polytrauma casualty (chest seal in place, pelvic binder on, two units blood given) for a 3-hour rotary evac. He is 75 kg, currently lightly sedated and starting to buck the tube; BP 100/62, HR 110. Available: ketamine, midazolam, fentanyl, and a limited supply of each.
-
-Propose an analgesia-and-sedation infusion/bolus regimen. Then RED-TEAM it: argue against your own choices from the standpoint of hemodynamic collapse, oversedation masking deterioration, and running out of drug mid-flight. Revise into a final regimen with conservation in mind.
-
-1) What ketamine-based regimen maintains sedation while supporting BP?
-2) What bolus dose do I give right now for the bucking, and units?
-3) How do I avoid stacking benzodiazepine and opioid into hypotension?
-4) How do I budget limited drug across a 3-hour flight?
-5) What vitals trend would tell me I am oversedating and hiding shock?
-6) What is my plan if the IV fails mid-flight?
-7) What handoff numbers does the receiving ICU need?`},
-{n:75,title:"30% TBSA Burns — Dressing-Change Pain",type:"sc",march:"pain",cat:"BURN ANALGESIA",model:"Gemini",technique:"Decision-Matrix",text:`You are a burn-center anesthesiologist consulting remotely. A 68 kg operator has 30 percent TBSA burns (deep partial and full thickness) from a fuel fire, 6 hours from a burn-capable facility, fluid resuscitation started. Pain is severe and dressing changes are needed. Available: ketamine, morphine, fentanyl, midazolam, ondansetron.
-
-Build a DECISION MATRIX (markdown table) comparing analgesia options for background pain vs procedural dressing-change pain: Drug | Background Dose | Procedural Dose | Pros | Cons | Best Use. Then recommend a regimen.
-
-1) Why is ketamine often preferred for burn procedural pain, and at what dose IV/IM?
-2) How do I handle escalating opioid tolerance over a long evac?
-3) What background analgesia keeps him comfortable without compromising fluid-status assessment?
-4) How do burns change my opioid pharmacokinetics over time?
-5) What antiemetic plan supports repeated dosing?
-6) How do I pre-medicate before a dressing change specifically?
-7) What signs tell me analgesia is failing versus worsening shock?`},
-{n:76,title:"Hypotensive Crush Injury — Perfusion First",type:"sc",march:"pain",cat:"ANALGESIA",model:"Claude",technique:"Socratic Tutor",text:`You are a Socratic anesthesia tutor. Do not hand me doses immediately. A 60 kg female interpreter has a crush injury to the lower leg after a vehicle rollover, severe pain, HR 130, BP 88/58, RR 24, alert and anxious. I have ketamine, fentanyl, morphine, TXA, and IV fluids. Evac is 5 hours.
-
-Teach me by asking one guiding question at a time and reacting to my answers, leading me toward the safest analgesic choice in a hypotensive, possibly hemorrhaging patient. Begin with your first question.
-
-1) Why might morphine be a poor first choice given her BP?
-2) Why is ketamine often considered hemodynamically friendlier here, and at what analgesic dose?
-3) How does her possible occult hemorrhage change my drug selection?
-4) What is the role of fixing perfusion before chasing the pain score?
-5) How do I titrate to comfort without dropping her pressure?
-6) What monitoring confirms I am not masking shock?
-7) What endpoint tells me I have it right?`},
-{n:77,title:"Shrapnel to the Jaw — Airway Versus Comfort",type:"sc",march:"pain",cat:"DENTAL/FACIAL",model:"ChatGPT",technique:"Step-Back Reasoning",text:`Act as a maxillofacial and pain-management consultant. An operator took shrapnel to the jaw and cheek; airway currently patent but swelling, severe pain 9/10, trismus, bleeding controlled with packing, talking with difficulty. 70 kg, HR 110, BP 130/84, SpO2 96 percent. 7 hours to surgical care. You have ketamine, fentanyl, an antiemetic, and basic airway adjuncts.
-
-STEP BACK first: before choosing an analgesic, state the overriding principle in facial trauma (the airway can fail fast, and sedation can precipitate obstruction). Derive your analgesia plan from that principle.
-
-1) Why does facial trauma change which analgesics are "safe by default"?
-2) Is ketamine analgesia preferable here for airway-reflex preservation, and at what dose?
-3) What are the specific risks of opioids in evolving facial swelling?
-4) How do I provide analgesia while keeping a surgical airway plan ready?
-5) What positioning balances airway, bleeding, and comfort?
-6) What signs mean I move from analgesia to definitive airway?
-7) What do I relay to the surgeon about timing of swelling onset?`},
-{n:78,title:"Open Tibia at Day Four — Redness or Infection",type:"sc",march:"antibiotics",cat:"PROLONGED CARE",model:"Claude",technique:"Chain-of-Thought",text:`You are a JTS Prolonged Field Care infectious-disease advisor on a daily radio check. A 85 kg operator has an open tibia-fibula fracture, debrided and splinted 36 hours ago, now 4 days from evac. Wound edges are reddening, mild warmth, low-grade fever 38.2C, no systemic compromise. We started ertapenem at injury. Supplies: remaining ertapenem 1 g daily, moxifloxacin 400 mg, and clean dressing materials.
-
-Think step by step and show reasoning before the plan. Per TCCC/JTS field antibiotic guidance for open fractures and prolonged care, reason through coverage, route, and duration.
-
-1) Was ertapenem 1 g IV/IM daily the correct empiric choice for an open fracture, and why?
-2) If IV access is failing, is moxifloxacin 400 mg PO daily an acceptable bridge?
-3) How do I distinguish expected inflammation from early infection at the wound?
-4) When does local redness warrant a change or escalation in antibiotics?
-5) How long do I continue antibiotics in prolonged field care for an open fracture?
-6) What wound-care steps matter as much as the antibiotic?
-7) What findings would convert this to an urgent surgical evac?`},
-{n:79,title:"Day-Three Abdomen — Septic Shock, No Pressor",type:"sc",march:"antibiotics",cat:"SEPSIS",model:"ChatGPT",technique:"Structured Output",text:`Act as a critical-care sepsis expert advising by satphone. A casualty 3 days post penetrating abdominal injury (damage-control wound packed, awaiting evac) now has fever 39.4C, HR 132, BP 86/50, RR 28, mottled knees, confused, urine output dropping. 70 kg. Available: ertapenem, moxifloxacin, IV crystalloid, limited blood, vasopressor not available.
-
-Return a structured response with sections: RECOGNITION (why this is septic shock), RESUSCITATION (fluid plan and targets), ANTIBIOTICS (drug, dose, timing), SOURCE CONTROL (field options), MONITORING, EVAC PRIORITY. Be numeric.
-
-1) What objective findings make this septic shock, not just fever?
-2) What is my fluid resuscitation volume and endpoint without a pressor?
-3) Which antibiotic and dose covers an abdominal source here?
-4) How fast must antibiotics go in after recognition?
-5) What field source-control options exist for a packed abdomen?
-6) What do I do for blood pressure if fluids fail and I have no vasopressor?
-7) What makes this the top evac priority on the manifest?`},
-{n:80,title:"Crepitus and Foul Odor — Necrotizing Infection",type:"sc",march:"antibiotics",cat:"INFECTION",model:"Gemini",technique:"Rubric-Graded",text:`You are a wound-infection specialist grading a junior medic's plan. A 75 kg operator has a large soft-tissue blast wound to the thigh, 5 days old in prolonged field care, now with foul odor, gray necrotic edges, crepitus on palpation, and rapidly spreading erythema with severe pain out of proportion. Fever 38.9C, HR 120. You suspect necrotizing soft-tissue infection.
-
-Grade the plan below against a RUBRIC you define first (criteria: recognition of necrotizing infection, antibiotic breadth, surgical urgency, resuscitation, analgesia, evac escalation). Score each 0-2. Plan to grade: "Give moxifloxacin, redress the wound, recheck in the morning."
-
-1) What clinical signs flag necrotizing soft-tissue infection here?
-2) Why is the graded plan dangerously inadequate?
-3) What broad antibiotic coverage is indicated, with available agents?
-4) Why is surgical debridement, not antibiotics, the definitive treatment?
-5) How urgently must this casualty be evacuated and why?
-6) What resuscitation supports him while awaiting surgery?
-7) What is the realistic prognosis trajectory if evac is delayed 12 hours?`},
-{n:81,title:"Two Casualties — Rationing the Antibiotics",type:"sc",march:"antibiotics",cat:"PROLONGED CARE",model:"Claude",technique:"Role + Constraints",text:`You are a deployed physician assistant. CONSTRAINTS: the only antibiotics on hand are moxifloxacin 400 mg tablets and a few doses of ertapenem 1 g; no refrigeration; one casualty can take PO, the other cannot. Casualty A: penetrating chest wound, chest seal in place, eating and drinking, day 2. Casualty B: abdominal wound, NPO, vomiting, day 2, IV access intact.
-
-Work within these constraints only. Allocate the limited antibiotics rationally between the two casualties and justify the triage.
-
-1) Which casualty gets the IV/IM ertapenem and which the PO moxifloxacin, and why?
-2) What is the correct empiric choice for a penetrating chest wound per TCCC?
-3) What is the correct empiric choice for a penetrating abdominal wound?
-4) How does the vomiting casualty's NPO status drive route selection?
-5) How do I stretch a limited ertapenem supply across days?
-6) When would I deviate and give both casualties the same drug?
-7) What signs tell me my chosen coverage is failing?`},
-{n:82,title:"Greenish Burn Exudate — Colonization or Sepsis",type:"sc",march:"antibiotics",cat:"BURN INFECTION",model:"ChatGPT",technique:"Self-Critique Loop",text:`Act as a burn-and-infection consultant. A 70 kg casualty with 25 percent TBSA burns is now day 4 in prolonged care. Burn wounds show increasing exudate, a greenish tinge, and the surrounding skin is newly erythematous; temp 38.7C, HR 118. Fluid resuscitation completed earlier. Available: moxifloxacin, ertapenem, silver-impregnated dressings, clean water.
-
-Give your plan, then run a SELF-CRITIQUE LOOP: identify weaknesses (Am I treating colonization as infection? Is systemic antibiotic even indicated for burn wounds? Am I missing burn-wound sepsis?), revise, and repeat once before finalizing.
-
-1) Is routine systemic antibiotic prophylaxis indicated for burns, and what does that mean here?
-2) What signs separate normal burn colonization from invasive burn-wound infection?
-3) Which antibiotic and dose if systemic therapy is now warranted?
-4) What is the role of topical antimicrobial dressings here?
-5) How does burn-wound sepsis present differently and how do I catch it early?
-6) What wound-care actions reduce infection risk independent of antibiotics?
-7) What change forces an urgent evac upgrade?`},
-{n:83,title:"Febrile in Field — Hunting the Source",type:"sc",march:"antibiotics",cat:"SEPSIS",model:"Gemini",technique:"Tree-of-Thought",text:`You are an austere critical-care physician. A 65 kg casualty in prolonged field care, day 6 after a penetrating extremity injury, becomes febrile 39.1C, HR 128, BP 92/58, confused. The wound looks clean, but he has a central-line-adjacent IV, a urinary catheter placed 4 days ago, and crackles at the right base. Available: ertapenem, moxifloxacin, IV fluids.
-
-Use Tree-of-Thought: branch the possible infection sources (wound, line-associated, catheter-associated UTI, pneumonia), weigh the evidence for each, prune unlikely branches, and converge on the most probable source and treatment.
-
-1) Which source is most likely given the clean wound and the lines/catheter?
-2) How do I gather evidence in the field to discriminate sources?
-3) What empiric antibiotic and dose covers the likely source(s)?
-4) What non-drug source control matters (remove line, change catheter)?
-5) How do I resuscitate while I narrow the source?
-6) What if two sources are plausible at once?
-7) What deterioration trend changes my whole approach?`},
-{n:84,title:"Three Casualties — Field Antibiotic Triage",type:"sc",march:"antibiotics",cat:"PROPHYLAXIS",model:"Claude",technique:"Decision-Matrix",text:`You are a TCCC subject-matter expert. Three casualties from a single contact need wound antibiotic decisions in the field before evac. A: penetrating eye injury, can take PO. B: open femur fracture, IV access intact. C: superficial fragment wounds only, can take PO. 70-90 kg range. Available: moxifloxacin 400 mg PO, ertapenem 1 g IV/IM.
-
-Build a DECISION MATRIX (markdown table): Casualty | Wound Type | Recommended Antibiotic | Dose/Route | Rationale. Then state which casualty does NOT need field antibiotics and why.
-
-1) What is the TCCC-recommended field antibiotic when a casualty can take PO?
-2) What is the recommended agent when PO is not possible or for serious wounds?
-3) Does the eye injury have any special antibiotic consideration?
-4) Does the superficial-fragment casualty need systemic antibiotics at all?
-5) How does the timing-from-injury affect benefit?
-6) How do I prioritize a limited number of ertapenem doses?
-7) What documentation travels with each casualty?`},
-{n:85,title:"Vehicle Fire Burns — Airway on the Clock",type:"sc",march:"wounds",cat:"BURNS",model:"ChatGPT",technique:"Chain-of-Thought",text:`You are a burn-center physician advising over radio. An 80 kg operator is pulled from a vehicle fire with burns to the entire anterior torso, both full arms, and the face; singed nasal hair, hoarse voice, soot in the mouth. Alert, in pain, HR 120, BP 118/76, RR 24. 6 hours from a burn-capable facility. You have IV access, crystalloid, a clean sheet, and basic airway gear.
-
-Think step by step and show your math. Estimate TBSA with the Rule of Nines and compute fluid needs.
-
-1) What TBSA does the Rule of Nines give for anterior torso, both arms, and face?
-2) Using a modern formula (2 mL x kg x percent TBSA), what is the 24-hour fluid estimate and the first-8-hour rate?
-3) Why are the airway findings (hoarse voice, soot, singed hair) an emergency, and what is my window?
-4) How do I dress these burns in the field and what do I avoid?
-5) What analgesia fits a large burn (see ketamine dosing)?
-6) What monitoring confirms adequate resuscitation (urine output target)?
-7) What makes this airway and this casualty the top evac priority?`},
-{n:86,title:"Contaminated Thigh Avulsion — Tourniquet Conversion",type:"sc",march:"wounds",cat:"SOFT TISSUE",model:"Gemini",technique:"Structured Output",text:`Act as a combat wound-care expert. A 90 kg operator has a large avulsion of the lateral thigh from a fragment, bleeding controlled with a tourniquet placed 70 minutes ago, exposed muscle, gross contamination with dirt and cloth. Evac is 5 hours. You have irrigation fluid, hemostatic gauze, pressure dressings, antibiotics, and analgesia.
-
-Return your plan as a structured checklist with sections: TOURNIQUET CONVERSION DECISION, IRRIGATION/DEBRIDEMENT, DRESSING, ANTIBIOTIC, ANALGESIA, REASSESSMENT SCHEDULE. Be specific and time-stamped.
-
-1) At 70 minutes, do I attempt tourniquet conversion to a pressure dressing, and how?
-2) What irrigation volume and technique for gross contamination in the field?
-3) Do I debride visible contaminant or leave the wound alone for surgery?
-4) What dressing strategy keeps it clean over 5 hours?
-5) Which antibiotic and dose for this contaminated soft-tissue wound?
-6) What analgesia regimen supports the irrigation procedure?
-7) How often do I reassess perfusion and the tourniquet?`},
-{n:87,title:"Pulsatile Groin Bleed — Junctional Control",type:"sc",march:"wounds",cat:"JUNCTIONAL",model:"Claude",technique:"Red-Team the Plan",text:`You are a vascular and trauma surgeon advising remotely. A 75 kg operator has a deep groin wound from a fragment with pulsatile bleeding in the junctional zone where a limb tourniquet cannot reach. You packed it with hemostatic gauze and applied a junctional tourniquet; bleeding slowed but oozes. HR 124, BP 94/60, alert. TXA given. 4 hours to surgery.
-
-Give your hemorrhage-control plan, then RED-TEAM it: attack each assumption (Is the packing actually controlling the source? Is the junctional device seated correctly? Am I under-resuscitating? Am I missing a second bleed?). Revise into a final plan.
-
-1) How do I confirm the packing and junctional device are truly controlling the source?
-2) What is the correct re-packing technique if it keeps oozing?
-3) Was TXA timing correct and what is the dose (2 g IV)?
-4) How do I resuscitate toward a permissive-hypotension target here?
-5) What if there is a concurrent intra-abdominal source?
-6) How do I prevent the lethal triad over 4 hours?
-7) What do I tell the surgeon to prep on arrival?`},
-{n:88,title:"40% Flame Burn — Grading the Resuscitation",type:"sc",march:"wounds",cat:"BURNS",model:"ChatGPT",technique:"Rubric-Graded",text:`Act as a burn resuscitation expert grading a plan. A 70 kg casualty has an estimated 40 percent TBSA flame burn, 3 hours post-injury, IV access via a single line, mentation intact, no airway compromise yet. The medic's plan: "Run 2 liters wide open, wrap in wet towels, give morphine, recheck at the FOB."
-
-Define a RUBRIC first (criteria: fluid formula accuracy, fluid endpoint/titration, hypothermia avoidance, dressing choice, analgesia, monitoring, airway surveillance) and score each item 0-2. Identify the two most dangerous errors.
-
-1) What is the correct first-8-hour fluid rate (2 mL x kg x percent TBSA, half in 8 h)?
-2) Why is "wide open" fluid wrong and what endpoint should guide titration?
-3) Why are wet towels dangerous in a large burn?
-4) What dry dressing approach is correct?
-5) What analgesic is preferred for a 40 percent burn and at what dose?
-6) What monitoring confirms adequate resuscitation?
-7) What airway sign would change everything?`},
-{n:89,title:"Sealed Chest Wound — Tension Pneumothorax",type:"sc",march:"wounds",cat:"CHEST",model:"Gemini",technique:"Step-Back Reasoning",text:`You are a trauma surgeon on radio. A 85 kg operator has a penetrating wound to the right anterior chest, a chest seal applied, but over 30 minutes he develops worsening dyspnea, rising HR 132, falling BP 88/56, distended neck veins, and tracheal deviation suspected. SpO2 falling to 88 percent. You have needle-decompression kits, a finger-thoracostomy capability, and a working chest seal.
-
-STEP BACK and state the governing principle first (a sealed penetrating chest wound can convert an open pneumothorax into a tension pneumothorax). Derive your immediate actions from that principle.
-
-1) Why did sealing the wound possibly cause this deterioration?
-2) Is burping the seal the first move, and how?
-3) What is the needle-decompression landmark and catheter choice?
-4) When do I escalate to finger thoracostomy?
-5) How do I confirm decompression worked?
-6) What recurrence plan do I set for the next 4 hours?
-7) What do I hand off about the seal, the decompression, and timing?`},
-{n:90,title:"Scalded Child — Pediatric Burn Math",type:"sc",march:"wounds",cat:"PEDIATRIC",model:"Claude",technique:"Few-Shot Anchoring",text:`You are a pediatric trauma and burn expert advising a medic during a village medical engagement. A child (estimated 6 years, estimated 20 kg) has scald burns to one whole leg and the buttocks from a cooking accident, crying, HR 140, otherwise stable, parent present. You have IV/IO capability, crystalloid, analgesia, and clean dressings.
-
-Anchor on the adult pattern: adults use 2 mL x kg x percent TBSA for burn fluids and the Rule of Nines. Apply pediatric-adjusted reasoning and SHOW the calculations, noting where pediatric anatomy changes the percentages.
-
-1) What TBSA does a whole leg plus buttocks give using a pediatric-adjusted Rule of Nines?
-2) What is the fluid estimate for a 20 kg child and the first-8-hour rate?
-3) Why do children's body proportions change the Rule of Nines?
-4) What analgesia and weight-based dose for this child?
-5) How do I avoid hypothermia in a small burned child?
-6) What urine-output target confirms adequate pediatric resuscitation?
-7) What thresholds make this an urgent evac despite "stable" vitals?`},
-{n:91,title:"Eviscerated Bowel — Reduce or Cover?",type:"sc",march:"wounds",cat:"ABDOMINAL",model:"ChatGPT",technique:"Self-Critique Loop",text:`Act as a damage-control surgery consultant. A 90 kg operator has a penetrating abdominal wound with a small loop of bowel eviscerated, moderate ooze, abdomen tender, HR 120, BP 96/62, alert. 6 hours to surgery. You have moist sterile dressings, irrigation, antibiotics, TXA, and analgesia.
-
-Give your management plan, then run a SELF-CRITIQUE LOOP: list errors (Did I try to reduce the bowel? Did I let it dry out? Wrong antibiotic? Over- or under-resuscitating?), revise, repeat once, then finalize.
-
-1) Do I reduce the eviscerated bowel back in, or not, and why?
-2) How do I dress eviscerated bowel to keep it viable?
-3) Which antibiotic and dose for a penetrating abdominal wound?
-4) What fluid/blood strategy and BP target while awaiting surgery?
-5) What is TXA's role and dose here?
-6) What analgesia fits without obscuring the abdominal exam?
-7) What deterioration signs flag a major vascular or hollow-viscus catastrophe?`},
-{n:92,title:"IED Polytrauma — Sorting the Threats",type:"sc",march:"wounds",cat:"BLAST",model:"Gemini",technique:"Tree-of-Thought",text:`You are a blast-injury specialist. A dismounted operator (80 kg) is hit by an IED: bilateral lower-leg mangling with tourniquets on, perineal soiling, a chest that "doesn't feel right," and he is confused. HR 140, BP 84/52, SpO2 92 percent, pale. 4 hours to surgery. You have blood products (2 units), TXA, chest tools, junctional control, and antibiotics.
-
-Use Tree-of-Thought: branch the competing threats (hemorrhagic shock from limbs vs occult truncal/junctional bleed vs blast lung vs TBI), evaluate each branch, prune, and converge on a prioritized action sequence.
-
-1) Which threat most likely explains the shock, and which to chase first?
-2) How do blast-lung findings change my fluid and oxygen plan?
-3) What junctional/pelvic source could be hiding given perineal soiling?
-4) How do I sequence blood, TXA, and hemorrhage control?
-5) How does possible TBI change my BP target?
-6) What antibiotic coverage for these dirty blast wounds?
-7) What single deterioration would make me re-rank the whole tree?`},
-{n:93,title:"Rooftop Fall — Unstable Pelvic Hemorrhage",type:"sc",march:"splinting",cat:"PELVIC",model:"Claude",technique:"Chain-of-Thought",text:`You are an orthopedic trauma surgeon advising by radio. An 85 kg operator fell from a rooftop; he has pelvic pain, instability on gentle palpation, blood at the urethral meatus, scrotal bruising, HR 130, BP 86/54, pale, abdomen soft. 5 hours to surgery. You have a commercial pelvic binder, blood products, TXA, and analgesia.
-
-Think step by step and show reasoning before acting. Reason through why an unstable pelvis is a hemorrhage problem, not just a bone problem.
-
-1) How do I correctly place a pelvic binder and at what anatomical level?
-2) Why should I NOT spring or rock the pelvis to test stability?
-3) Given urethral blood, what do I avoid (catheterization) and why?
-4) How do binding plus blood plus TXA work together to control bleeding?
-5) What BP target do I aim for in this likely pelvic hemorrhage?
-6) How do I package and move him to avoid disrupting clot?
-7) What handoff details does the surgeon need for angio/fixation planning?`},
-{n:94,title:"Crush Release — The Lethal Moment",type:"sc",march:"splinting",cat:"CRUSH",model:"ChatGPT",technique:"Structured Output",text:`Act as a critical-care nephrology and trauma expert advising on a building collapse. A 75 kg worker has been pinned under rubble by both legs for an estimated 5 hours; the legs are pulseless distally and the entry team is about to lift the slab. Before release: HR 110, BP 110/70, alert. You have IV fluids, calcium, sodium bicarbonate, an ECG monitor, and a tourniquet.
-
-Return a structured plan with sections: PRE-RELEASE PREP, RELEASE-MOMENT ACTIONS, HYPERKALEMIA MANAGEMENT, FLUID PLAN, MONITORING, EVAC. Be numeric on doses and rates.
-
-1) Why is the moment of release the most dangerous, and what kills him then?
-2) What pre-release fluid loading should I start and at what rate?
-3) Should a tourniquet go on before release, and what is the tradeoff?
-4) What ECG changes signal hyperkalemia and what do I give (calcium, bicarbonate)?
-5) What fluid target protects the kidneys from myoglobin?
-6) How do I splint and package crushed limbs after release?
-7) What makes this a high-priority, surgically urgent evac?`},
-{n:95,title:"Improvised Femur Traction — Single Rescuer",type:"sc",march:"splinting",cat:"FRACTURE",model:"Gemini",technique:"Role + Constraints",text:`You are a backcountry orthopedic medic. CONSTRAINTS: improvised materials only (SAM splint, cravats, padding, trekking poles), no traction device, single rescuer, casualty must be carried 8 km. The casualty is a 90 kg operator with a closed mid-shaft femur fracture, deformed thigh, severe pain, intact distal pulse, HR 120, BP 118/78.
-
-Work strictly within those constraints. Do not assume gear I did not list.
-
-1) Why is a closed femur fracture a hemorrhage and pain emergency even when closed?
-2) How do I improvise a traction splint from poles and cravats, step by step?
-3) How much blood can a femur fracture sequester and how does that guide me?
-4) What analgesia supports applying traction (ketamine dose)?
-5) How do I monitor the distal pulse during and after splinting?
-6) How do I package him for an 8 km single-rescuer carry?
-7) What signs would make me stop and not move him?`},
-{n:96,title:"Open Forearm Fracture — Don't Push It Back",type:"sc",march:"splinting",cat:"OPEN FRACTURE",model:"Claude",technique:"Rubric-Graded",text:`You are a JTS extremity-trauma expert grading a medic's plan. A 80 kg operator has an open both-bone forearm fracture with bone ends visible, moderate bleeding controlled with a pressure dressing, gross contamination, intact radial pulse, severe pain. 6 hours to surgery. Plan to grade: "Push the bone back in, splint it straight, wrap it, give him some Tylenol, and go."
-
-Define a RUBRIC first (criteria: contamination/irrigation, antibiotic timing, reduction technique, splinting/neurovascular check, analgesia adequacy, documentation) and score each 0-2. Call out the two worst errors.
-
-1) Should the medic push the exposed bone back in, and what is correct?
-2) What irrigation and dressing approach for an open contaminated fracture?
-3) Which antibiotic, dose, and how quickly for an open fracture?
-4) How do I splint and what neurovascular checks bracket the splinting?
-5) Why is acetaminophen alone inadequate analgesia here?
-6) What position of function for the forearm and wrist?
-7) What documentation must travel to the OR?`},
-{n:97,title:"Spinal Fall — Tactical Precautions Versus Rigid",type:"sc",march:"splinting",cat:"SPINE",model:"ChatGPT",technique:"Decision-Matrix",text:`Act as a spine and tactical-evacuation expert. A 90 kg operator fell 4 m onto rocks; he reports midline thoracic back pain, tingling in both feet, can wiggle toes weakly, no other major bleeding, HR 96, BP 130/82, alert. We are in a contested area and rigid full spinal immobilization will slow movement and increase exposure time.
-
-Build a DECISION MATRIX (markdown table): Option (full rigid immobilization vs minimal-handling spinal precautions vs no precautions) | Benefit | Risk | Tactical Cost | Recommended When. Then commit to one approach for this casualty.
-
-1) What findings raise concern for an unstable spinal injury here?
-2) How do tactical spinal precautions differ from civilian full immobilization?
-3) How do I balance neuroprotection against time-in-the-open risk?
-4) What is the safest realistic movement technique with limited hands?
-5) How do I monitor for neurologic deterioration during the move?
-6) What changes if his motor function worsens en route?
-7) What do I hand off about mechanism and serial neuro exams?`},
-{n:98,title:"Shoulder Dislocation — Reduce in the Field?",type:"sc",march:"splinting",cat:"DISLOCATION",model:"Gemini",technique:"Socratic Tutor",text:`You are a Socratic orthopedics tutor. Do not give me the answer outright. A 80 kg operator has an anterior shoulder dislocation from a fall during a fast-rope insertion; arm held in slight abduction, severe pain, intact distal pulse and sensation, 9 hours from definitive care, and the arm is impairing his ability to move under load.
-
-Tutor me with one question at a time, reacting to my answers, toward a decision on whether and how to reduce in the field. Begin with your first question.
-
-1) What argues FOR field reduction given the long evac and tactical load?
-2) What neurovascular checks must I do before and after any reduction?
-3) Which reduction technique is safest for a lone provider?
-4) What analgesia/sedation supports reduction (ketamine dosing)?
-5) How do I confirm a successful reduction without imaging?
-6) How do I immobilize post-reduction for movement?
-7) What complication would make me NOT attempt reduction?`},
-{n:99,title:"Tense Calf, Present Pulse — Compartment Syndrome",type:"sc",march:"splinting",cat:"COMPARTMENT",model:"Claude",technique:"Step-Back Reasoning",text:`You are an orthopedic and acute-care surgeon on radio. A 85 kg operator has a closed tibial fracture splinted 8 hours ago; he now reports pain out of proportion, the calf is tense and shiny, pain on passive toe extension is severe, sensation is becoming dull, distal pulse still present. HR 110, BP 124/80. 6 hours to surgery.
-
-STEP BACK and state the governing principle first (compartment syndrome is a clinical diagnosis driven by pressure and pain, and a present distal pulse does NOT rule it out). Derive your actions from that principle.
-
-1) Why is the present pulse a dangerous false reassurance here?
-2) What are the cardinal signs and which is earliest?
-3) What immediate steps reduce compartment pressure (loosen, position)?
-4) Why is this a surgical emergency (fasciotomy) and how urgent?
-5) How does this change the evac priority?
-6) What analgesia do I give without masking the diagnostic exam entirely?
-7) What do I document about onset time and serial exams?`},
-{n:100,title:"Partial Amputation — Convert or Preserve",type:"sc",march:"splinting",cat:"AMPUTATION",model:"ChatGPT",technique:"Tree-of-Thought",text:`Act as a trauma and limb-salvage expert. A 90 kg operator has a traumatic below-knee partial amputation from a blast, tourniquet high on the thigh stopped the bleeding 50 minutes ago, the limb is mangled but a partial bridge of tissue remains, severe pain, HR 130, BP 100/66, alert. Blood products available, 5 hours to surgery, dirty wound.
-
-Use Tree-of-Thought: branch the key decisions (tourniquet conversion vs leave, complete the amputation vs preserve the bridge, analgesia approach, antibiotic, splinting/packaging), evaluate each branch, prune, and converge on an ordered plan.
-
-1) Do I attempt tourniquet conversion at 50 minutes, and what are the tradeoffs?
-2) Do I complete the partial amputation in the field or preserve tissue for the surgeon?
-3) How do I dress and splint a mangled partial amputation for transport?
-4) Which antibiotic and dose for this dirty blast amputation?
-5) What analgesia and dose given his marginal BP (ketamine)?
-6) What blood/TXA strategy supports him over 5 hours?
-7) What deterioration would force me to re-evaluate the whole tree?`},
-// --- core_t2i.js ---
-{n:101,title:"Night Surgical Cric Under Red Light",type:"t2i",march:null,cat:"AIRWAY",model:"Midjourney",technique:"Photoreal Macro",text:`Extreme close-up photorealistic image: gloved hands performing surgical cricothyroidotomy on a male patient's neck illuminated only by a red-filtered headlamp. The scalpel has just made the horizontal incision through the cricothyroid membrane — a thin line of dark blood visible. The non-dominant hand stabilizes the larynx using the 'laryngeal handshake' grip. A bougie and 6.0mm cuffed tracheostomy tube lie on the patient's chest, staged and ready. Background is pure black except for the cone of red light and faint reflection off the scalpel blade. Blood appears dark maroon under red light. Visible: chin stubble, tracheal rings through the incision, tactical watch. Gritty, high-ISO noise, clinical macro photography. 16:9.`},
-{n:102,title:"Tourniquet Conversion Decision Point",type:"t2i",march:null,cat:"HEMORRHAGE",model:"Flux",technique:"Split-Screen Compare",text:`Split-screen medical training image. LEFT: correctly applied CAT Gen 7 tourniquet on a right above-knee amputation stump with clock showing '01:45' elapsed — approaching the 2-hour conversion window. Wound packed with Combat Gauze, bleeding controlled. RIGHT: same limb with tourniquet loosened, hemostatic dressing visible beneath — medic's hand on the windlass in 'gradual release' position, timer at 2:00:00. Between panels: decision flowchart overlay with green checkmarks (not in shock, wound visible, can monitor, <2hrs) and red X marks (6+ hours, amputation, shock). Medical training manual aesthetic, Canon medical photography lighting. 16:9.`},
-{n:103,title:"REBOA Zone 1 vs Zone 3 Anatomy",type:"t2i",march:null,cat:"HEMORRHAGE",model:"DALL·E 3",technique:"Cross-Section Cutaway",text:`Medical illustration: transparent anterior torso showing the full aorta. REBOA catheter inserted via right femoral artery. Two balloon positions: ZONE 1 (between left subclavian and celiac trunk) in red glow labeled 'Thoracic/Abdominal Hemorrhage,' ZONE 3 (infrarenal aorta above bifurcation) in blue glow labeled 'Pelvic/Junctional.' Key arteries labeled: celiac trunk, SMA, renal arteries, IMA. Inset: pREBOA-PRO partial inflation (crescent lumen) vs full occlusion. External measurement landmarks (xiphoid to umbilicus) as tape measure overlay. Netter-quality with neon accents on dark navy. 3:4 vertical poster.`},
-{n:104,title:"i-STAT Critical Values Dashboard",type:"t2i",march:null,cat:"PFC / INFOGRAPHIC",model:"Imagen",technique:"Reference Card",text:`Medical reference card (landscape 8.5x5.5"). Title: 'FIELD i-STAT CRITICAL ACTION THRESHOLDS' white on dark navy header. Four columns per cartridge: CG4+ (blue): pH <7.25 → BICARB NOW, pCO₂ >50 → VENTILATE, Lactate >4.0 → RESUSCITATE. EG7+ (purple): K⁺ >6.0 → CALCIUM + EKG, Na⁺ <130 → RESTRICT FREE WATER, Hct <21 → TRANSFUSE. CHEM8+ (orange): Creatinine >2.0 in crush → EXPECT AKI, Glucose <60 → D50. PT/INR (red): INR >1.5 → COAGULOPATHY. Each box color-coded green/yellow/red. Photorealistic i-STAT device center. Waterproof card design. Print-ready.`},
-{n:105,title:"Pelvic Binder — Correct vs Incorrect",type:"t2i",march:null,cat:"MSK / TRAINING",model:"Flux",technique:"Split-Screen Compare",text:`Side-by-side comparison on white background. LEFT 'CORRECT' (green): SAM Pelvic Sling at greater trochanters. Labeled arrows: landmark palpated, belt centered, buckle anterior, tension indicator green. RIGHT 'INCORRECT' (red X): same binder at iliac crests — too high, fails to compress pelvic ring. Bottom panel: anterior pelvic X-ray showing 'open book' fracture with compression force arrows. Medical training manual photography, even clinical lighting. 16:9.`},
-{n:106,title:"White Phosphorus Under Wood's Lamp",type:"t2i",march:null,cat:"BURNS",model:"Midjourney",technique:"Photoreal Macro",text:`Dramatic medical documentation: WP wound on forearm under Wood's lamp UV illumination. WP particles fluorescing bright green-white against purple-UV-lit skin. Medic's gloved hand holds the Wood's lamp. Wound: pale necrotic tissue with embedded granular particles, some actively smoking. Basin of cold water nearby. Dark ambient except UV glow and small area light. Military medical case study quality. 4:3 documentation format.`},
-{n:107,title:"Ketamine Dosing Matrix Card",type:"t2i",march:null,cat:"PAIN / INFOGRAPHIC",model:"DALL·E 3",technique:"Reference Card",text:`Credit-card-sized (3.5 x 2"). Black background, color-coded rows. Header: 'KETAMINE FIELD REFERENCE' with medical cross. GREEN 'ANALGESIA': IV 0.2-0.3 mg/kg, IM 0.5-1 mg/kg, IN 1 mg/kg. YELLOW 'PROCEDURAL': IV 1-2 mg/kg. ORANGE 'RSI': IV 1.5-2 mg/kg. CYAN 'PFC DRIP': 750mg/250mL NS = 3mg/mL, Rate = Wt÷2 mL/hr. Bottom: pre-calculated doses for 60/70/80/90/100kg in white monospace. Reverse: 'ENDPOINT: Nystagmus' + 'NOT contraindicated: TBI, eye injury.' Waterproof mil-spec card. Exact card proportions.`},
-{n:108,title:"Tension Pneumothorax Cross-Section",type:"t2i",march:null,cat:"RESPIRATION",model:"DALL·E 3",technique:"Cross-Section Cutaway",text:`Medical illustration: coronal cross-section showing tension pneumothorax in 3 stages L→R. STAGE 1: Small pneumothorax, lung partially collapsed, midline mediastinum. STAGE 2: Expanding — lung fully collapsed, mediastinum shifting, IVC compression starting. STAGE 3: Full tension — massive air, mediastinum shifted, great vessels kinked, IVC crushed. 14ga needle entering 5th ICS AAL with air burst. Netter-style with modern color. Dark background, luminous anatomy. 16:9.`},
-{n:109,title:"Blast Injury Pattern — IED vs Artillery vs FPV",type:"t2i",march:null,cat:"CONFLICTS",model:"Imagen",technique:"Data-Viz Poster",text:`Three-panel body diagrams showing injury patterns. PANEL 1 'IED (GWOT)': lower extremity amputations, pelvic/perineal blast, upward fragmentation on legs/groin. PANEL 2 'ARTILLERY (Ukraine)': widespread fragmentation across entire body, blast lung on chest. PANEL 3 'FPV DRONE (Emerging)': head/face/upper body concentration from above-angle detonation, burns on exposed skin. Each panel: weapon silhouette, ISS range, casualty pie chart. Dark background, earth tones, red injury highlights. 16:9 three columns.`},
-{n:110,title:"Chest Seal Failure — Burping Sequence",type:"t2i",march:null,cat:"RESPIRATION",model:"Flux",technique:"Sequential Frames",text:`4-frame sequential instruction. FRAME 1: HyFin Vent applied, vents visible, SpO₂ 94%, HR 110. FRAME 2: Vents clogged — SpO₂ 88%, HR 128. FRAME 3: 'BURPING' — gloved hand peels corner 2cm, air + blood-tinged fluid escapes. FRAME 4: Re-sealed, SpO₂ 93%, HR 116. Arrow timeline connecting frames. White background, numbered steps, clinical photography with callouts. 16:9 training poster.`},
-{n:111,title:"Prolonged Field Care Station — Complete Setup",type:"t2i",march:null,cat:"PFC",model:"Midjourney",technique:"Concept Art",text:`Wide-angle photorealistic PFC station inside a rural stone building. Equipment: Ventway Sparrow ventilator on intubated patient (litter on sawhorses), i-STAT on ammo crate, 2 LTOWB bags hanging from wall nail with fluid warmer, BATDOK tablet showing vitals, Butterfly iQ3 for FAST exam, Tempus Pro cardiac monitor, HPMK blanket, urinary catheter bag with marked output. Tactical lanterns, warm pools of light. Two medics working. Documentary photography, mixed lighting, medium-wide lens. 21:9 ultrawide.`},
-{n:112,title:"Fascia Iliaca Block — Dual View",type:"t2i",march:null,cat:"PAIN / TRAINING",model:"DALL·E 3",technique:"Split-Screen Compare",text:`Split screen. LEFT (60%): Ultrasound screen — fascia iliaca compartment 'bowtie' view. Labeled: sartorius, iliacus, fascia lata, fascia iliaca, femoral nerve, femoral artery. Needle tip approaching, anechoic LA pool spreading. RIGHT (40%): External photo — linear probe on inguinal region, needle entering lateral at 30-45°. Landmarks: ASIS, inguinal ligament, femoral pulse. Medical education photography, labeled arrows, light blue accent. 16:9.`},
-{n:113,title:"Evacuation Timeline — Golden Hour vs LSCO",type:"t2i",march:null,cat:"CONFLICTS / DATA",model:"Imagen",technique:"Data-Viz Poster",text:`Dark background. Central clock face: 'golden hour' (0-60 min) in green with GWOT model. Beyond: spiraling timeline to 24 hours, progressively red. Data points: 'IDF helicopter 51 min' (green), 'US GWOT 43 min' (green), 'Ukraine ground 6-24+ hrs' (red zone). Mortality curve overlay. Callout: 'PFC BEGINS AT HOUR 1.' Title: 'THE GOLDEN HOUR IS DEAD FOR LSCO.' Modern data viz, glowing timeline, sans-serif. 3:4 vertical poster.`},
-{n:114,title:"ErythroMer vs Natural RBC",type:"t2i",march:null,cat:"RESEARCH",model:"Stable Diffusion",technique:"Concept Art",text:`Electron microscope scale (~50,000×). Center-left: 3 natural RBCs (biconcave, 7-8μm, natural red). Center-right: ErythroMer nanoparticles (~200nm, proportionally tiny, semi-transparent orange-red polymer shells with hemoglobin inside). Scale bar. Callouts: 'Natural RBC: 7μm, 120-day lifespan' vs 'ErythroMer: ~200nm, 2+ year shelf life, 2-3× O₂ per gram Hb.' Scientific journal figure, Cinema 4D molecular viz, volumetric lighting. 16:9.`},
-{n:115,title:"DARPA MASH Autonomous Care Robot",type:"t2i",march:null,cat:"RESEARCH",model:"Midjourney",technique:"Concept Art",text:`Near-future concept: DARPA MASH robotic system beside a wounded soldier in urban rubble at dusk. Compact (backpack-sized packed), 3 articulating arms: one ultrasound transducer (FAST on screen), one catheter-based hemorrhage control into femoral artery, one managing IV fluids. Flat display: vitals, AI injury assessment, treatment algorithm. Quadcopter relay drone hovering 2m above. Golden dusk + blue LED glow + dust particles. Grounded 2030-2035 tech, NOT sci-fi. Painterly concept art, photorealistic detail. 16:9.`},
-// --- t2i.js ---
-{n:116,title:"Surgical Cricothyroidotomy Under Red Light",type:"t2i",march:null,cat:"AIRWAY",model:"Midjourney",technique:"Photoreal Macro",text:`Extreme close-up photorealistic image: gloved hands performing a surgical cricothyroidotomy on an adult male's neck under a red-filtered headlamp. The scalpel has just made the vertical skin incision, then a horizontal stab through the cricothyroid membrane; a thin line of dark venous blood beads at the wound. The non-dominant hand stabilizes the larynx in the laryngeal-handshake grip, thumb and middle finger on the thyroid cartilage. A bougie and 6.0mm cuffed tube staged on the patient's chest. Pure black background except the red cone of light. Gritty high-ISO grain, clinical macro photography, shallow depth of field. 16:9.`},
-{n:117,title:"NPA Insertion — Four-Panel Sequence",type:"t2i",march:null,cat:"AIRWAY",model:"DALL·E 3",technique:"Sequential Frames",text:`Four-panel sequential instructional illustration on a clean clinical white background showing nasopharyngeal airway (NPA) insertion. Panel 1: measuring the NPA from the patient's nare to the earlobe to size it. Panel 2: lubricating the 28Fr tube. Panel 3: inserting bevel toward the septum, advancing perpendicular to the face along the floor of the nasal passage, not upward. Panel 4: fully seated NPA with flange at the nostril, patient supine. Soft even studio lighting, muted teal labels and thin leader lines, numbered corners. Flat editorial medical style. 3:2.`},
-{n:118,title:"Endotracheal Tube Airway Cutaway",type:"t2i",march:null,cat:"AIRWAY",model:"Flux",technique:"Cross-Section Cutaway",text:`Sagittal cross-section cutaway of the human upper airway, head tilted into the sniffing position. Show tongue, epiglottis, vallecula, vocal cords, thyroid and cricoid cartilage, and trachea in a peeled-back cutaway with semi-transparent skin. Overlay a correctly placed endotracheal tube passing between the cords, cuff inflated below the cricoid. Thin neon-cyan callout labels on a deep charcoal background, subtle volumetric glow on the airway lumen. Anatomically precise, textbook-grade, Netter-influenced rendering with modern 3D shading. 3:4 vertical.`},
-{n:119,title:"High and Tight Windlass Tourniquet",type:"t2i",march:null,cat:"HEMORRHAGE",model:"Midjourney",technique:"Photoreal Macro",text:`Photoreal macro of a CAT-style windlass tourniquet applied high and tight on a soldier's bare thigh, 2-3 inches above a mid-thigh wound, never over a joint. The windlass rod is twisted three turns and locked into the clip; the time-written-in-marker strip reads a recent timestamp. Skin distal to the band shows pallor; proximal muscle bulges under strap tension. Dusty desert daylight, harsh side light, sweat and dirt on skin. Documentary war-photography grain, 50mm look, shallow focus on the windlass clip. 16:9.`},
-{n:120,title:"Wound Packing for Groin Hemorrhage",type:"t2i",march:null,cat:"HEMORRHAGE",model:"DALL·E 3",technique:"Medical Illustration",text:`Medical illustration of deep wound packing for a high junctional groin hemorrhage. Show a gloved hand stuffing rolled hemostatic gauze directly onto the bleeding femoral artery deep in the wound cavity, with the other hand applying direct pressure above. Cutaway reveals the femoral artery, vein, and surrounding muscle. Step caption strip along the bottom: pack tightly to the source, hold three minutes, then apply a pressure dressing. Clean clinical palette, red arterial accents, soft instructional shading on white. Editorial textbook style. 4:3.`},
-{n:121,title:"Junctional Tourniquet — Correct vs Incorrect",type:"t2i",march:null,cat:"HEMORRHAGE",model:"Imagen",technique:"Split-Screen Compare",text:`Split-screen comparison poster. LEFT: a correctly applied junctional tourniquet (SAM Junctional or CRoC style) seated over the inguinal crease with the pressure bladder centered on the femoral artery, strap snug across the pelvis. RIGHT: an improperly placed device sitting too low on the thigh, with a red X and a callout noting continued bleeding. Center divider line with bold heading CORRECT vs INCORRECT. Flat vector medical-poster style, navy background, white anatomy, amber warning accents. 16:9.`},
-{n:122,title:"TXA Clotting Cascade Infographic",type:"t2i",march:null,cat:"HEMORRHAGE",model:"Flux",technique:"Annotated Infographic",text:`Annotated infographic explaining tranexamic acid (TXA) in trauma. Central illustration of a clotting cascade with TXA blocking plasminogen-to-plasmin conversion to prevent fibrinolysis. Dosing callout: 1g IV over 10 minutes, then 1g over 8 hours, ideally within 3 hours of injury. A small clock graphic emphasizes the early-treatment window. Cool blue-and-white scientific palette, molecular icons, clean sans-serif labels, thin connector lines. Modern medical data-viz style. 3:4 vertical.`},
-{n:123,title:"REBOA Zone 1 vs Zone 3 Anatomy",type:"t2i",march:null,cat:"HEMORRHAGE",model:"Midjourney",technique:"Cross-Section Cutaway",text:`Medical illustration: transparent anterior torso and pelvis showing the full aorta. A REBOA catheter is inserted via the right common femoral artery. Two balloon positions are shown: ZONE 1 in the descending thoracic aorta above the celiac trunk for abdominal hemorrhage, and ZONE 3 in the infrarenal aorta above the bifurcation for pelvic and junctional bleeding. Key arteries labeled: celiac trunk, SMA, renal arteries, IMA, common iliacs. Netter-quality rendering with neon-cyan accents and leader lines on dark navy. 3:4 vertical poster.`},
-{n:124,title:"Applying a Vented Chest Seal",type:"t2i",march:null,cat:"RESPIRATION",model:"DALL·E 3",technique:"Photoreal Macro",text:`Photoreal macro of a vented chest seal being applied over a penetrating chest wound on the anterior left chest. A gloved hand peels the backing and presses the adhesive flat onto wiped, dry skin around a small dark entry wound; the one-way valve flutter dome sits centered over the defect. Blood streaks wiped clear so adhesive bonds. Low ambient light with a cold blue cast, sweat sheen on skin, fine sensor grain. Clinical reportage realism, tight depth of field on the valve. 16:9.`},
-{n:125,title:"Needle Decompression Anatomy Cutaway",type:"t2i",march:null,cat:"RESPIRATION",model:"Flux",technique:"Cross-Section Cutaway",text:`Anatomical cross-section of the chest demonstrating needle decompression for tension pneumothorax. Show a 14-gauge 3.25-inch catheter entering the 5th intercostal space at the anterior axillary line, passing over the top of the rib to avoid the neurovascular bundle, into the pleural space where a collapsed lung and shifted mediastinum are visible. A small hissing-air icon marks decompression. Charcoal background, semi-transparent ribcage, neon-cyan needle path and labels. Modern 3D medical illustration. 3:4 vertical.`},
-{n:126,title:"Tension Pneumothorax — Normal vs Tension",type:"t2i",march:null,cat:"RESPIRATION",model:"Imagen",technique:"Split-Screen Compare",text:`Split-screen anatomical illustration of a tension pneumothorax. LEFT half: normal chest with two fully inflated lungs and a midline trachea and mediastinum. RIGHT half: tension pneumothorax with a collapsed lung, air filling the pleural space, flattened diaphragm, and the trachea and heart shifted to the opposite side with compressed great veins. Bold center divider and labels NORMAL vs TENSION. Clean medical-poster vector style, deep blue background, white anatomy, red shift arrows. 16:9.`},
-{n:127,title:"Open Pneumothorax Reference Card",type:"t2i",march:null,cat:"RESPIRATION",model:"Stable Diffusion",technique:"Reference Card",text:`Pocket reference card layout for managing an open pneumothorax. Vertical card proportions with a header band reading SUCKING CHEST WOUND. Compact illustrated steps: 1) expose and assess all wounds front and back, 2) apply vented chest seal on dry skin, 3) monitor for tension, 4) burp or lift the seal if respiratory distress worsens. Small anatomy thumbnail of a sealed chest in the corner. Matte card stock texture, rounded corners, two-color print look in navy and safety-orange. Card aspect ratio 2:3.`},
-{n:128,title:"Proximal Tibia IO Access",type:"t2i",march:null,cat:"CIRCULATION",model:"Midjourney",technique:"Photoreal Macro",text:`Photoreal macro of intraosseous (IO) access being established at the proximal tibia. A gloved hand holds a battery-powered IO driver perpendicular to the flat medial tibial plateau, one finger-width below and medial to the tibial tuberosity, needle just seated through cortex. A flush syringe and pressure bag of saline staged beside the leg. Dim field lighting, cool shadows, betadine-stained skin, fine grain. Shallow focus on the needle hub, clinical documentary realism. 16:9.`},
-{n:129,title:"Field Whole Blood Transfusion",type:"t2i",march:null,cat:"CIRCULATION",model:"DALL·E 3",technique:"Medical Illustration",text:`Medical illustration of low-titer O whole blood transfusion in the field. A casualty on a litter receives a unit of whole blood via an IO line in the humeral head, the bag elevated and run through a fluid warmer and pressure infuser. Inset diagram contrasts whole blood (red cells, plasma, platelets, clotting factors together) against separated components. Caption: walking blood bank, transfuse warmed product. Clean instructional palette, warm red blood accents, soft shading on white. Editorial textbook style. 4:3.`},
-{n:130,title:"Lethal Triad of Trauma",type:"t2i",march:null,cat:"CIRCULATION",model:"Flux",technique:"Annotated Infographic",text:`Annotated infographic on the lethal triad of trauma. Three interlocking circles labeled HYPOTHERMIA, ACIDOSIS, and COAGULOPATHY, each feeding the next with arrows to show the vicious cycle worsening hemorrhage. Surrounding callouts list field countermeasures: keep the patient warm, give warmed blood products, minimize crystalloids, treat the source of bleeding. Dark slate background, glowing red-amber circle outlines, crisp white sans-serif labels, connector arrows. Scientific data-viz poster style. 3:4 vertical.`},
-{n:131,title:"Recognizing Hemorrhagic Shock Classes",type:"t2i",march:null,cat:"CIRCULATION",model:"Imagen",technique:"Data-Viz Poster",text:`Data-visualization poster of hemorrhagic shock classes I to IV. A horizontal stepped chart maps each class against blood loss percentage, heart rate, blood pressure, respiratory rate, and mental status, with a silhouette of a casualty shifting from calm to obtunded across the columns. Color gradient from green to deep red as severity climbs. Clean grid, bold numeric callouts, minimalist medical-poster aesthetic on off-white. Header: RECOGNIZING SHOCK. 16:9.`},
-{n:132,title:"Rule of Nines Burn Estimation",type:"t2i",march:null,cat:"BURNS",model:"Midjourney",technique:"Annotated Infographic",text:`Annotated infographic of the Rule of Nines for estimating burn total body surface area on an adult. Front and back body silhouettes with regions shaded and labeled: head 9 percent, each arm 9 percent, anterior trunk 18 percent, posterior trunk 18 percent, each leg 18 percent, genitalia 1 percent. Side panel shows the modified Brooke formula for fluid resuscitation. Flat vector style, teal body fill with amber burn-zone overlays, clean labels on white. 3:4 vertical poster.`},
-{n:133,title:"Burn Depth Comparison Cross-Sections",type:"t2i",march:null,cat:"BURNS",model:"DALL·E 3",technique:"Split-Screen Compare",text:`Split-screen medical illustration comparing burn depth. Three vertical skin cross-sections side by side: superficial (epidermis only, red and dry), partial-thickness (into dermis, blistered and weeping), and full-thickness (through dermis to subcutaneous fat, leathery and insensate). Each panel labels epidermis, dermis, hair follicles, and nerve endings, with a severity bar beneath. Clean clinical palette, layered skin shading, thin labels. Editorial textbook comparison style. 16:9.`},
-{n:134,title:"Field Burn Dressing and Warming",type:"t2i",march:null,cat:"BURNS",model:"Stable Diffusion",technique:"Photoreal Macro",text:`Photoreal macro of field burn management: gloved hands laying a dry sterile burn dressing over a partial-thickness forearm burn while a foil-lined hypothermia-prevention blanket is tucked around the casualty. Blistered, glistening skin visible at the wound edge, no ointment applied. Cool overcast field light, subtle smoke haze in the background, realistic skin texture and sweat. Documentary trauma-photography grain, shallow depth of field on the dressing. 16:9.`},
-{n:135,title:"Penetrating Ocular Injury Cutaway",type:"t2i",march:null,cat:"EYES",model:"Flux",technique:"Cross-Section Cutaway",text:`Cross-section cutaway of the human eye and orbit illustrating a penetrating ocular injury with a retained foreign body. Show cornea, anterior chamber, iris, lens, vitreous, retina, and optic nerve, with a small metallic fragment lodged in the vitreous. Overlay a rigid eye shield (not a pressure patch) protecting the globe, with a no-pressure warning icon. Charcoal background, neon-cyan labels and leader lines, glassy translucent ocular media. Modern 3D medical illustration. 3:4 vertical.`},
-{n:136,title:"Combat Eye Injury Reference Card",type:"t2i",march:null,cat:"EYES",model:"DALL·E 3",technique:"Reference Card",text:`Pocket reference card for combat eye trauma. Vertical card proportions, header band EYE INJURY. Concise illustrated guidance: shield, do not patch, do not apply pressure, do not remove impaled objects, give antibiotics, evacuate. Small icon of a rigid Fox eye shield taped over the orbit. A do-not-touch warning strip along the bottom in safety-orange. Matte card texture, rounded corners, two-color print look in navy and orange. Card aspect ratio 2:3.`},
-{n:137,title:"Pelvic Binder Application Sequence",type:"t2i",march:null,cat:"MSK",model:"Midjourney",technique:"Sequential Frames",text:`Four-panel sequential illustration of pelvic binder application for a suspected open-book pelvic fracture. Panel 1: locating the greater trochanters as the correct binder level (not the iliac crests). Panel 2: sliding the binder under the patient at trochanter height. Panel 3: cinching the buckle to compress and close the pelvic ring. Panel 4: padded internal rotation of the legs with knees and ankles tied. Clean white background, numbered corners, muted teal labels, flat editorial medical style. 3:2.`},
-{n:138,title:"Femur Traction Splint Illustration",type:"t2i",march:null,cat:"MSK",model:"Imagen",technique:"Medical Illustration",text:`Medical illustration of a traction splint applied to a closed mid-shaft femur fracture. Show the splint anchored at the ischial tuberosity, the ankle hitch in place, and mechanical traction pulling the limb to length to realign the displaced bone ends and reduce pain and bleeding into the thigh. Cutaway of the femur shows the fracture before and after alignment. Clean clinical palette, soft instructional shading, red traction-force arrows, thin labels on white. Editorial textbook style. 4:3.`},
-{n:139,title:"Field Splinting Principles Card",type:"t2i",march:null,cat:"MSK",model:"Stable Diffusion",technique:"Reference Card",text:`Pocket reference card for field splinting principles. Vertical card with header SPLINT. Compact icon list: check circulation, motor, and sensation before and after; immobilize the joint above and below the fracture; pad bony prominences; splint in position found for angulated joints; recheck distal pulses. Small thumbnail of a SAM-style malleable splint molded around a forearm. Matte card stock, rounded corners, navy-and-orange two-color print look. Card aspect ratio 2:3.`},
-{n:140,title:"Prolonged Field Care Station",type:"t2i",march:null,cat:"PFC",model:"Midjourney",technique:"Concept Art",text:`Cinematic concept art of a prolonged field care station inside a dim hardened shelter. A casualty lies on a litter raised on ammo crates; a medic monitors a portable vitals monitor, a hanging unit of whole blood on a warmer, a Foley catheter bag, and a documentation clipboard with a flow sheet. Headlamps and a single chemlight provide warm pooled light against deep shadow. Realistic gear clutter, dust motes in the beam. Moody, grounded military-medical realism, 35mm look. 21:9 cinematic.`},
-{n:141,title:"PFC Nursing Checklist Infographic",type:"t2i",march:null,cat:"PFC",model:"DALL·E 3",technique:"Annotated Infographic",text:`Annotated infographic of the prolonged field care nursing checklist using the ventilate-infuse-monitor-protect framework. A central casualty silhouette ringed by labeled stations: airway and ventilation settings, fluid and blood balance with intake-output, vital-sign monitoring trend lines, analgesia and sedation, urinary output via Foley, pressure-injury turning schedule, and hypothermia prevention. Clean clinical palette, teal and white, icon-driven callouts with leader lines. Modern medical data-viz style. 3:4 vertical.`},
-{n:142,title:"24-Hour PFC Vitals Flow Sheet",type:"t2i",march:null,cat:"PFC",model:"Flux",technique:"Data-Viz Poster",text:`Data-visualization poster of a 24-hour prolonged field care vitals flow sheet. Stacked time-series line charts for heart rate, systolic and diastolic blood pressure, SpO2, temperature, and urine output across an hourly grid, with annotation markers for interventions like blood transfusion and analgesia. Dark dashboard aesthetic, glowing teal and amber trend lines, clean gridlines and axis labels. Header: PFC TREND MONITORING. Crisp infographic style. 16:9.`},
-{n:143,title:"FAST Exam — Probe vs Image",type:"t2i",march:null,cat:"DIAGNOSTIC",model:"Imagen",technique:"Split-Screen Compare",text:`Split-screen comparison of a FAST ultrasound exam. LEFT: a medic holding a curvilinear probe at the right upper quadrant Morison's pouch view on a supine casualty, probe marker oriented correctly. RIGHT: the corresponding grayscale ultrasound image showing an anechoic black stripe of free fluid between the liver and kidney indicating hemorrhage. Center divider, labels PROBE PLACEMENT vs IMAGE. Clean clinical poster style, navy frame, realistic ultrasound texture. 16:9.`},
-{n:144,title:"eFAST Ultrasound Windows Map",type:"t2i",march:null,cat:"DIAGNOSTIC",model:"Stable Diffusion",technique:"Annotated Infographic",text:`Annotated infographic of the eFAST ultrasound exam windows. A supine body silhouette with labeled probe positions: right upper quadrant, left upper quadrant, suprapubic, subxiphoid cardiac, and bilateral anterior chest for lung sliding and pneumothorax. Each window paired with a small thumbnail of the expected normal sonographic finding. Clean medical-poster palette, teal silhouette, white probe icons, leader lines and labels on dark background. 3:4 vertical.`},
-{n:145,title:"Point-of-Care Ultrasound in the Field",type:"t2i",march:null,cat:"DIAGNOSTIC",model:"DALL·E 3",technique:"Photoreal Macro",text:`Photoreal macro of a handheld point-of-care ultrasound probe pressed against a casualty's lower chest in a field setting, gloved hand steadying the transducer with conduction gel glistening at the contact point. A rugged tablet screen out of focus in the background shows a grayscale lung image. Dim tactical lighting with a cold cast, sweat and dust on skin, fine sensor grain. Shallow depth of field on the probe head, clinical documentary realism. 16:9.`},
-{n:146,title:"Nerve-Agent Poisoning Reference Card",type:"t2i",march:null,cat:"CBRN",model:"Midjourney",technique:"Reference Card",text:`Pocket reference card for nerve-agent (organophosphate) poisoning. Vertical card, header NERVE AGENT. Left column lists the SLUDGE and DUMBELS cholinergic toxidrome signs. Right column shows antidote dosing: atropine to dry secretions, pralidoxime (2-PAM) to reactivate cholinesterase, and a benzodiazepine for seizures, with the triple-autoinjector icon. A decontamination warning strip along the bottom. Matte card texture, rounded corners, navy-and-hazard-yellow two-color print look. Card aspect ratio 2:3.`},
-{n:147,title:"CBRN Decontamination Line Concept",type:"t2i",march:null,cat:"CBRN",model:"Flux",technique:"Concept Art",text:`Cinematic concept art of medics in MOPP-level protective suits and gas masks treating a casualty at a CBRN decontamination line. Casualty on a litter being moved across the hot-line into a clean zone, decon shower mist backlit by harsh floodlights, hazard placards and rolled plastic sheeting. Eerie green-tinged chemical-light glow against night darkness, breath fogging mask lenses. Tense, grounded military-medical realism, atmospheric haze, 35mm look. 21:9 cinematic.`},
-{n:148,title:"Trauma Hypothermia Prevention Infographic",type:"t2i",march:null,cat:"HYPOTHERMIA",model:"Imagen",technique:"Annotated Infographic",text:`Annotated infographic on trauma hypothermia prevention. A casualty wrapped in a layered hypothermia management kit: chemical heat blankets against the torso, a reflective shell, and an insulating outer wrap, head covered, ground insulation beneath. Side panel charts the danger of the lethal triad and shows core-temperature thresholds where coagulopathy worsens. Cool blue palette with warm orange heat-source accents, clean labels and leader lines on white. Modern medical data-viz style. 3:4 vertical.`},
-{n:149,title:"TCCC Analgesia Ladder Poster",type:"t2i",march:null,cat:"PAIN",model:"DALL·E 3",technique:"Data-Viz Poster",text:`Data-visualization poster of the TCCC analgesia ladder for combat casualties. A tiered chart from mild to severe pain: oral acetaminophen and meloxicam combat-wound-medication pack for the walking wounded; oral transmucosal fentanyl lozenge for moderate pain; IV or IO ketamine for severe pain or shock. Each tier lists route, indication, and a monitoring caution about respiration and airway. Clean medical-poster grid, color gradient from green to red, bold labels on off-white. 16:9.`},
-{n:150,title:"Next-Generation Combat Casualty Care",type:"t2i",march:null,cat:"RESEARCH",model:"Flux",technique:"Concept Art",text:`Futuristic concept art of next-generation combat casualty care. A medic uses an augmented-reality visor projecting holographic vitals and a vascular access guide over a casualty, while a small autonomous medical drone delivers a cooled whole-blood unit. A wearable closed-loop resuscitation cuff auto-titrates fluids. Sleek near-future field aesthetic, cool teal holographic UI glow against dusk light, realistic gear and grounded proportions. Cinematic sci-fi medical realism, volumetric light, 35mm look. 21:9 cinematic.`},
-// --- core_i2v.js ---
-{n:151,title:"Tourniquet Windlass Rotation",type:"i2v",march:null,cat:"HEMORRHAGE",model:"Runway Gen-3",technique:"Camera Push-In",text:`Starting frame: extreme close-up of CAT Gen 7 windlass rod at first rotation on a thigh. 30° camera angle showing rod, band, skin compression. Animation: Windlass rotates 180° — band tightens progressively, tissue blanches white, bleeding slows and stops as arterial pressure overcome. Rod clicks into retention clip. Operator's fingers release. Duration: 5 seconds. Camera: slow push-in to extreme close-up on windlass. Lighting: harsh overhead tactical headlamp. Sound: fabric creak, retention clip click, exhale. 24fps cinematic.`},
-{n:152,title:"Needle Decompression — Air Release",type:"i2v",march:null,cat:"RESPIRATION",model:"Kling",technique:"Vitals Overlay",text:`Starting frame: 14ga 3.25" catheter at 5th ICS AAL, needle tip through parietal pleura. Animation: Visible air rush escapes around catheter hub — turbulent burst disturbing blood at site, medic's hair flutters. Patient's hyper-expanded chest settles, ribcage equalizes. Background cardiac monitor: HR 138→110. SpO₂: 82%→88%→91%. Duration: 6 seconds. Camera: locked medium close-up, slight handheld tremor. Lighting: red headlamp + white penlight. 24fps.`},
-{n:153,title:"Tension Pneumothorax Internal Progression",type:"i2v",march:null,cat:"RESPIRATION",model:"Sora",technique:"Anatomical Morph",text:`Starting frame: anatomical cutaway, small left pleural air collection. Animation (8s): (1) Air accumulates — left lung compresses/collapses, (2) Pressure exceeds atmospheric — mediastinum shifts right, (3) Heart/great vessels pushed, IVC kinks — blood flow particles slow, (4) Right lung compresses from shift, (5) Full tension: both lungs compromised, heart displaced, IVC kinked. Vital overlay degrading in real-time. Camera: slow zoom out from air leak to full thorax. Medical illustration, translucent anatomy. 24fps.`},
-{n:154,title:"Whole Blood — Bag Squeeze to Patient",type:"i2v",march:null,cat:"BLOOD / DCR",model:"Runway Gen-3",technique:"Macro Reveal",text:`Starting frame: close-up of gloved hand squeezing LTOWB bag. 'LTOWB O-POS' label visible. Animation: Camera follows blood flow — hand squeezes, dark red blood through clear tubing, passes fluid warmer (orange glow), continues down, enters antecubital IV site. Brief cutaway: patient's face relaxing, color returning to lips. Monitor: HR 128→118. Camera: tracking shot following blood path. Duration: 6 seconds. Warm headlamp + lantern lighting. Documentary intimacy. 24fps.`},
-{n:155,title:"Chest Seal Breathing Mechanics",type:"i2v",march:null,cat:"RESPIRATION",model:"Kling",technique:"Macro Reveal",text:`Starting frame: HyFin Vent positioned over left lateral penetrating wound. Bubbling 2cm defect visible. Animation: (1) Medic presses seal — hydrogel conforms to skin/ribs, (2) Inhalation: vent channels close flat (negative pressure occludes wound), (3) Exhalation: vents open — tiny burst of air + blood-tinged fluid escapes, (4) Second breath cycle: rhythmic open/close. Camera: extreme close-up on vents, pulls back to show chest wall moving. Duration: 6 seconds. Clinical lighting, macro lens. 24fps.`},
-{n:156,title:"Pelvic Binder Rapid Deployment",type:"i2v",march:null,cat:"MSK",model:"Pika",technique:"Time-Lapse Procedure",text:`Starting frame: SAM Pelvic Sling laid flat beneath supine casualty. Animation (8s real-time): (1) Medic slides sling to center at greater trochanters, (2) Belt threaded through friction buckle, pulled tight — circumferential compression, (3) Autostop clicks — indicator turns green, (4) Excess strap tucked. Patient shows slight relief. Camera: overhead bird's-eye → lateral view showing trochanter landmark. Training studio, white background. 24fps.`},
-{n:157,title:"FAST Exam — Morrison's Pouch Positive",type:"i2v",march:null,cat:"PFC / DIAGNOSTIC",model:"Sora",technique:"Split-Screen Process",text:`Starting frame: Butterfly iQ3 probe on right flank. Ultrasound screen visible. Animation (7s): (1) Probe placed — screen shows liver-kidney interface (Morrison's pouch), normal, (2) Probe fans — dark anechoic stripe appears — free fluid, (3) Stripe grows with angle change — medic's expression shifts, (4) Overlay: 'LIVER,' 'KIDNEY,' 'FREE FLUID' with measurement calipers ~2cm. 'POSITIVE FAST — Hemoperitoneum.' Split screen: probe movement + ultrasound image. Clinical lighting. 24fps.`},
-{n:158,title:"Ketamine Push — Draw to Nystagmus",type:"i2v",march:null,cat:"PAIN",model:"Runway Gen-3",technique:"Slow-Motion Detail",text:`Starting frame: drawing ketamine from 500mg/5mL vial. Animation (8s): (1) Needle punctures stopper, draws 0.3mL (30mg), (2) Swaps to IV port, slow push over 15s (compressed), (3) Camera to patient face — grimacing from femur fracture, (4) Grimace softens, eyes show horizontal nystagmus (oscillating), dissociative calm, (5) Medic checks eyes with penlight — nystagmus confirmed. Text: 'Analgesic dose — nystagmus = endpoint.' Camera: vial→port→patient face. Warm tactical lighting. 24fps.`},
-{n:159,title:"Crush Syndrome Release — Lethal Cascade",type:"i2v",march:null,cat:"MSK",model:"Sora",technique:"Anatomical Morph",text:`Starting frame: anatomical illustration — trapped limb under concrete. Damaged cells filled with K⁺ (orange), myoglobin (brown), lactate (yellow). IV line running to opposite arm. Animation (8s): (1) Slab lifted — tissue springs back, (2) FLOOD of toxic particles into venous system, (3) K⁺ reaches heart — monitor: sinus → peaked T-waves → wide-complex tachycardia, (4) Myoglobin reaches kidneys — clogs tubules, (5) Overlay: 'START IV BEFORE EXTRICATION.' Camera: limb → heart → kidney cascade. Medical illustration, translucent anatomy. 24fps.`},
-{n:160,title:"Lateral Canthotomy — Pressure Release",type:"i2v",march:null,cat:"EYES",model:"Kling",technique:"Slow-Motion Detail",text:`Starting frame: proptotic right eye, lateral canthus clamped 2 min, clamp removed. Animation (7s): (1) Scissors cut 1-2cm lateral through skin/conjunctiva, (2) Scissors directed inferiorly — sever inferior crus of lateral canthal tendon, (3) Pressure releases — proptosis reduces, eye recedes into orbit, (4) Pupil begins to constrict, (5) IOP gauge: 42→28→18 mmHg. Patient's pain softens. Camera: extreme macro, slight pull-back as decompression occurs. Ring-flash lighting. 24fps.`},
-{n:161,title:"Walking Blood Bank — Vein to Vein",type:"i2v",march:null,cat:"BLOOD",model:"Runway Gen-3",technique:"Time-Lapse Procedure",text:`Starting frame: operator seated, sleeve up, tourniquet on bicep. Animation (10s compressed): (1) Blood typing card — agglutination confirms O-pos, (2) 16ga venipuncture — blood flows into collection bag filling on scale, (3) Bag fills to 450mL, (4) Second medic spikes bag, hangs on IV pole, (5) Blood flows to patient on litter — vein-to-vein complete, (6) Split final frame: donor pressing gauze (healthy) + recipient receiving (color returning). Camera: follows blood journey. Mixed lighting. 24fps.`},
-{n:162,title:"Blast Wave — Alveolar Destruction",type:"i2v",march:null,cat:"BLAST",model:"Sora",technique:"Anatomical Morph",text:`Starting frame: microscopic healthy alveoli — grape-like clusters, capillaries, O₂/CO₂ exchange. Animation (8s): (1) Pressure wave arrives from left — translucent compression front, (2) Wave hits — thin walls stretch and tear, capillaries rupture, blood floods air spaces, (3) Disrupted alveoli stop gas exchange, (4) Air from ruptured alveoli enters capillaries — bubbles (emboli) enter bloodstream toward heart, (5) Pull back: contused hemorrhagic lung region. Overlay: 'BLAST LUNG — Why PPV causes air embolism.' Camera: micro → organ level. Scientific viz. 24fps.`},
-{n:163,title:"Hypothermia Rewarming — Afterdrop",type:"i2v",march:null,cat:"ENVIRONMENTAL",model:"Pika",technique:"Split-Screen Process",text:`Starting frame: core temp gauge 30°C. Split viz: core (heart) temp LEFT, peripheral temp + blood flow RIGHT. Animation (8s): (1) WRONG: hot water on extremities — peripheral vessels dilate, cold acidotic blood (blue particles) rushes to heart, (2) Core drops 30°→28°C — 'AFTERDROP' in red, rhythm becomes erratic approaching VF, (3) RESET — CORRECT: warm IV + truncal warming, core rises 30°→31°→32°C, extremities stay cool/vasoconstricted, (4) Peripheral rewarming only AFTER core safe. Overlay: temp curves for both methods. Medical animation. 24fps.`},
-{n:164,title:"EtCO₂ Waveform — Confirming Cric",type:"i2v",march:null,cat:"AIRWAY",model:"Kling",technique:"Vitals Overlay",text:`Starting frame: completed surgical cric, 6.0mm tube in place, cuff inflated, capnography sensor attached. Monitor: flat line. Animation (6s): (1) First BVM ventilation — chest rises, (2) Exhalation: capnography springs to life — square-wave EtCO₂: sharp rise, alveolar plateau at 38 mmHg, sharp descent. Display: '--' → '38', (3) Second ventilation: perfect waveform confirms tracheal placement, (4) Medic relaxes. Text: 'EtCO₂ WAVEFORM = CONFIRMED PLACEMENT.' Camera: tube/sensor → monitor → wide shot. Clinical lighting. 24fps.`},
-{n:165,title:"FPV Drone Approach — Injury-Mechanism POV",type:"i2v",march:null,cat:"CONFLICTS",model:"Sora",technique:"POV Sequence",text:`Starting frame: soldier in trench, POV looking up at approaching FPV drone (~30cm wingspan with munition). Animation (7s): (1) Drone approaches high speed from above-right, (2) Soldier instinctively raises arms, turns head — the 'flinch' creating the upper-body injury pattern, (3) Freeze at detonation moment — translucent blast radius overlay: PRIMARY (red, face + raised arms), FRAGMENTATION (orange, upper torso), THERMAL (yellow, exposed skin), (4) Body diagram overlay maps predicted injuries, (5) Comparison: IED pattern (lower body). Text: 'FPV: upper body. IED: lower body. Different threats → different prep.' Camera: POV → freeze → infographic transition. Desaturated→clean. 24fps.`},
-// --- i2v.js ---
-{n:166,title:"Tourniquet Windlass Rotation",type:"i2v",march:null,cat:"HEMORRHAGE",model:"Runway Gen-3",technique:"Single-Action Loop",text:`Starting frame: CAT Gen 7 staged high and tight on a mid-thigh, windlass rod horizontal, slack still in the band. Animation: gloved hands pull the free running end taut, the friction adapter buckle bites, then the windlass rotates 180° then 360° — the band narrows, tissue blanches from pink to white, and a thin pulsatile bleed at the wound below slows to a stop. Rod seats into the retention clip with a click; time strap flips up reading 0930. Duration: 6 seconds. Camera: locked medium close-up, micro handheld tremor. Lighting: harsh overhead tactical headlamp, cool white. Sound: nylon creak, plastic click, sharp exhale. 24fps cinematic.`},
-{n:167,title:"Wound Packing — Hemostatic Gauze",type:"i2v",march:null,cat:"HEMORRHAGE",model:"Kling",technique:"Macro Reveal",text:`Starting frame: extreme macro of a gaping junctional groin wound, dark venous and bright arterial blood welling at the femoral triangle, Combat Gauze tail visible at frame edge. Animation: gloved fingers drive Combat Gauze directly onto the bleeding source, packing tightly stroke by stroke deep into the wound cavity, then hold three-finger pressure for the count. Blood flow at the surface darkens, pools, and stops glistening as the clot organizes. Duration: 8 seconds. Camera: slow macro pull-back from extreme close-up to reveal the full pack. Lighting: warm penlight raking across wet tissue. 24fps.`},
-{n:168,title:"TXA Clot Stabilization",type:"i2v",march:null,cat:"HEMORRHAGE",model:"Sora",technique:"Anatomical Morph",text:`Starting frame: stylized translucent thigh cross-section, the femoral artery glowing red with platelets and fibrin strands suspended in plasma at a transected vessel. Animation: a TXA molecule drifts in and binds the lysine site of plasminogen, blocking conversion to plasmin; existing fibrin mesh stops being degraded and thickens, trapping red cells into a stable plug. Label fades in: antifibrinolytic — stabilizes the clot. Duration: 9 seconds. Camera: gentle orbit around the vessel with a push-in on the binding site. Lighting: clean medical-illustration key with soft rim. 24fps.`},
-{n:169,title:"Junctional Tourniquet Compression",type:"i2v",march:null,cat:"HEMORRHAGE",model:"Pika",technique:"Time-Lapse Procedure",text:`Starting frame: junctional hemorrhage at the groin with a SAM Junctional Tourniquet target compression device positioned over the femoral pulse point, straps loose. Animation: the belt cinches around the pelvis, the pressure handle ratchets down turn by turn, the dome compresses the inguinal crease, and distal arterial bleeding tapers and ceases. A small pulse-check at the knee goes flat. Duration: 7 seconds. Camera: slight high-angle time-lapse push-in over the device. Lighting: overhead surgical white with shadow under the dome. Sound: ratchet clicks, fabric tension. 24fps.`},
-{n:170,title:"Surgical Cricothyrotomy",type:"i2v",march:null,cat:"AIRWAY",model:"Luma",technique:"Slow-Motion Detail",text:`Starting frame: anterior neck prepped, fingers identifying the cricothyroid membrane between thyroid and cricoid cartilage, scalpel poised. Animation: vertical skin incision, then horizontal stab through the membrane; the blade is rotated 90° to open the tract, a bougie is railroaded through into the trachea, and a 6.0 cuffed tube is advanced over it. The cuff inflates and fogging appears in the tube. Duration: 8 seconds. Camera: locked macro on the membrane, ultra slow-motion. Lighting: focused white headlamp, deep shadow at the wound margins. Sound: tissue give, air whistle, syringe click. 24fps.`},
-{n:171,title:"Nasopharyngeal Airway Insertion",type:"i2v",march:null,cat:"AIRWAY",model:"Runway Gen-3",technique:"POV Sequence",text:`Starting frame: first-person view down a supine casualty's face, a nasopharyngeal airway and lube in the operator's hands. Animation: the NPA bevel is turned toward the septum, lubricated, and advanced straight back along the nasal floor — not upward — with a gentle rotation past resistance until the flange rests at the nostril. The chest rises with the next breath and condensation flickers at the tube. Duration: 6 seconds. Camera: stabilized POV with a slow push-in to the nostril. Lighting: red headlamp wash with white spill. Sound: wet insertion, breath through the tube. 24fps.`},
-{n:172,title:"Capnography Waveform Confirmation",type:"i2v",march:null,cat:"AIRWAY",model:"Kling",technique:"Vitals Overlay",text:`Starting frame: an intubated casualty with an EtCO₂ sampling line and a capnograph showing a flat baseline. Animation: the waveform builds the classic square wave — phase I baseline, phase II rapid upstroke, phase III alveolar plateau, then a sharp inspiratory downstroke — repeating breath by breath, EtCO₂ stabilizing at 38 mmHg. A side ticker reads RR 14, confirming tube placement. Duration: 7 seconds. Camera: locked on the monitor with a subtle push-in on the plateau. Lighting: dim cabin, green phosphor glow from the screen. 24fps.`},
-{n:173,title:"Vented Chest Seal Application",type:"i2v",march:null,cat:"RESPIRATION",model:"Sora",technique:"Split-Screen Process",text:`Starting frame: split screen — left, a HyFin Vent chest seal hovering over a sucking chest wound on a hairy chest; right, a translucent thorax cutaway showing collapsing lung. Animation: left side wipes the skin, peels the backing, and applies the vented seal centered on the wound; the three-channel valve flutters open on exhalation and seals on inhalation. Right side shows trapped air venting out while the lung re-expands toward the chest wall. Duration: 8 seconds. Camera: static split with synchronized slow push-in on both panels. Lighting: tactical white left, illustrative key right. 24fps.`},
-{n:174,title:"Needle Decompression — Air Release",type:"i2v",march:null,cat:"RESPIRATION",model:"Pika",technique:"Camera Push-In",text:`Starting frame: 14ga 3.25 inch catheter poised at the 5th intercostal space, anterior axillary line, just above the rib. Animation: the needle is driven through the chest wall over the rib margin, popping through the parietal pleura; a visible rush of air escapes around the hub, the hyperinflated hemithorax visibly relaxes, and jugular veins flatten. Background monitor: HR 138→112, SpO₂ 84%→90%→93%. Duration: 6 seconds. Camera: medium close-up with a steady push-in onto the hub. Lighting: red headlamp plus white penlight. Sound: tissue pop, air hiss, monitor beep climbing. 24fps.`},
-{n:175,title:"Tension Pneumothorax Progression",type:"i2v",march:null,cat:"RESPIRATION",model:"Luma",technique:"Anatomical Morph",text:`Starting frame: translucent chest cutaway, a small pleural air pocket at the apex of the right lung following penetrating trauma. Animation: with each breath the air pocket enlarges, the lung collapses progressively, the mediastinum and trachea shift toward the left, the great vessels kink, and venous return drops — the heart silhouette strains. A vitals tag falls: BP 90/60→70/40, HR climbing. Tension physiology labeled at the kink point. Duration: 9 seconds. Camera: slow orbit settling into a push-in on the tracheal deviation. Lighting: clean illustrative key with red strain glow. 24fps.`},
-{n:176,title:"Whole Blood Transfusion",type:"i2v",march:null,cat:"BLOOD",model:"Runway Gen-3",technique:"Time-Lapse Procedure",text:`Starting frame: a unit of cold-stored low-titer O whole blood hanging on a field pole, primed line clamped, large-bore IV in the antecubital fossa. Animation: the roller clamp opens, blood runs down the drip chamber, and the time-lapse tracks the bag emptying as the casualty's pallor warms — lips pink up, capillary refill at the nailbed quickens from sluggish to brisk. Monitor: MAP 52→68, HR 130→98. Duration: 8 seconds. Camera: high-angle time-lapse with slow descent toward the IV site. Lighting: warm ambient with a cool window edge. 24fps.`},
-{n:177,title:"Intraosseous Tibial Insertion",type:"i2v",march:null,cat:"BLOOD",model:"Kling",technique:"Slow-Motion Detail",text:`Starting frame: EZ-IO driver loaded with a 45mm needle, tip seated on the medial flat of the proximal tibia, two finger-widths below the patella. Animation: the driver spins, the needle bores through cortex with steady pressure until the give of the marrow space; the driver pulls off, the stylet is removed, and a flash of marrow blood appears in the hub before the line is flushed with saline. Duration: 7 seconds. Camera: macro on the insertion site, ultra slow-motion. Lighting: focused white work-light, shadowed leg. Sound: drill whir, cortical crunch, click of stylet release. 24fps.`},
-{n:178,title:"Shock Reperfusion — Capillary Bed",type:"i2v",march:null,cat:"BLOOD",model:"Sora",technique:"Anatomical Morph",text:`Starting frame: stylized capillary bed in shock — vessels clamped, cells stacked and sludged, tissue dim and starved of oxygen. Animation: resuscitation arrives; volume and oxygen restore, arterioles dilate, red cells unstack and stream freely, the tissue glows from gray to vital pink, and mitochondria light up as aerobic metabolism resumes. Lactate label drops 6.0→2.0 mmol/L. Duration: 9 seconds. Camera: drifting push-in following a single red cell through the reperfusing bed. Lighting: dim-to-bright illustrative gradient. 24fps.`},
-{n:179,title:"Pelvic Sling Compression",type:"i2v",march:null,cat:"MSK",model:"Pika",technique:"Single-Action Loop",text:`Starting frame: a SAM Pelvic Sling II laid beneath a casualty at the level of the greater trochanters, suspected open-book pelvic fracture, buckle centered. Animation: both straps are pulled in opposite directions, the auto-stop buckle clicks at correct tension, the iliac wings compress and reduce, and the pelvic volume visibly closes to tamponade venous bleeding. Casualty's grimace eases. Duration: 6 seconds. Camera: overhead with a slow push-in on the buckle click. Lighting: even surgical white. Sound: strap zip, the distinctive auto-stop click, exhale. 24fps.`},
-{n:180,title:"Femur Traction Splinting",type:"i2v",march:null,cat:"MSK",model:"Luma",technique:"Time-Lapse Procedure",text:`Starting frame: mid-shaft femur fracture, thigh shortened and externally rotated, a CT-6 traction splint laid alongside the leg with the ankle hitch applied. Animation: the ischial strap is secured, the ankle hitch clipped to the ratchet, and traction is wound on click by click — the limb lengthens, derotates, and aligns; the thigh circumference shrinks as the muscle spasm releases. Distal pulse check at the foot stays present. Duration: 8 seconds. Camera: side-on time-lapse tracking limb elongation. Lighting: warm field tent glow. Sound: ratchet clicks. 24fps.`},
-{n:181,title:"Crush Syndrome — Hyperkalemia Management",type:"i2v",march:null,cat:"MSK",model:"Runway Gen-3",technique:"Vitals Overlay",text:`Starting frame: a casualty's leg pinned under a concrete slab, the limb dusky below, a prepared IV and bicarbonate at the ready. Animation: before release, fluids run and the line is flagged; the slab lifts and crush syndrome physiology overlays — potassium floods out, the ECG tracing peaks its T-waves and widens the QRS. Calcium is pushed, the tracing narrows and tames. Monitor: K+ 6.8→5.4. Duration: 9 seconds. Camera: medium shot with the ECG overlay pushing in at peak T-waves. Lighting: dusty gray rubble light with monitor glow. 24fps.`},
-{n:182,title:"Lateral Canthotomy Release",type:"i2v",march:null,cat:"EYES",model:"Kling",technique:"Macro Reveal",text:`Starting frame: a tense proptotic eye with a retrobulbar hematoma, lids swollen, lateral canthus marked, blunt-tipped scissors and forceps in frame. Animation: a hemostat crushes the lateral canthus for thirty seconds, then scissors cut the lateral canthal tendon's inferior crus; the lower lid releases, the globe relaxes back into the orbit, intraocular pressure drops, and the cornea regains clarity. Duration: 8 seconds. Camera: macro push-in on the lateral canthus during the cut. Lighting: bright focused exam light, sharp specular highlights. Sound: scissor snip, tissue release. 24fps.`},
-{n:183,title:"Primary Blast Lung Injury",type:"i2v",march:null,cat:"BLAST",model:"Sora",technique:"Anatomical Morph",text:`Starting frame: translucent thorax at the instant of an overpressure blast wave, alveoli drawn as clustered grape-like sacs at the air-tissue interface. Animation: the shock front passes, alveolar septa tear at the capillary interface, hemorrhage blooms into air spaces, and air tracks into vessels as arterial gas emboli that travel toward the coronaries and brain. SpO₂ tag falls 96%→78%. Label: primary blast lung. Duration: 9 seconds. Camera: slow push-in from chest to a single rupturing alveolus. Lighting: cool illustrative key with red hemorrhage bloom. 24fps.`},
-{n:184,title:"FAST Exam — Free Fluid",type:"i2v",march:null,cat:"DIAGNOSTIC",model:"Pika",technique:"Macro Reveal",text:`Starting frame: a Butterfly iQ probe seated in the right upper quadrant at Morison's pouch, the phone screen showing the liver-kidney interface, marker dot up. Animation: the grayscale sweep resolves; an anechoic black stripe creeps into the hepatorenal recess and widens breath by breath — free fluid, a positive FAST. The operator's thumb annotates the screen. Duration: 7 seconds. Camera: over-the-shoulder push-in onto the phone screen. Lighting: dim cabin, blue screen glow on gloved hands. Sound: low ultrasound hum, finger tap on glass. 24fps.`},
-{n:185,title:"Lung Ultrasound — Pneumothorax Signs",type:"i2v",march:null,cat:"DIAGNOSTIC",model:"Luma",technique:"Split-Screen Process",text:`Starting frame: split screen — left, the Butterfly iQ probe on the anterior chest in the second intercostal space; right, the ultrasound screen in M-mode showing the seashore sign. Animation: left side keeps the probe steady; right side loses pleural sliding and the seashore collapses into the flat barcode/stratosphere sign, then a lung point flickers at the transition — confirming pneumothorax. Duration: 8 seconds. Camera: static split with a slow zoom on the barcode pattern. Lighting: tactical white left, screen glow right. 24fps.`},
-{n:186,title:"Burn Cooling And Dressing",type:"i2v",march:null,cat:"ENVIRONMENTAL",model:"Runway Gen-3",technique:"Time-Lapse Procedure",text:`Starting frame: a partial-thickness burn across a forearm, blistered and weeping, a cooled wet dressing and a sheet of clean cling film at the side. Animation: cool running irrigation sheets over the burn for the count, the wound is patted, a non-adherent dressing is laid on, and cling film is wrapped longitudinally — not circumferentially — to allow for swelling. A burn-percentage tag reads 4% TBSA. Duration: 8 seconds. Camera: overhead time-lapse with a gentle descent. Lighting: cool field light, glistening wound highlights. Sound: water trickle, film stretch. 24fps.`},
-{n:187,title:"Hypothermia Rewarming Management",type:"i2v",march:null,cat:"ENVIRONMENTAL",model:"Kling",technique:"Vitals Overlay",text:`Starting frame: a hypothermic casualty wrapped in a Hypothermia Prevention and Management Kit, an active warming blanket and chemical heat pads staged at the torso and groin. Animation: the heat pads are placed at the trunk, the reflective shell zips closed, and a core temperature ticker climbs 32.5°C→34.0°C→35.5°C over the sequence; shivering subsides and the ECG's J-waves shrink and disappear. Duration: 9 seconds. Camera: medium shot with the temperature overlay pushing in. Lighting: cold blue dawn light warming slightly. 24fps.`},
-{n:188,title:"Heat Stroke Rapid Cooling",type:"i2v",march:null,cat:"ENVIRONMENTAL",model:"Sora",technique:"Anatomical Morph",text:`Starting frame: a stylized neuron at a synapse in heat stroke, proteins beginning to unfold under thermal stress, the cell membrane shimmering at 41°C. Animation: rapid cooling begins — cold packs at the neck, axilla, and groin and evaporative misting overlay; the core temperature falls, proteins refold, membrane integrity returns, and the firing pattern normalizes. Core tag: 41.5°C→39.0°C→38.5°C. Label: cool first, transport second. Duration: 9 seconds. Camera: push-in on the synapse stabilizing. Lighting: red-hot fading to cool teal. 24fps.`},
-{n:189,title:"Urine Output Monitoring",type:"i2v",march:null,cat:"PFC",model:"Pika",technique:"Vitals Overlay",text:`Starting frame: a prolonged field care litter setup at 6 hours, casualty with a Foley draining into a graduated bag, vitals card and flow sheet clipped to the litter. Animation: the urine output ticker fills the bag mark by mark, climbing 0.3→0.5→0.8 mL/kg/hr as resuscitation takes hold; MAP holds at 65, mentation note flips from confused to alert. A hand logs the trend on the flow sheet. Duration: 8 seconds. Camera: slow push-in from the litter to the urine bag scale. Lighting: dim shelter lantern, warm. Sound: pen scratch, distant generator. 24fps.`},
-{n:190,title:"Log-Roll Posterior Exam",type:"i2v",march:null,cat:"PFC",model:"Luma",technique:"Split-Screen Process",text:`Starting frame: split screen — left, a casualty being log-rolled by two operators for a full posterior exam; right, an annotated body diagram on a TCCC card. Animation: left side sweeps gloved hands down the spine and flanks, finding and marking a previously missed posterior wound; right side fills in the injury on the diagram and updates the running tally of treatments and meds given. Duration: 8 seconds. Camera: static split, gentle synchronized push-in. Lighting: headlamp pool left, lantern on paper right. 24fps.`},
-{n:191,title:"iTClamp Wound Closure",type:"i2v",march:null,cat:"HEMORRHAGE",model:"Runway Gen-3",technique:"Single-Action Loop",text:`Starting frame: a deep upper-arm wound near the axilla, bright pulsatile bleeding, an iTClamp closure device pinched open in gloved fingers. Animation: the wound edges are approximated by hand, the iTClamp's needled arms are pressed to seat into each skin edge, and the clamp is released to close — the barbs hold the edges sealed, blood pools beneath the closed skin and stops escaping, forming a contained hematoma tamponade. Duration: 6 seconds. Camera: macro with a quick push-in onto the closing clamp. Lighting: harsh white headlamp. Sound: skin pinch, spring snap. 24fps.`},
-{n:192,title:"Supraglottic Airway Insertion",type:"i2v",march:null,cat:"AIRWAY",model:"Kling",technique:"POV Sequence",text:`Starting frame: first-person view over a casualty in respiratory distress, a King LT-D supraglottic airway and syringe in hand. Animation: the head is positioned, the curved tube is inserted midline along the palate until the connector reaches the teeth, and a single syringe inflates both cuffs together; the tube is withdrawn slightly to seat, the chest rises bilaterally, and EtCO₂ confirms placement on a side monitor. Duration: 7 seconds. Camera: stabilized POV pushing toward the airway opening. Lighting: white headlamp with hard shadows. Sound: cuff inflation hiss, chest air entry. 24fps.`},
-{n:193,title:"Finger Thoracostomy",type:"i2v",march:null,cat:"RESPIRATION",model:"Sora",technique:"Camera Push-In",text:`Starting frame: a finger thoracostomy in progress, gloved finger at the 5th intercostal space, anterior axillary line, blunt-dissected tract through the chest wall. Animation: the finger sweeps inside the pleural space clearing adhesions, a gush of blood and air releases past the digit, the collapsed lung brushes the fingertip as it re-expands, and a chest tube is fed along the finger into the cavity. Duration: 8 seconds. Camera: tight medium close-up with a deliberate push-in onto the tract. Lighting: red headlamp plus white spill. Sound: wet rush, lung tissue against glove. 24fps.`},
-{n:194,title:"TXA Infusion Within Window",type:"i2v",march:null,cat:"BLOOD",model:"Pika",technique:"Vitals Overlay",text:`Starting frame: a TXA vial and a 100mL bag of saline on a field tray, a casualty within the 3-hour window after major hemorrhage, IV running. Animation: 1g of TXA is drawn, injected into the bag, and the slow infusion begins over ten minutes shown as a sped-up drip; an overlaid clock counts the window, and a bleeding-rate gauge on the dressing edges downward as the clot stabilizes. Duration: 8 seconds. Camera: slow push-in from the tray to the drip chamber. Lighting: warm field light, cool monitor glow. Sound: vial tap, drip cadence. 24fps.`},
-{n:195,title:"Forearm Fasciotomy Release",type:"i2v",march:null,cat:"MSK",model:"Luma",technique:"Slow-Motion Detail",text:`Starting frame: a forearm with a tense, shiny, swollen volar compartment after crush injury, the skin marked for fasciotomy, scalpel poised. Animation: a long longitudinal incision opens the skin and the fascia is split with scissors; the swollen muscle bulges out through the release, the dusky color brightens toward pink as perfusion returns, and the distal radial pulse strengthens under the operator's fingers. Duration: 8 seconds. Camera: macro on the compartment, slow-motion bulge. Lighting: focused surgical white, glistening tissue. Sound: tissue release, fascia split. 24fps.`},
-{n:196,title:"Frostbite Rapid Rewarming",type:"i2v",march:null,cat:"ENVIRONMENTAL",model:"Runway Gen-3",technique:"Anatomical Morph",text:`Starting frame: a frostbitten hand, fingertips waxy white and hard, ice crystals stylized within the tissue at the cellular level. Animation: rapid rewarming in a 38°C water bath begins; intracellular ice melts, capillaries reopen, the waxy white flushes to deep red hyperemia, and sensation returns as nerves rewarm — clear blisters form at the demarcation line. Label: do not rewarm if refreeze possible. Duration: 9 seconds. Camera: macro push-in tracking color spreading down a finger. Lighting: cold blue to warm amber gradient. 24fps.`},
-{n:197,title:"Cardiac Ultrasound — Tamponade",type:"i2v",march:null,cat:"DIAGNOSTIC",model:"Kling",technique:"Camera Push-In",text:`Starting frame: a Butterfly iQ subxiphoid cardiac view, the four chambers faint on screen, probe angled up toward the left shoulder. Animation: the image sharpens to reveal an anechoic stripe around the heart that swells with each beat; the right ventricle begins to collapse in diastole and the chamber motion dampens — pericardial tamponade developing. Monitor: BP 88/64→72/58, HR rising. Duration: 8 seconds. Camera: over-the-shoulder push-in onto the screen. Lighting: dark cabin, blue screen glow. Sound: ultrasound hum, monitor alarm rising. 24fps.`},
-{n:198,title:"Lethal Triad Reversal",type:"i2v",march:null,cat:"BLOOD",model:"Sora",technique:"Anatomical Morph",text:`Starting frame: stylized blood vessel cross-section in the lethal triad — cold-stiffened cells, acidic plasma rendered amber, and a failing clot fraying at a vessel tear. Animation: the three factors loop and worsen each other — hypothermia slows enzymes, acidosis disables clotting factors, coagulopathy lets bleeding continue and lose more heat. Then warming, calcium, and whole blood arrive and the loop reverses toward a stable clot. Labels orbit: cold, acid, bleed. Duration: 9 seconds. Camera: slow orbit then push-in on the reforming clot. Lighting: grim gray reversing to warm. 24fps.`},
-{n:199,title:"AI-Guided Triage Under Delay",type:"i2v",march:null,cat:"CONFLICTS",model:"Pika",technique:"Split-Screen Process",text:`Starting frame: split screen — left, a casualty in a contested near-peer environment under prolonged evacuation delay; right, a concept heads-up display projecting AI-guided triage cues. Animation: left side shows a single medic managing competing casualties with limited blood and no air support; right side overlays predicted deterioration curves, a resource countdown, and a recommended treatment order that updates as vitals shift. The medic's choice highlights on both panels. Duration: 9 seconds. Camera: static split with slow synchronized push-in. Lighting: dim tactical left, cyan HUD glow right. 24fps.`},
-{n:200,title:"Hemostatic Nanoparticle Clotting",type:"i2v",march:null,cat:"CONFLICTS",model:"Luma",technique:"Anatomical Morph",text:`Starting frame: a near-future concept of an engineered hemostatic nanoparticle suspension in a syringe beside a translucent bleeding vessel. Animation: injected nanoparticles travel downstream, recognize activated platelets at the injury site, and crosslink them into a reinforced plug far faster than native clotting — the breach seals while uninjured vessels stay clear. Tag floats: investigational concept, not fielded. Bleeding-rate gauge drops to zero. Duration: 9 seconds. Camera: push-in following particles to the injury site. Lighting: clean cool illustrative key with a green confirm flash. 24fps.`},
+ {
+  "n": 1,
+  "type": "sc",
+  "march": "hemorrhage",
+  "cat": "SCENARIO",
+  "model": "Claude",
+  "technique": "Tree-of-Thought",
+  "title": "Multi-Axis Ambush — Split Casualty Field",
+  "text": "You are the senior 18D on a 12-man ODA that has been ambushed from three directions in a forested valley. Comms are down. The team is split into two elements separated by 200m of open ground under fire. Element 1 has 2 casualties: one with bilateral penetrating chest wounds (sucking), one with a traumatic amputation below the right knee with tourniquet. Element 2 has 1 casualty: a TBI with GCS 7 and expanding scalp hematoma. You are with Element 1 and your junior medic is with Element 2. You can communicate by hand signals only.\n\nThink step by step and branch your reasoning — for each major fork, name the two options and the deciding factor before you commit. Walk through the first 20 minutes: (1) What orders do you signal to your junior medic for the TBI casualty? (2) Triage and treatment sequence for your two casualties — who gets attention first and why? (3) The chest wound casualty has bilateral tension developing — you have 2 NDC kits and 1 chest seal remaining. Allocation strategy? (4) The amputation casualty's tourniquet is slipping — you cannot reach it while treating the chest wounds. What do you tell the nearest operator to do with zero medical training? (5) Fire suppression allows a 90-second window to cross the open ground — what do you carry, what do you leave? (6) Both elements consolidate — you now have 3 casualties, 2 medics, limited supplies. Build your CCP priority list.",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "split-field tableau",
+    "text": "Cinematic combat-medicine still, 16:9 widescreen. A senior Special Forces medic kneels in a forested valley at dawn, mist drifting between pines, applying a chest seal to an operator with bilateral penetrating chest wounds while a second casualty beside him has a CAT tourniquet on a below-knee traumatic amputation. 200 meters of open ground behind them, a distant second team element barely visible through smoke. Muted green and grey palette, shafts of low sunlight, tense composition, realistic gear and blood, tasteful and instructional."
+   },
+   "i2v": {
+    "model": "Runway",
+    "technique": "kneel-and-seal motion",
+    "text": "Starting frame: a senior medic kneeling in a misty forested valley at dawn pressing a chest seal onto an operator with bilateral chest wounds, a tourniqueted amputation casualty beside him, a distant second element through smoke. Animation: the medic smooths the chest seal with both hands as the casualty's chest rises in a labored breath, mist drifts left to right, a faint hand signal toward the far element. Camera slowly pushes in over the medic's shoulder. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo",
+    "technique": "tense field push-in",
+    "text": "16:9 widescreen cinematic clip. In a misty pine valley at dawn, a Special Forces medic kneels and seals a chest wound on one operator while a tourniqueted leg-amputation casualty lies beside him; a distant team element is faintly visible through drifting smoke 200 meters back. The medic smooths the seal as the chest rises, then signals with one hand toward the far element. Slow push-in over the shoulder, low golden sidelight, muted green-grey palette, realistic and tasteful. 7 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 2,
+  "type": "sc",
+  "march": "circulation",
+  "cat": "PFC SCENARIO",
+  "model": "ChatGPT",
+  "technique": "Time-Blocked Plan",
+  "title": "Contested CASEVAC — 14-Hour Hold",
+  "text": "Your TACEVAC helicopter was shot down attempting extraction. All crew survived but your original casualty — an operator with an open abdominal wound, temporary closure, and 4 units of whole blood already transfused — is now stranded with you in a damaged structure. Estimated time to next extraction attempt: 14 hours. Enemy is within 500m. It is December, ambient temp -8°C.\n\nYou have: Ventway Sparrow ventilator, i-STAT with 3 CG4+ cartridges and 2 CHEM8+, 2 remaining units LTOWB, ketamine vials, ertapenem, one IV fluid bag (1L LR), HPMK, BATDOK tablet (no connectivity). Based on JTS CPG 91 (Prolonged Casualty Care), structure your answer as a 2-hour-block timeline table (columns: block, monitoring, interventions, decision gates): (1) Build the full 14-hour care plan, (2) Your patient's abdomen is distending — suspect re-bleeding from the temporary closure. You cannot operate. What CAN you do? (3) i-STAT management: you have 5 cartridges for 14 hours — when do you run each one for maximum information yield? (4) Hypothermia prevention at -8°C with one HPMK and a damaged structure — creative solutions, (5) Your patient becomes increasingly confused at hour 6 — differential: sepsis vs re-bleed vs hypothermia vs TBI you missed. Diagnostic approach with available tools, (6) BATDOK is offline — paper documentation protocol for eventual handoff.",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "cold candlelit interior",
+    "text": "Cinematic still, 16:9 widescreen. Inside a damaged concrete structure at night, a medic monitors an operator with an open abdomen under temporary closure, a small Ventway Sparrow ventilator and an i-STAT analyzer glowing nearby, an HPMK heat blanket wrapping the patient. Frost on broken windows, breath visible in minus-eight-degree air, single headlamp beam, a BATDOK tablet propped against rubble. Cold blue shadows with warm headlamp pool, somber prolonged-care mood, realistic gear, tasteful."
+   },
+   "i2v": {
+    "model": "Luma",
+    "technique": "vigil flicker",
+    "text": "Starting frame: a medic inside a frosted damaged concrete structure at night monitoring an open-abdomen patient wrapped in an HPMK blanket, a glowing Ventway ventilator and i-STAT analyzer beside him, headlamp pool of warm light in cold blue dark. Animation: the patient's chest rises with the ventilator, the medic leans in checking the i-STAT screen, visible breath fogs the air, frost glints. Camera slow dolly along the wall toward the patient. 8 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo",
+    "technique": "prolonged-care vigil",
+    "text": "16:9 widescreen cinematic clip. Inside a damaged frosted concrete shelter at night, a medic monitors an operator with a temporary-closure open abdomen wrapped in a foil heat blanket; a small ventilator and an i-STAT glow nearby, breath fogging in subzero air. The patient breathes with the ventilator while the medic checks the analyzer screen. Slow dolly along the wall, cold blue palette with a warm headlamp pool, somber realistic tone. 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 3,
+  "type": "sc",
+  "march": "circulation",
+  "cat": "ETHICS / DCR",
+  "model": "Claude",
+  "technique": "Ethical Decision-Matrix",
+  "title": "Walking Blood Bank Under Fire — Ethical Dilemma",
+  "text": "Mass casualty event: convoy IED plus complex ambush. 7 casualties, 2 critical (expected), 3 urgent, 2 minimal. You are the only medic. Your 2 critical patients both need blood NOW. You have 2 units LTOWB remaining and 15 pre-screened walking blood bank donors among the uninjured operators.\n\nHere is the dilemma: activating the WBB means pulling fighters off the perimeter during an active engagement. The team leader says he cannot spare more than 2 donors without compromising security, and the draw will take 15-20 minutes per donor. Meanwhile, one critical patient (the team leader's best friend) has a survivable injury IF he gets blood in the next 30 minutes. The other critical has a 50/50 chance even WITH blood.\n\nLay out your reasoning as an explicit decision matrix (options × criteria: survival probability, resource cost, security risk, time) before you recommend. (1) How do you triage when probability of survival conflicts with resource allocation during active combat? (2) Make the case for each decision: give both units to the high-probability survivor vs split them, (3) The team leader pressures you to prioritize his friend — how do you handle command influence on medical decisions? (4) You activate WBB for 2 donors — screening shortcuts you can and cannot take under fire, (5) A donor faints during the draw and hits his head — GCS 14 — you now have 8 casualties. Recalculate, (6) What does TCCC say about this scenario and where does the doctrine leave gaps that require judgment?",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "walking blood bank moment",
+    "text": "Cinematic still, 16:9 widescreen. At a dusty casualty collection point after an IED ambush, a lone medic kneels between two critical casualties as an uninjured operator rolls up a sleeve and a fresh LTOWB transfusion line runs warm red into a patient's arm. Other fighters hold a perimeter in the blurred background. Harsh midday desert light, dust haze, drama of choice on the medic's face, realistic equipment, blood handled tastefully and clinically."
+   },
+   "i2v": {
+    "model": "Kling",
+    "technique": "transfusion decision beat",
+    "text": "Starting frame: a lone medic kneeling between two critical casualties at a dusty desert casualty collection point, a donor operator rolling up a sleeve, a warm red transfusion line running into a patient, blurred fighters on the perimeter. Animation: blood flows down the line, the medic glances between the two patients then up at the donor, dust drifts across the frame, the donor extends his bared arm. Camera slow arc around the medic. 6 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Sora",
+    "technique": "MCI triage tension",
+    "text": "16:9 widescreen cinematic clip. At a dusty desert casualty collection point after an ambush, a single medic kneels between two critical patients while an uninjured operator bares his arm to donate and a warm transfusion line runs into one casualty; blurred fighters hold a perimeter. Blood flows, the medic looks between the two patients deciding. Slow arc around the medic, harsh midday light and dust haze, realistic and clinical. 6 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 4,
+  "type": "sc",
+  "march": "respiration",
+  "cat": "MARITIME / MCI",
+  "model": "Gemini",
+  "technique": "Constraint Puzzle",
+  "title": "Submarine Rescue — Confined-Space MCI",
+  "text": "You are a SARC (Special Amphibious Reconnaissance Corpsman) responding to a disabled submarine with 12 casualties in a space roughly the size of a school bus. Atmosphere: confirmed low O₂ (16%), elevated CO₂ (4.5%), unknown toxic gas exposure. Casualties range from unresponsive to ambulatory. You enter through a 26-inch diameter hatch with one other corpsman and can carry what fits in two medical packs.\n\nTreat every physical limit (hatch size, atmosphere, PPE work-time, 2 O₂ cylinders) as a hard constraint and solve within them — state each constraint explicitly, then optimize. (1) Triage in a confined toxic atmosphere where your own PPE limits your work time — how does this change standard SALT? (2) What do you carry through a 26\" hatch — build your load list by priority weight, (3) Three patients are unresponsive — differential for low-O₂ environment: simple hypoxia vs CO₂ narcosis vs toxic gas exposure — treatment differs dramatically. How do you differentiate with no labs? (4) You have 2 portable O₂ cylinders — allocation across 12 patients, (5) Extraction sequence: who comes out first and why — sickest first or most salvageable? (6) One patient is seizing — in a 16% O₂ environment with elevated CO₂, your drug choices narrow. What can you give and what is contraindicated?",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "confined-space rescue",
+    "text": "Cinematic still, vertical 9:16. Inside the cramped steel interior of a disabled submarine, a SARC corpsman in a respirator squeezes through a narrow round hatch dragging two portable oxygen cylinders toward a dozen slumped casualties packed in a space the size of a school bus. Dim emergency lighting tints everything red, condensation on pipes, claustrophobic crowding, headlamp cutting the gloom. Tense maritime mood, realistic gear, tasteful."
+   },
+   "i2v": {
+    "model": "Kling",
+    "technique": "hatch entry crawl",
+    "text": "Starting frame: a respirator-wearing corpsman squeezing through a narrow round submarine hatch dragging two oxygen cylinders toward a dozen slumped casualties in a cramped red-lit steel compartment with condensation on pipes. Animation: the corpsman pulls himself through the hatch and the cylinders scrape after him, his headlamp beam sweeps across the casualties, red emergency lights pulse, condensation drips. Camera follows from inside the compartment. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo",
+    "technique": "claustrophobic entry",
+    "text": "Vertical 9:16 cinematic clip. Inside a disabled submarine's cramped red-lit steel interior, a SARC corpsman in a respirator pushes through a narrow round hatch dragging two oxygen cylinders toward a dozen slumped casualties; condensation drips from pipes. His headlamp sweeps the crowded space as red emergency lights pulse. Camera follows from inside, claustrophobic framing, tense maritime mood, realistic gear, tasteful. 7 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 5,
+  "type": "sc",
+  "march": "hemorrhage",
+  "cat": "FID / TRAINING",
+  "model": "ChatGPT",
+  "technique": "Talk-Through Script",
+  "title": "Partner Force Medic — Teach Through a Translator",
+  "text": "You are an 18D advising a partner force in a country where the local medics have EMT-Basic equivalent training. Through a translator, you must talk a local medic through managing a casualty with a junctional inguinal wound that is NOT amenable to tourniquet. The local medic has: gauze (not hemostatic), IV access supplies, normal saline, and basic wound care materials. He has never seen an iTClamp or Combat Gauze.\n\nWrite the actual words to say, short enough for a translator to relay in real time, then annotate why each step works. (1) How do you explain wound packing for junctional hemorrhage control when the medic has never done it — what analogies and hand gestures work through a language barrier? (2) The patient needs blood and there is none — what austere resuscitation looks like with only crystalloid and the evidence for why it is inferior, (3) Build a 5-step talk-through that a translator can relay during active hemorrhage, (4) Your translator freezes under stress — backup communication plan, (5) Cultural consideration: the partner force medic believes the patient will die and wants to stop. How do you motivate continued effort? (6) This patient survives. Design a 3-day training curriculum using only locally available supplies.",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "teach-through-translator",
+    "text": "Cinematic still, 16:9 widescreen. An 18D Special Forces medic crouches beside a local partner-force medic, guiding his gloved hands as they pack a junctional inguinal groin wound with gauze on a supine casualty; a translator gestures urgently between them. Simple austere clinic, daylight through a doorway, focused teaching expressions. Warm earth tones, documentary realism, clinical and tasteful, blood minimal and controlled."
+   },
+   "i2v": {
+    "model": "Runway",
+    "technique": "guided-hands instruction",
+    "text": "Starting frame: an 18D medic crouched beside a local partner medic guiding his gloved hands packing a junctional groin wound, a translator gesturing between them in an austere daylit clinic. Animation: the 18D's hands cover and direct the local medic's hands pressing gauze into the wound, the translator's mouth moves and hands gesture, both medics glance at each other in concentration. Camera slow push-in toward the wound and hands. 6 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo",
+    "technique": "mentorship close work",
+    "text": "16:9 widescreen cinematic clip. In an austere daylit clinic, an 18D medic crouches beside a local partner-force medic and guides his gloved hands to pack a junctional groin wound on a supine casualty while a translator gestures between them. The 18D directs the hands pressing gauze as the translator relays instructions. Slow push-in on the hands and wound, warm earth tones, documentary realism, clinical and tasteful. 6 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 6,
+  "type": "sc",
+  "march": "circulation",
+  "cat": "PEDIATRIC",
+  "model": "Claude",
+  "technique": "Show-Your-Math",
+  "title": "Pediatric Casualty — Dosing Under Pressure",
+  "text": "During a village stability operation, an explosion injures several civilians including a child approximately 4-5 years old (estimated weight 18kg). The child has: a deep scalp laceration with significant bleeding, a deformed left forearm (likely fracture), abdominal rigidity with guarding, HR 160, crying but not making eye contact, capillary refill 4 seconds.\n\nFor every dose and rate, show the full calculation (formula, substitution, result with units) so I can check your math. (1) Walk through your assessment using MARCH adapted for an 18kg child, (2) Your tourniquet is designed for adults — what modifications allow hemorrhage control on a small limb? (3) Fluid resuscitation: 20 mL/kg bolus = how much for this child? How fast? What if you only have adult IV tubing with standard drip chambers? (4) Pain management: calculate ketamine dose for an 18kg child across all routes (IV analgesia, IM analgesia, procedural sedation) — show your math, (5) IO access: which EZ-IO needle for this child and where? What if the proximal tibia is inaccessible? (6) The mother is hysterical and interfering with treatment — managing the tactical, medical, and human dimensions simultaneously.",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "pediatric trauma tableau",
+    "text": "Cinematic still, 16:9 widescreen. After a village explosion, a Special Forces medic kneels over a small injured child of about five, bandaging a scalp laceration and splinting a deformed forearm, an EZ-IO drill and a 20-milliliter-per-kilogram fluid bag laid out on a poncho beside them. A distraught mother reaches in from the edge of frame. Dusty street, soft overcast light, deep compassion and urgency, realistic and tasteful, no graphic gore."
+   },
+   "i2v": {
+    "model": "Kling",
+    "technique": "gentle pediatric care",
+    "text": "Starting frame: a medic kneeling over a small injured child bandaging a scalp wound and splinting a forearm, an EZ-IO and fluid bag on a poncho, a distraught mother reaching in from frame edge in a dusty overcast street. Animation: the medic wraps the head bandage and steadies the splint, the child shivers and cries softly, the mother reaches closer, dust drifts. Camera slow pedestal down to the child's level. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Sora",
+    "technique": "compassionate urgency",
+    "text": "16:9 widescreen cinematic clip. After a village explosion, a Special Forces medic kneels over a small injured child, bandaging a scalp laceration and splinting a deformed forearm, an EZ-IO drill and a fluid bag on a poncho; a distraught mother reaches in from the edge. The medic wraps the bandage as the child cries and the mother leans closer. Slow pedestal down to the child's level, soft overcast light, dusty street, compassionate and tasteful. 7 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 7,
+  "type": "sc",
+  "march": "hemorrhage",
+  "cat": "DIVERGENT",
+  "model": "Gemini",
+  "technique": "Decision Framework",
+  "title": "Dual-Role Dilemma — Medic as Combatant",
+  "text": "Your 6-man reconnaissance element is compromised. During the break-contact drill, you — the only medic — are on the SAW providing suppressive fire when the point man goes down 15m ahead in the open. The team leader is calling for fire. If you drop the gun to treat the casualty, the remaining 4 operators lose their base of fire during a critical bounding movement. If you maintain fire, the point man bleeds.\n\nFirst give me a reusable decision framework (the rule), then apply it to this exact case. (1) Analyze the dual-role tension that defines the SOF medic — when does the medic stop being a shooter? (2) You continue firing for 60 seconds while another operator throws a tourniquet — talk that operator through application over the radio in 4 sentences or less, (3) Fire superiority achieved, you move to the casualty — tourniquet on left thigh, unresponsive. Fastest meaningful neurological check under fire? (4) You need to move him 50m to cover — what MUST happen before movement vs what can wait? (5) Design the pre-mission brief that would have prepared the non-medic team members, (6) Post-mission AAR: what training failures led to the medic being the only operator who could run the SAW? How do you fix this?",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "shooter-to-medic transition",
+    "text": "Cinematic still, 16:9 widescreen. A reconnaissance medic crouched behind cover lowers a SAW machine gun off his shoulder, half-turning toward a downed point man fifteen meters out in the open where another operator is cinching a CAT tourniquet on a thigh. Spent brass, dust, muzzle smoke. Harsh contrasty daylight, motion in the air, the moment of choosing between gun and aid bag. Gritty realism, tasteful, minimal blood."
+   },
+   "i2v": {
+    "model": "Runway",
+    "technique": "drop-the-gun pivot",
+    "text": "Starting frame: a recon medic behind cover lowering a SAW off his shoulder and half-turning toward a downed point man fifteen meters out where another operator cinches a thigh tourniquet, amid spent brass and muzzle smoke. Animation: the medic lowers the weapon and pivots his body toward the casualty, the distant operator pulls the tourniquet windlass tight, dust and smoke drift across. Camera quick rack-focus from the SAW to the casualty. 5 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo",
+    "technique": "dual-role decision",
+    "text": "16:9 widescreen cinematic clip. A reconnaissance medic behind cover lowers his SAW machine gun and turns toward a downed point man fifteen meters out in the open, where another operator tightens a CAT tourniquet on a thigh; spent brass and muzzle smoke around them. The medic pivots toward the casualty as the tourniquet windlass is cranked tight. Quick rack-focus from gun to casualty, harsh contrasty daylight, gritty realism, tasteful. 5 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 8,
+  "type": "sc",
+  "march": "respiration",
+  "cat": "CHEM / SCENARIO",
+  "model": "ChatGPT",
+  "technique": "Layered Triage",
+  "title": "CBRN Overlap — Chlorine in Underground Hospital",
+  "text": "Based on the Syrian conflict pattern (311 confirmed chemical attacks, 91.5% chlorine), your team enters a basement medical facility where chlorine gas was deployed. 8 patients who were receiving treatment are now exposed. Chlorine is heavier than air — the basement is the worst possible location. Your team has M50 gas masks but no MOPP suits.\n\nThese patients have conventional wounds AND chemical exposure — address both layers and show how they interact. (1) Chlorine at what concentration causes what symptoms? Build a triage matrix by exposure level, (2) Your team's protective posture: M50 masks filter chlorine but skin is exposed — how long can you work? What dermal effects to monitor in your own team? (3) Treatment priorities for chlorine inhalation layered on conventional trauma, (4) Decontamination in a basement with no running water — improvised solutions, (5) One patient is intubated on a ventilator — chlorine entered the circuit. Disconnect and bag, or continue? Both options have lethal risks, (6) Vertical extraction: sequence for moving 8 patients up a stairwell while minimizing continued exposure.",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "chlorine basement layered",
+    "text": "Cinematic still, 16:9 widescreen. In a dim underground medical basement where pale greenish-yellow chlorine gas pools low along the floor, a team in M50 gas masks moves among eight coughing patients on cots, one on a manual bag valve mask. Heavy gas hangs at ankle height, single emergency bulb, condensation, a stairwell of escape light at the back. Eerie sickly palette, tense CBRN mood, realistic gear, tasteful."
+   },
+   "i2v": {
+    "model": "Kling",
+    "technique": "gas-pool advance",
+    "text": "Starting frame: a dim chlorine-filled medical basement with greenish-yellow gas pooling low, a team in M50 masks among eight coughing patients on cots, one being bagged, a lit stairwell at the back. Animation: the gas swirls at ankle height as a masked medic squeezes a bag valve mask, a patient coughs and recoils, a teammate gestures toward the stairwell. Camera slow lateral track through the haze. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo",
+    "technique": "toxic-atmosphere triage",
+    "text": "16:9 widescreen cinematic clip. In a dim underground basement clinic, pale greenish-yellow chlorine gas pools along the floor as a team in M50 gas masks works among eight coughing patients on cots; one medic squeezes a bag valve mask. Gas swirls at ankle height, a patient coughs, a teammate points to a lit stairwell. Slow lateral track through the haze, eerie sickly palette, single emergency bulb, tense and tasteful. 7 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 9,
+  "type": "sc",
+  "march": "respiration",
+  "cat": "DIVERGENT",
+  "model": "Claude",
+  "technique": "Tactile SOP",
+  "title": "Zero-Vis Trauma Care — Role 1 Power Failure",
+  "text": "You are running a Role 1 BAS when total power failure occurs during a mass casualty event. You have 4 casualties in various stages of treatment. It is night. Your NVGs are 30m away. Only light: 2 headlamps (one red, one white) and a BATDOK screen glow.\n\nFor each task, classify it as \"tactile-only OK\" or \"requires light\" and justify, then build the workflow around that. (1) What skills transition to tactile-only and which require light? Prioritize 2 light sources across 4 patients, (2) You were mid-needle-decompression on Patient 1 when lights died — needle partially inserted. Complete by feel or stabilize and redirect light? (3) Patient 3 is on a ketamine drip — the IV pump stopped. Convert to gravity drip in the dark — calculate manual drip rate for 750mg/250mL at 135 mL/hr and the tactile method for counting drops, (4) Patient 2 is post-cric with EtCO₂ monitoring now dark — confirm tube placement without capnography? (5) Generator is 50m outside — sending someone means losing hands for 5 minutes. Decision matrix, (6) Design a Role 1 SOP for power failure that prevents this chaos.",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "blackout headlamp glow",
+    "text": "Cinematic still, 16:9 widescreen. A Role 1 aid station plunged into darkness during a mass casualty event, four casualties on litters in near-total black, a single white headlamp beam and a red headlamp cutting the gloom, a BATDOK tablet glowing faintly. A medic mid needle-decompression, needle partly inserted in a chest, working by feel. Deep shadows, isolated pools of light, tense improvisation, realistic gear, tasteful."
+   },
+   "i2v": {
+    "model": "Luma",
+    "technique": "work-by-feel beam",
+    "text": "Starting frame: a blacked-out Role 1 aid station with four litter casualties in darkness, a white and a red headlamp beam and a glowing BATDOK tablet, a medic mid needle-decompression working by feel. Animation: the headlamp beam swings between patients, the medic's hands steady the needle and advance it slowly, the red light bobs as a helper moves, faint screen glow flickers. Camera slow handheld drift across the dark room. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo",
+    "technique": "power-failure improvisation",
+    "text": "16:9 widescreen cinematic clip. A Role 1 aid station in total darkness during a mass casualty event, four litter casualties barely visible, a single white headlamp and a red headlamp cutting the gloom, a faintly glowing tablet. A medic performs a needle decompression by feel, hands steadying the needle into a chest. Headlamp beams swing between patients. Slow handheld drift through the dark, isolated light pools, tense and tasteful. 7 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 10,
+  "type": "sc",
+  "march": "hypothermia",
+  "cat": "AIRBORNE / SCENARIO",
+  "model": "Gemini",
+  "technique": "Differential Threads",
+  "title": "HALO Freefall Injury — Triple Pathology",
+  "text": "During a HALO insertion from 25,000 feet, an operator's O₂ system fails at 22,000 feet. He loses consciousness, deploys reserve chute late, impacts hard on rocky terrain at 8,500 feet. Presents with: severe headache, confusion, visual disturbances, left wrist deformity, pain with inspiration on right side.\n\nSeparate the tangled pathologies like threads — name each, rank by lethality, and show how you would tease them apart at the bedside. (1) Triple pathology — hypoxic brain injury + possible barotrauma + blunt impact. Which kills first? (2) How many seconds of useful consciousness at 22,000 feet after O₂ failure? What damage during unconscious freefall? (3) Headache/confusion: residual hypoxia vs HACE vs closed head injury — differentiation pathway, (4) Inspiratory pain + rocky landing = rib fractures ± pneumothorax. POCUS vs clinical assessment, (5) He must walk 4km to the ORP — can he? Go/no-go criteria, (6) Prevention: O₂ system checks and contingency protocols for the next jump.",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "alpine impact assessment",
+    "text": "Cinematic still, 16:9 widescreen. On a rocky high mountain ridge at 8,500 feet, a HALO parachutist lies tangled in a half-collapsed reserve canopy after a hard landing, a medic kneeling to check his pupils while supporting a deformed left wrist, a portable ultrasound probe resting on the right chest. Thin cold blue alpine light, scattered scree, parachute fabric rippling, urgency and altitude. Crisp realism, tasteful, minimal blood."
+   },
+   "i2v": {
+    "model": "Kling",
+    "technique": "pupil-check on the ridge",
+    "text": "Starting frame: a HALO parachutist tangled in a half-collapsed reserve canopy on a rocky ridge, a medic kneeling checking his pupils and supporting a deformed wrist, an ultrasound probe on the chest, thin blue alpine light. Animation: the medic shines a penlight across the eyes, the parachute fabric ripples in mountain wind, the casualty stirs and winces, the medic shifts the ultrasound probe. Camera slow orbit around the pair. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo",
+    "technique": "high-altitude trauma exam",
+    "text": "16:9 widescreen cinematic clip. On a rocky 8,500-foot ridge, a HALO parachutist lies tangled in a half-collapsed reserve canopy; a medic kneels checking pupils with a penlight, supporting a deformed wrist, an ultrasound probe on the right chest. The medic examines the eyes as the parachute ripples in cold wind and the casualty winces. Slow orbit around them, thin blue alpine light, scattered scree, crisp realism, tasteful. 7 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 11,
+  "type": "sc",
+  "march": "respiration",
+  "cat": "MARITIME / CBRN",
+  "model": "ChatGPT",
+  "technique": "Pharmacology Brief",
+  "title": "Maritime Fentanyl Exposure — 3 Operators Down",
+  "text": "Your VBSS team boards a drug vessel. Upon breaching a cargo hold, 3 operators collapse within 90 seconds from aerosolized fentanyl. You're topside. CASEVAC boat is 10 minutes out. You have naloxone, 8 remaining operators who refuse to enter.\n\nLead with a 3-sentence pharmacology brief, then act on it. (1) Why fentanyl aerosol is different: pharmacology in 3 sentences, (2) PPE for entry — is your M50 sufficient? (3) Naloxone dose escalation: 5× 2mg IN + 3× 0.4mg IV across 3 apneic patients. Allocation, (4) ONE medic, THREE patients needing ventilatory support simultaneously — triage and resource allocation, (5) Naloxone wears off faster than fentanyl — re-sedation monitoring protocol, (6) Decontamination before CASEVAC arrival.",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "VBSS overdose topside",
+    "text": "Cinematic still, vertical 9:16. On the deck of a drug vessel at sea, three operators lie collapsed near an open cargo hold while a single medic kneels over them administering intranasal naloxone, eight more operators standing back refusing to enter the hold. Sea spray, grey overcast ocean light, ship rust and rigging. Urgent maritime CBRN mood, realistic gear, tasteful, no gore."
+   },
+   "i2v": {
+    "model": "Runway",
+    "technique": "naloxone push beat",
+    "text": "Starting frame: three collapsed operators on a drug-vessel deck near an open cargo hold, a single medic kneeling administering intranasal naloxone, eight operators standing back, sea spray and grey ocean light. Animation: the medic pumps the nasal naloxone into one patient then turns to the next, sea spray blows across, one downed operator's chest twitches with a shallow breath, the standing operators shift uneasily. Camera slow push-in on the medic and the three patients. 6 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo",
+    "technique": "topside mass-overdose",
+    "text": "Vertical 9:16 cinematic clip. On a rusty drug-vessel deck at sea, three operators lie collapsed near an open cargo hold while one medic kneels giving intranasal naloxone; eight operators stand back refusing to enter. The medic pumps naloxone into one patient then turns to the next as sea spray blows across and a downed operator takes a shallow breath. Slow push-in on the medic and patients, grey overcast ocean light, urgent maritime mood, tasteful. 6 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 12,
+  "type": "sc",
+  "march": "circulation",
+  "cat": "MCI / DIVERGENT",
+  "model": "Claude",
+  "technique": "Compare/Contrast",
+  "title": "Hospital Surge — Parking-Garage Trauma Station",
+  "text": "Your SOF medical element is attached to a civilian hospital receiving 40 mass casualties. The trauma bay holds 6. The surgeon asks your 4-medic team to take over a parking garage overflow area.\n\nBuild a two-column compare/contrast of military-tactical vs civilian-hospital capability, then synthesize a combined plan from the overlap. (1) What capabilities does your team bring that hospital staff don't, and vice versa? (2) Build a parking garage trauma station layout, (3) TCCC vs civilian trauma protocols — where do they critically differ? (4) Your i-STAT vs their overwhelmed lab (4-hour turnaround) — how to support civilian triage with tactical diagnostics, (5) An aggressive family member — managing hostile civilians without military ROE, (6) The surgeon asks you to scrub in — scope of practice implications.",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "parking-garage overflow",
+    "text": "Cinematic still, 16:9 widescreen. A concrete parking garage converted into a mass casualty overflow trauma station, four military medics setting up litters and an i-STAT analyzer on a folding table among rows of civilian patients, harsh fluorescent strip lights and shadowed pillars. Improvised triage chaos organized into lanes, hospital meets tactical. Cool grey-green palette, documentary realism, busy and tense, tasteful."
+   },
+   "i2v": {
+    "model": "Kling",
+    "technique": "station setup bustle",
+    "text": "Starting frame: a concrete parking garage overflow trauma station, four military medics setting up litters and an i-STAT on a folding table among rows of civilian patients under fluorescent strip lights and pillars. Animation: medics unfold litters and lay out supplies, a medic taps the i-STAT screen, patients shift on the ground, people move between the lanes. Camera slow crane up revealing the full bay of casualties. 8 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Sora",
+    "technique": "surge trauma bay",
+    "text": "16:9 widescreen cinematic clip. A concrete parking garage converted into a mass casualty overflow station: four military medics set up litters and an i-STAT analyzer on a folding table among rows of civilian patients under harsh fluorescent strips and shadowed pillars. Medics unfold litters and lay out gear while patients shift. Slow crane up revealing the full bay, cool grey-green palette, documentary realism, busy and tasteful. 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 13,
+  "type": "sc",
+  "march": "hypothermia",
+  "cat": "ENVIRONMENTAL",
+  "model": "Gemini",
+  "technique": "CPG-Anchored",
+  "title": "Arctic Submersion — Cold-Water Drowning",
+  "text": "Operator falls through lake ice in Norway. Water 2°C, submersion 4 minutes. Recovered: GCS 6, agonal respirations 4/min, pulse 38, estimated core temp 30°C. Ambient -15°C. Dry suit kept body dry but hands and head submerged.\n\nAnchor every answer to JTS CPG 64 (Drowning) and JTS hypothermia guidance — cite the principle, then apply it. (1) Cold water drowning — explain the mammalian dive reflex and \"not dead until warm and dead,\" (2) Below 32°C the heart is irritable and jostling can trigger VF — handling precautions, (3) Rewarming: core vs peripheral sequence — why peripheral-first causes lethal afterdrop, (4) Intubation at -15°C with a 30°C patient — how hypothermia alters RSI drug metabolism, (5) He arrests at 33°C, VF on monitor — defibrillate or wait? (6) ROSC at 34°C — the next 6 hours of PFC protocol.",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "arctic ice rescue",
+    "text": "Cinematic still, 16:9 widescreen. On a frozen Norwegian lake at dusk, rescuers pull a dry-suited operator from a jagged black hole in the ice, a medic supporting his head with extreme care, frost on eyebrows, breath steaming in minus-fifteen air. A hypothermia wrap and a defibrillator case open on the snow. Cold steel-blue twilight, long shadows, gentle handling per cold-care doctrine. Stark realism, tasteful."
+   },
+   "i2v": {
+    "model": "Luma",
+    "technique": "careful ice extraction",
+    "text": "Starting frame: rescuers pulling a dry-suited operator from a jagged hole in lake ice at dusk, a medic cradling his head, frost on eyebrows, breath steaming, a hypothermia wrap and open defibrillator case on the snow. Animation: the rescuers ease the limp body up onto the ice with slow gentle motion, breath fogs in the cold, the medic stabilizes the head and neck, snow crystals drift. Camera slow low push-in toward the patient's face. 8 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo",
+    "technique": "cold-water recovery",
+    "text": "16:9 widescreen cinematic clip. On a frozen Norwegian lake at dusk, rescuers gently lift a dry-suited operator from a jagged black ice hole while a medic cradles his head with extreme care; frost on eyebrows, breath steaming in subzero air, a hypothermia wrap and defibrillator on the snow. They ease the limp body onto the ice with deliberate slow motion. Slow low push-in toward the face, cold steel-blue twilight, stark realism, tasteful. 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 14,
+  "type": "sc",
+  "march": "hemorrhage",
+  "cat": "CIVILIAN / DIVERGENT",
+  "model": "ChatGPT",
+  "technique": "Plain-Language",
+  "title": "Embedded Journalist — Competing Priorities",
+  "text": "An embedded journalist takes shrapnel. Penetrating right flank wound with evisceration, deep right hand laceration (arterial), facial lacerations. She's screaming, has no training, no armor, and is photographing her own injuries.\n\nGive two layers for each step: the clinical action, and the exact plain-language words to say to a terrified civilian. (1) First 60 seconds — what you do, what you say, (2) Explain evisceration management to a terrified person looking at her own intestines, (3) Arterial hand wound, no small tourniquets — improvised hemorrhage control, (4) She's going into shock and STILL using her phone — balance compliance with dignity, (5) MEDEVAC for a civilian with a military unit — what changes? (6) Her photos will become public — documentation implications.",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "civilian flank wound",
+    "text": "Cinematic still, 16:9 widescreen. A combat medic kneels over a terrified female journalist with a penetrating right flank wound and evisceration covered by a moist occlusive dressing, an improvised tourniquet on her bleeding right hand, her camera still clutched in the other. Press lanyard visible. Rubble street, soft side light, raw human fear and steady professional calm. Documentary realism, tasteful, intestines tactfully obscured."
+   },
+   "i2v": {
+    "model": "Runway",
+    "technique": "calm-the-civilian beat",
+    "text": "Starting frame: a combat medic kneeling over a terrified female journalist with an occlusive dressing over an eviscerating flank wound, an improvised hand tourniquet, her camera clutched, press lanyard visible, on a rubble street. Animation: the medic presses the moist dressing and speaks calmly making eye contact, the journalist's hand trembles around the camera, her chest heaves with panicked breaths. Camera slow push-in on their faces. 6 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo",
+    "technique": "terrified-patient care",
+    "text": "16:9 widescreen cinematic clip. On a rubble street, a combat medic kneels over a terrified female journalist with a moist occlusive dressing over an eviscerating flank wound and an improvised tourniquet on her bleeding hand; she clutches her camera, press lanyard visible. The medic presses the dressing and speaks calmly as her hand trembles and she breathes in panic. Slow push-in on their faces, soft side light, documentary realism, tasteful with injuries obscured. 6 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 15,
+  "type": "sc",
+  "march": "respiration",
+  "cat": "DIVERGENT",
+  "model": "Claude",
+  "technique": "Visual Signaling Design",
+  "title": "Parallel Care Across a River — Zero Comms",
+  "text": "Platoon split by a failed river crossing. Both sides have casualties and one medic. Radios are waterlogged. 100m line of sight only. Your casualty: open pneumo + femur fracture. Junior medic's casualty: facial blast + compromised airway + burned hands.\n\nDesign a concrete, unambiguous visual signaling system first (define each gesture/panel signal), then run the scenario through it. (1) Design a pre-established visual medical signaling system for 100m, (2) Sequencing: open pneumo vs femur traction — which first? (3) You can see Medic 2 struggling with the airway — visual guidance from across a river, (4) Rope crossing possible — pack a kit bag for Medic 2's patient, (5) One helicopter, lands only on Medic 2's side — decision framework, (6) Post-mission training event to prevent this.",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "cross-river signaling",
+    "text": "Cinematic still, 16:9 widescreen. A river splits a platoon; on the near bank a medic stands holding a bright orange signal panel raised in a deliberate gesture toward the far bank one hundred meters away, where a junior medic kneels over a casualty with a compromised airway. Casualties on both banks, fast brown water between. Overcast flat light, wet rocks, tense wordless coordination. Realistic, tasteful."
+   },
+   "i2v": {
+    "model": "Kling",
+    "technique": "panel-signal exchange",
+    "text": "Starting frame: a medic on a near riverbank raising a bright orange signal panel toward a junior medic kneeling over an airway casualty on the far bank one hundred meters away, fast brown water between, casualties on both sides. Animation: the near medic sweeps the panel in a deliberate signal, the far medic looks up and raises a hand in acknowledgment, the river rushes and ripples between them. Camera slow dolly along the near bank. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo",
+    "technique": "wordless coordination",
+    "text": "16:9 widescreen cinematic clip. A platoon is split by a fast brown river; on the near bank a medic raises a bright orange signal panel toward a junior medic one hundred meters away kneeling over an airway casualty, with wounded on both banks. The near medic sweeps the panel in a signal and the far medic raises a hand in reply as the river rushes between. Slow dolly along the near bank, overcast flat light, wet rocks, tense and tasteful. 7 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 16,
+  "type": "sc",
+  "march": "respiration",
+  "cat": "BLAST / DIVERGENT",
+  "model": "Gemini",
+  "technique": "Mechanism-First",
+  "title": "Thermobaric Blast — Primary Blast Lung",
+  "text": "Three operators near the edge of a thermobaric strike. No external injuries. All have: dyspnea, hemoptysis, TM rupture. One has a rigid belly. Primary blast injury only.\n\nExplain the underlying mechanism before each management decision, so the \"why\" drives the \"what.\" (1) Thermobaric sustained overpressure vs conventional blast — why blast lung is more severe, (2) The lethal trap: positive-pressure ventilation can cause air embolism in blast lung — explain the mechanism, (3) Rigid belly = blast bowel (hollow viscus rupture). Field management? (4) TM rupture as a predictor of internal blast severity — the evidence, (5) All walking and talking now but blast lung deteriorates 12-48h. Monitoring protocol, (6) Altitude change on helicopter worsens blast lung — MEDEVAC precautions.",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "blast-lung walking wounded",
+    "text": "Cinematic still, 16:9 widescreen. Three dazed operators sit and stand near the scorched edge of a thermobaric blast crater with no external wounds, one coughing blood into a gloved hand, a medic crouched listening to a chest with a stethoscope and watching for labored breathing. Drifting smoke, scorched earth, shimmering heat. Desaturated warm-grey palette, ominous quiet-after-the-blast mood, realistic gear, tasteful."
+   },
+   "i2v": {
+    "model": "Runway",
+    "technique": "auscultation pause",
+    "text": "Starting frame: three dazed operators near a scorched thermobaric crater with no external wounds, one coughing blood into a glove, a medic crouched listening to a chest with a stethoscope, drifting smoke and shimmering heat. Animation: the medic presses the stethoscope and concentrates, the coughing operator hunches with a wet cough, smoke drifts slowly, heat shimmer ripples the air. Camera slow push-in on the medic and the listening moment. 6 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo",
+    "technique": "primary-blast aftermath",
+    "text": "16:9 widescreen cinematic clip. Near the scorched edge of a thermobaric blast crater, three dazed operators with no external wounds; one coughs blood into a gloved hand while a medic crouches listening to his chest with a stethoscope. Smoke drifts and heat shimmers as the medic concentrates and the operator hunches with a wet cough. Slow push-in on the listening moment, desaturated warm-grey palette, ominous quiet, realistic and tasteful. 6 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 17,
+  "type": "sc",
+  "march": "hemorrhage",
+  "cat": "VETERINARY / DIVERGENT",
+  "model": "ChatGPT",
+  "technique": "Cross-Species Mapping",
+  "title": "Combat Working Dog — K9 TCCC",
+  "text": "Your MWD (Belgian Malinois, 30kg) takes a GSW to the left shoulder during compound clearance. Handler panicking. Dog whimpering, non-weight-bearing, moderate hemorrhage, no exit wound.\n\nFor each step, explicitly map the human TCCC standard to the canine equivalent and flag where they diverge. (1) Translate human MARCH to canine — what's different? (2) CAT Gen 7 on a canine forelimb — does it work? Modifications? (3) Ketamine dosing: canine = 5-10 mg/kg IM (vs human 0.5-1) — calculate for 30kg, (4) No exit wound = retained bullet — field wound care for an animal that will chew the bandage, (5) Cephalic vein IV access — technique differences, (6) Handler management: this dog is a teammate. Psychological first aid.",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "K9 TCCC",
+    "text": "Cinematic still, 16:9 widescreen. Inside a cleared compound room, a Special Forces medic applies a CAT tourniquet high on the left foreleg of a Belgian Malinois working dog lying on its side, an anxious handler cradling the dog's head and muzzle. Gear scattered, dust in slanted window light. Tender and urgent, the dog as teammate. Warm dusty palette, documentary realism, tasteful, controlled bleeding."
+   },
+   "i2v": {
+    "model": "Kling",
+    "technique": "canine tourniquet apply",
+    "text": "Starting frame: a medic applying a CAT tourniquet high on the foreleg of a Belgian Malinois lying on its side, an anxious handler cradling the dog's head, dust in slanted window light inside a compound room. Animation: the medic twists the tourniquet windlass tight, the dog's flank rises and falls panting, the handler strokes its head and leans close, dust motes drift in the light beam. Camera slow push-in toward the dog's eyes. 6 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo",
+    "technique": "working-dog care",
+    "text": "16:9 widescreen cinematic clip. Inside a cleared compound room with dust in slanted window light, a Special Forces medic applies a CAT tourniquet high on the foreleg of a Belgian Malinois lying on its side while an anxious handler cradles its head. The medic cranks the windlass tight as the dog pants and the handler strokes its head. Slow push-in toward the dog's eyes, warm dusty palette, documentary realism, tender and tasteful. 6 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 18,
+  "type": "sc",
+  "march": "wounds",
+  "cat": "BURNS / MCI",
+  "model": "Claude",
+  "technique": "Leader-Lens",
+  "title": "Mass Burn MCI — Marketplace VBIED",
+  "text": "VBIED in a crowded marketplace. 25-30 casualties visible. Fires still burning, fuel leak, secondary device threat. 2 medics, 8 operators, 3 CLS bags.\n\nAnswer as the on-scene medical LEADER, not the hands-on provider — your job is allocation and tempo, not individual treatment. (1) The impulse is to run in. Why that's wrong. First 5 minutes as a leader: security, assessment, resource allocation, (2) SALT triage adapted for burn MCI — half have flash-burned corneas and can't see. Modification? (3) You can meaningfully treat 8-10 with available supplies; 25-30 need help. Who gets marked expectant and how you live with it, (4) ISR Rule of 10s for rapid fluid calculation — but not enough fluid for everyone. Allocation protocol, (5) Secondary device threat vs patient movement — security/medical balance, (6) Civilians self-evacuating and worsening injuries — crowd management as medical intervention.",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "burn MCI leader-lens",
+    "text": "Cinematic still, 16:9 widescreen. A medical leader stands at the edge of a marketplace VBIED scene, arm raised directing operators while dozens of burned casualties lie scattered amid burning stalls and drifting smoke, three CLS bags staged on the ground. He surveys rather than treats, the weight of triage on his face. Orange firelight against grey smoke, wide chaotic composition, somber leadership mood, realistic, tasteful, no graphic gore."
+   },
+   "i2v": {
+    "model": "Sora",
+    "technique": "leader directs tempo",
+    "text": "Starting frame: a medical leader at the edge of a marketplace bombing scene, arm raised directing operators, dozens of burned casualties amid burning stalls and smoke, three CLS bags staged on the ground. Animation: the leader sweeps his arm pointing operators toward casualty clusters, smoke and embers drift, figures move to the wounded in the background. Camera slow crane up and back revealing the scale of the scene. 8 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo",
+    "technique": "MCI command view",
+    "text": "16:9 widescreen cinematic clip. At the edge of a marketplace VBIED scene, a medical leader raises his arm directing operators while dozens of burned casualties lie amid burning stalls and drifting smoke, three CLS bags staged nearby. He points operators toward casualty clusters as embers drift and figures move to the wounded. Slow crane up and back revealing the scale, orange firelight against grey smoke, somber leadership mood, tasteful with no graphic gore. 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 19,
+  "type": "sc",
+  "march": "circulation",
+  "cat": "ASSESSMENT / DIVERGENT",
+  "model": "Gemini",
+  "technique": "Error Reconstruction",
+  "title": "Missed Injury — Blast Bowel at Hour 8",
+  "text": "You treated an operator after a blast 8 hours ago. Found: superficial forearm laceration + left TM rupture. Categorized minimal, returned to duty. Now at hour 8: increasing abdominal pain, rigid abdomen, HR 112 (was 78), BP 98/64, vomited twice.\n\nReconstruct the chain of decisions backwards from this outcome to find the exact failure point, then fix the system. (1) Blast bowel presents in a delayed fashion — explain the pathophysiology, (2) Reconstruct your error: what should the initial assessment have caught? (3) 8+ hours from surgery — PFC bridging? (4) POCUS: FAST findings vs a negative FAST with a screaming clinical picture, (5) Septic abdomen vs hemorrhagic shock — fluid strategy differs, (6) Write the self-critique AAR. What systematic change prevents this?",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "delayed blast-bowel POCUS",
+    "text": "Cinematic still, 16:9 widescreen. Eight hours after a blast, an operator lies pale and sweating on a cot clutching a rigid abdomen, a medic running a POCUS ultrasound probe across the belly with a furrowed look of dawning realization, the small ultrasound screen glowing. Dim tent interior, a single work light, a forearm dressing and an old casualty card nearby. Muted clinical palette, tense regret, realistic, tasteful."
+   },
+   "i2v": {
+    "model": "Kling",
+    "technique": "ultrasound realization",
+    "text": "Starting frame: an operator pale and sweating on a cot clutching a rigid abdomen, a medic running a POCUS probe across the belly with a furrowed look, the glowing ultrasound screen, dim tent with a work light. Animation: the medic glides the probe and studies the screen as recognition crosses his face, the patient grimaces and shifts, the screen image flickers. Camera slow push-in from the screen to the medic's face. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo",
+    "technique": "missed-injury reckoning",
+    "text": "16:9 widescreen cinematic clip. Eight hours after a blast, an operator lies pale and sweating on a cot clutching a rigid abdomen while a medic runs a POCUS ultrasound probe across the belly, the glowing screen revealing trouble as realization crosses his face. The patient grimaces as the medic studies the image. Slow push-in from screen to the medic's face, dim tent with a single work light, muted clinical palette, tense regret, realistic and tasteful. 7 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 20,
+  "type": "sc",
+  "march": "airway",
+  "cat": "REMOTE MEDICINE",
+  "model": "ChatGPT",
+  "technique": "Radio-Script",
+  "title": "Sniper Hide — Remote Treatment Direction",
+  "text": "Sniper/spotter 800m away. Spotter radios: sniper hit by ricochet fragment to Zone II neck, significant bleeding, gurgling. Spotter has a CLS kit only. You can't reach them for 30 minutes.\n\nProduce verbatim radio scripts (short, jargon-free, read-aloud ready) plus the clinical reasoning behind each line. (1) Remote-direction medicine — what info do you NEED in 30 seconds? Script the radio report, (2) Walk the spotter through Zone II neck wound packing — no jargon, (3) Airway compromise from blood, no suction, no cric kit, no NPA — improvised solutions in a hide site, (4) Sniper unconscious — teach GCS over radio in 10 seconds, (5) \"He stopped breathing\" — talk a CLS through a surgical cric with a knife and pen barrel? Under what conditions is this the call? (6) Design a CLS upgrade package for isolated 2-man elements.",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "remote radio direction",
+    "text": "Cinematic still, 16:9 widescreen. Split-attention composition: in the foreground a medic presses a radio handset to his mouth with intense focus, and 800 meters away in soft focus a spotter kneels in a rocky sniper hide packing a Zone II neck wound on the downed sniper using only a CLS kit. Late afternoon golden light over a ridgeline, dust, the tension of guidance at a distance. Realistic, tasteful."
+   },
+   "i2v": {
+    "model": "Runway",
+    "technique": "voice-across-distance",
+    "text": "Starting frame: foreground medic pressing a radio handset to his mouth in intense focus, and far away in soft focus a spotter kneeling in a rocky hide packing a neck wound on a downed sniper with a CLS kit, golden ridgeline light. Animation: the medic speaks urgently into the handset, the distant spotter's hands press gauze into the neck wound responding, dust drifts across the ridge. Camera slow rack-focus from the medic to the distant hide. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo",
+    "technique": "telemedicine over radio",
+    "text": "16:9 widescreen cinematic clip. In the foreground a medic presses a radio handset to his mouth with intense focus; 800 meters away in soft focus a spotter kneels in a rocky sniper hide packing a Zone II neck wound on a downed sniper using a CLS kit. The medic speaks urgently as the distant spotter presses gauze into the wound. Slow rack-focus from medic to distant hide, golden ridgeline light, dust, tense and tasteful. 7 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 21,
+  "type": "sc",
+  "march": "hemorrhage",
+  "cat": "JUNCTIONAL",
+  "model": "Claude",
+  "technique": "Chain-of-Thought",
+  "title": "High Inguinal Blast — Junctional Hemorrhage",
+  "text": "You are the senior 18D on a split ODA conducting a vehicle interdiction in a high-desert wadi. An RPG strike has thrown an operator clear of the truck. He has a high inguinal blast wound at the groin crease, proximal to where a limb tourniquet can seat, with pulsatile bright-red bleeding soaking the ground. Estimated 700-900 mL lost (estimate). Radial pulse weak, RR 28, mentating but agitated. You have a junctional tourniquet, combat gauze, an iTClamp, and TXA in your aid bag. CASEVAC is 40 minutes out.\n\nThink step by step and show your full reasoning BEFORE you give the final answer. Reason aloud through wound location, why a limb CAT will fail here, packing mechanics, and device choice, then commit.\n\n(1) What is your exact sequence for the first 90 seconds of hemorrhage control? (2) How do you confirm the junctional device has actually occluded inflow? (3) When and how do you give TXA here, and what is the window? (4) If bleeding continues after packing plus junctional device, what is your next escalation? (5) What do you document on the casualty card? (6) What single reassessment will you repeat every 5 minutes en route?",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "junctional desert wadi",
+    "text": "Cinematic still, 16:9 widescreen. In a high-desert wadi beside a smoking truck, a senior 18D kneels over an operator with a high inguinal blast wound at the groin crease, seating a junctional tourniquet and packing Combat Gauze into the wound, blood darkening the sand. The agitated casualty's chest heaves. Harsh midday sun, dust, RPG smoke trailing. Gritty realism, tasteful, blood handled clinically not gratuitously."
+   },
+   "i2v": {
+    "model": "Kling",
+    "technique": "junctional device seat",
+    "text": "Starting frame: a senior 18D kneeling over an operator with a high inguinal groin wound in a desert wadi beside a smoking truck, seating a junctional tourniquet and packing Combat Gauze, blood darkening the sand. Animation: the medic cranks the junctional tourniquet pressure plate down and presses gauze firmly into the wound, the agitated casualty's chest heaves, dust and smoke drift. Camera slow push-in over the medic's shoulder to the wound. 6 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo",
+    "technique": "high-inguinal control",
+    "text": "16:9 widescreen cinematic clip. In a high-desert wadi beside a smoking truck, a senior 18D kneels over an operator with a high inguinal blast wound, seating a junctional tourniquet and packing Combat Gauze as blood darkens the sand. The medic cranks the device pressure plate down and presses gauze in while the agitated casualty's chest heaves and RPG smoke drifts. Slow push-in over the shoulder to the wound, harsh midday sun, gritty realism, clinically tasteful. 6 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 22,
+  "type": "sc",
+  "march": "hemorrhage",
+  "cat": "MARITIME",
+  "model": "ChatGPT",
+  "technique": "Structured Output",
+  "title": "Maritime Axillary Gunshot — Pitching Deck",
+  "text": "You are the lead medic on a maritime interdiction team that has just taken a vessel. During the assault one operator was shot through the left axilla; the round tracked into the chest wall. There is heavy dark bleeding from the axilla and the arm is cold. You are on a pitching deck, salt spray everywhere, casualty supine on a non-slip mat. Vitals: HR 130, BP unobtainable by palpation at radial, SpO2 reads 88 percent but the probe is unreliable when wet. You have wound packing gauze, an SAM junctional device, pressure dressings, and a single unit of cold-stored whole blood in the team cooler.\n\nReturn your entire answer as a markdown table with columns: Step | Action | Rationale | Failure-Mode-to-Watch. Order the rows by time priority. After the table, add one short paragraph titled CONTINGENCY describing what changes if we must move him down a ladder well to the small boat.\n\n(1) How do you control axillary bleeding that is too high to tourniquet? (2) How do you decide whether this is also a chest problem? (3) When do you commit the single blood unit? (4) How do you protect the airway if he deteriorates on a moving deck? (5) What do you hand off to the receiving ship's medical officer? (6) What is your trigger to abort the casualty's movement and treat in place? (7) How do you prevent hypothermia in a wet maritime casualty?",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "pitching-deck axillary",
+    "text": "Cinematic still, vertical 9:16. On the pitching deck of a captured vessel in salt spray, a maritime medic kneels over an operator supine on a non-slip mat, packing a high left axillary gunshot wound that is too high for a tourniquet, a single unit of cold whole blood from a team cooler staged beside him. Grey heaving sea, wet gear glinting, horizon tilted. Tense maritime realism, tasteful, controlled dark bleeding."
+   },
+   "i2v": {
+    "model": "Runway",
+    "technique": "axillary pack on swell",
+    "text": "Starting frame: a maritime medic kneeling over a supine operator on a non-slip mat packing a high left axillary gunshot wound, a unit of cold whole blood staged beside him, salt spray on a pitching deck with a tilted horizon. Animation: the medic packs gauze deep into the axilla with firm pressure as the deck pitches and the horizon tilts, salt spray blows across, the casualty grimaces. Camera handheld with a subtle roll matching the swell. 6 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo",
+    "technique": "maritime junctional gunshot",
+    "text": "Vertical 9:16 cinematic clip. On the pitching deck of a captured vessel in salt spray, a maritime medic kneels over a supine operator and packs a high left axillary gunshot wound too high to tourniquet, a unit of cold whole blood staged beside him. He packs gauze deep with firm pressure as the deck pitches, the horizon tilts, and spray blows across. Handheld camera with a subtle roll matching the swell, grey heaving sea, tense realism, tasteful. 6 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 23,
+  "type": "sc",
+  "march": "hemorrhage",
+  "cat": "PEDIATRIC",
+  "model": "Gemini",
+  "technique": "Role + Constraints",
+  "title": "Pediatric Blast Amputation — Tiny Limb",
+  "text": "Act as a deployed Special Forces medic with pediatric trauma experience advising over a poor satellite link. A 6-year-old local child has a mangled lower leg from a UXO blast, with a partial traumatic amputation mid-tibia and ongoing arterial bleeding. You estimate weight at 20 kg (estimate). You have applied an adult CAT but it does not seat well on the small limb and bleeding persists. No pediatric tourniquet on hand. RR 40, cap refill 4 seconds, child crying then becoming quiet.\n\nConstraints you MUST honor in your answer: assume austere supplies only (no IV pump, no pediatric blood), keep all drug doses weight-based and show the math, and flag anything that is an estimate. Do not suggest interventions requiring a hospital.\n\n(1) How do you achieve hemorrhage control on a limb too small for a standard CAT? (2) What is your weight-based TXA dose and route, with the calculation shown? (3) How do you recognize decompensated shock in a child versus an adult? (4) What improvised volume resuscitation is acceptable here and what are the limits? (5) How do you keep this child normothermic? (6) What are your handoff priorities to a host-nation hospital?",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "pediatric improvised tourniquet",
+    "text": "Cinematic still, 16:9 widescreen. A deployed Special Forces medic kneels over a six-year-old local child with a partial traumatic amputation mid-tibia, improvising hemorrhage control on the tiny limb where an adult CAT will not seat, a hypothermia wrap nearby. The frightened child has gone quiet. Austere dusty courtyard, warm soft light, deep tenderness and urgency. Documentary realism, tasteful, injury minimally shown."
+   },
+   "i2v": {
+    "model": "Kling",
+    "technique": "tiny-limb control",
+    "text": "Starting frame: a medic kneeling over a six-year-old child with a partial mid-tibia amputation, improvising a tourniquet on the tiny limb where an adult CAT will not seat, a hypothermia wrap nearby in a dusty courtyard. Animation: the medic cinches the improvised tourniquet tight and checks the small leg, the quiet child's chest rises shallowly, the medic's hand steadies the limb, dust drifts in warm light. Camera slow pedestal down to the child's level. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo",
+    "technique": "austere pediatric bleed",
+    "text": "16:9 widescreen cinematic clip. In an austere dusty courtyard, a deployed Special Forces medic kneels over a six-year-old child with a partial mid-tibia amputation, improvising hemorrhage control on the tiny limb where an adult CAT will not seat, a hypothermia wrap nearby. He cinches the improvised tourniquet and checks the leg as the quiet child breathes shallowly. Slow pedestal down to the child's level, warm soft light, documentary realism, tender and tasteful. 7 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 24,
+  "type": "sc",
+  "march": "hemorrhage",
+  "cat": "ARCTIC",
+  "model": "Claude",
+  "technique": "Red-Team the Plan",
+  "title": "Arctic Femur Fracture — Frozen Exposure",
+  "text": "You are the troop medic on an over-snow infiltration at minus 25 C with wind chill near minus 40 C. An operator caught a snowmobile rollover and has an open mid-thigh femur fracture with a deep laceration bleeding steadily through layered cold-weather clothing. You cannot easily expose the wound without inducing hypothermia. He is shivering, HR 120, alert. Tourniquet, hemostatic gauze, hypothermia prevention kit, and one unit of whole blood (currently cold, needs warming) are available. Exfil is 3 hours by ground.\n\nFirst give your complete hemorrhage-and-cold plan. THEN switch roles and red-team your own plan as a skeptical senior medic: attack every assumption (clothing removal in extreme cold, tourniquet over bulky layers, blood warming without a fluid warmer, fracture splinting). Finally, revise the plan to address the strongest critiques.\n\n(1) How do you expose and control the bleed without freezing the patient? (2) Does a tourniquet seat reliably over thick clothing, and what do you do about it? (3) How do you warm cold whole blood in the field? (4) How do you splint a femur for a 3-hour sled movement? (5) What hypothermia rewarming sequence applies? (6) Which decision could kill this patient fastest and how do you guard against it?",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "arctic femur exposure",
+    "text": "Cinematic still, 16:9 widescreen. In a brutal minus-twenty-five whiteout, a troop medic shields an operator with an open mid-thigh femur fracture, carefully cutting through layered cold-weather clothing to reach the bleed while keeping the body covered, a hypothermia kit and a whole-blood unit tucked inside his jacket to warm. Blowing snow, low grey light, an overturned snowmobile behind. Stark cold-blue palette, survival tension, realistic, tasteful."
+   },
+   "i2v": {
+    "model": "Luma",
+    "technique": "expose-and-control whiteout",
+    "text": "Starting frame: a troop medic shielding an operator with an open thigh femur fracture in a minus-twenty-five whiteout, cutting through cold-weather clothing to reach the bleed, a hypothermia kit and a whole-blood unit tucked in his jacket, an overturned snowmobile behind. Animation: the medic cuts the layered clothing and presses hemostatic gauze onto the wound while wind whips snow across, both men hunched against the blast, breath steaming. Camera slow push-in fighting the blowing snow. 8 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo",
+    "technique": "extreme-cold hemorrhage",
+    "text": "16:9 widescreen cinematic clip. In a brutal minus-twenty-five whiteout, a troop medic shields an operator with an open mid-thigh femur fracture, cutting through layered clothing to reach the bleed while keeping him covered, a whole-blood unit tucked in his jacket, an overturned snowmobile behind. He cuts the clothing and presses hemostatic gauze as wind whips snow and breath steams. Slow push-in through blowing snow, stark cold-blue palette, survival tension, realistic and tasteful. 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 25,
+  "type": "sc",
+  "march": "hemorrhage",
+  "cat": "MASS CASUALTY",
+  "model": "ChatGPT",
+  "technique": "Decision-Matrix",
+  "title": "Market Bombing — Mass Casualty Triage",
+  "text": "You are the sole medic responding to a market bombing in a partner-force town. There are 9 casualties with bleeding injuries and 2 host-nation medics with basic training under your direction. Among the wounded: two with extremity arterial bleeds, one with a junctional groin wound, one scalp laceration bleeding briskly but stable, one with a pelvic crush and signs of internal hemorrhage, and four walking wounded. You have 6 CATs, 4 packs of hemostatic gauze, 1 pelvic binder, 3 units of LTOWB, and TXA.\n\nProduce a decision matrix as a table: Casualty | Injury | Triage Category | Immediate Action | Who Performs | Resource Used. Then state, in priority order, how you task the two host-nation medics. Justify any casualty you categorize as expectant.\n\n(1) Who gets a tourniquet first and why? (2) How do you allocate only 3 units of blood across competing critical patients? (3) How do you manage the pelvic hemorrhage with one binder? (4) What do you delegate versus keep yourself? (5) How do you prevent over-triaging the dramatic scalp bleed? (6) What is your reassessment loop as resources free up?",
+  "media": {
+   "t2i": {
+    "model": "Flux",
+    "technique": "market MCI triage",
+    "text": "Cinematic still, 16:9 widescreen. The sole medic stands amid a market-bombing aftermath directing two host-nation medics, nine casualties spread across the rubble: tourniquets on two extremity bleeds, a pelvic binder on a crush patient, LTOWB units and CATs staged on a poncho, walking wounded clustered aside. Smoke, scattered produce, grey daylight. Organized chaos, the leader pointing decisively. Documentary realism, tasteful, no graphic gore."
+   },
+   "i2v": {
+    "model": "Sora",
+    "technique": "triage direction sweep",
+    "text": "Starting frame: the sole medic directing two host-nation medics amid a market-bombing aftermath, nine casualties across rubble with tourniquets, a pelvic binder, LTOWB and CATs staged on a poncho, walking wounded clustered aside, smoke and scattered produce. Animation: the medic points and gestures tasking the two host-nation medics who move to casualties, smoke drifts, patients shift on the ground. Camera slow crane up revealing all nine casualties. 8 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo",
+    "technique": "sole-medic mass casualty",
+    "text": "16:9 widescreen cinematic clip. Amid a market-bombing aftermath, the sole medic directs two host-nation medics across nine casualties in the rubble: tourniquets on extremity bleeds, a pelvic binder on a crush patient, blood units and CATs staged on a poncho, walking wounded aside. He points and tasks the two medics who move to the wounded as smoke drifts. Slow crane up revealing all nine casualties, grey daylight, organized chaos, documentary realism, tasteful. 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 26,
+  "type": "sc",
+  "march": "hemorrhage",
+  "cat": "K9",
+  "model": "Gemini",
+  "technique": "Few-Shot Anchoring",
+  "title": "Working Dog Down — Canine Hindlimb Bleed",
+  "text": "Act as an 18D cross-trained in tactical K9 care. Your multi-purpose canine took a gunshot to the right hindlimb during a compound assault. There is brisk bleeding from the thigh, the dog is panting heavily, mucous membranes pale-pink, and he is still trying to work but won't bear weight. Estimated weight 32 kg (estimate). You have a CAT, hemostatic gauze, a muzzle, and canine-appropriate analgesia in the K9 kit.\n\nBefore answering, study these two anchor examples of good K9 reasoning and match their structure: Example A: tourniquet placed high-and-tight on a canine forelimb, then reassessed for mucous membrane color and capillary refill. Example B: hemostatic packing of a canine axillary wound with continuous direct pressure for 3 minutes by the clock. Now reason in that same style for THIS case.\n\n(1) Where and how do you place a tourniquet on a canine hindlimb? (2) How do you safely restrain and muzzle a painful working dog before treatment? (3) What canine-specific signs tell you he is decompensating? (4) What analgesia and dosing are appropriate (show estimate)? (5) How do you package him for transport? (6) What do you communicate to the veterinary team on handoff?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "documentary photo, low angle",
+    "text": "A documentary photograph of a kneeling Special Forces medic applying a windlass tourniquet high and tight on the right thigh of a working Belgian Malinois lying on its side in a dusty courtyard at dusk. A soldier gently steadies the muzzled dog's head. The medic's gloved hands cinch the strap; a small smear of blood marks the thigh. Tactical kit, soft golden side light, shallow depth of field, calm and clinical. Horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow dolly-in, subtle motion",
+    "text": "Starting frame: a kneeling Special Forces medic applies a windlass tourniquet high and tight on the right hindlimb of a muzzled Belgian Malinois lying on its side in a dusty dusk courtyard while a soldier steadies the dog's head. Animation: the medic twists the windlass rod two turns, the strap tightens and the bleeding slows, the dog's flank rises and falls with panting, the soldier's hand strokes its neck. Camera slowly dollies in toward the hands. Soft golden light flickers gently. 6 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "clinical reenactment, handheld",
+    "text": "A Special Forces medic kneels in a dusty courtyard at dusk treating a wounded working Belgian Malinois lying on its side, gunshot to the right hindlimb. He cinches a windlass tourniquet high on the thigh and twists the rod as bleeding slows; a soldier steadies the muzzled dog's head and strokes its neck while the panting dog's flank rises and falls. Handheld camera drifts slowly inward over the gloved hands. Warm low side light, shallow depth of field, tasteful and instructional. Horizontal widescreen, 7 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 27,
+  "type": "sc",
+  "march": "hemorrhage",
+  "cat": "HIGH ALTITUDE",
+  "model": "Claude",
+  "technique": "Step-Back Reasoning",
+  "title": "High-Altitude Impalement — Six-Hour Hold",
+  "text": "You are the medic on a high-altitude observation post at 4,200 m. An operator slipped on scree and impaled his forearm on rebar, producing a deep laceration with steady venous and some arterial bleeding. He is hypoxic at baseline (SpO2 reads 84 percent at this altitude, which may be normal here), cold, and the nearest helicopter cannot reach this altitude until weather clears in an estimated 6 hours.\n\nBefore solving, take a STEP BACK: state the general principles of hemorrhage control, the physiology of bleeding at altitude, and how prolonged field care changes priorities. Only after laying out those principles should you apply them to this specific casualty.\n\n(1) Direct pressure, packing, or tourniquet for a forearm wound near a joint, and why? (2) How does high altitude change your interpretation of his vitals and SpO2? (3) What is your plan for a 6-hour prolonged hold? (4) How do you balance rebleeding risk against tourniquet conversion? (5) What hypothermia and analgesia steps apply? (6) How do you document a trending picture so the aircrew arrives oriented? (7) What is your abort/self-evac threshold for the whole team?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "alpine documentary, crisp",
+    "text": "A documentary photograph high on a rocky scree slope at 4200 meters, thin cold blue light and distant snow peaks. A SOF medic kneels pressing a wad of hemostatic gauze firmly into a deep forearm laceration of a seated operator whose sleeve is rolled up; a short length of rusty rebar lies on the rocks nearby. The operator looks pale and cold, breath fogging. Tactical layers, gloved hands, focused calm. Crisp high-altitude clarity, horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "gentle push-in, breath fog",
+    "text": "Starting frame: on a rocky scree slope at 4200 meters with snow peaks behind, a SOF medic kneels pressing hemostatic gauze into the forearm laceration of a pale seated operator, a length of rebar on the rocks nearby. Animation: the medic presses harder and wraps a pressure bandage around the forearm, the operator's breath fogs and his chest rises with effort, wind tugs at their layers. Camera gently pushes in past the rebar to the wound. Cold blue light, faint snow drift. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "alpine reenactment, slow handheld",
+    "text": "On a windswept scree slope at high altitude with snow peaks behind, a SOF medic kneels beside a pale seated operator who has impaled his forearm on rebar that now lies on the rocks. The medic packs hemostatic gauze into the deep laceration and wraps a pressure bandage as the operator's breath fogs in the thin cold air. Slow handheld camera, cold blue daylight, crisp clarity, focused and clinical. Horizontal widescreen, 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 28,
+  "type": "sc",
+  "march": "hemorrhage",
+  "cat": "URBAN CQB",
+  "model": "ChatGPT",
+  "technique": "Self-Critique Loop",
+  "title": "Urban CQB — Frag Under Fire",
+  "text": "You are the assault element medic during room-clearing in a dense urban block. An operator stacking on a doorway took fragmentation to both thighs from a grenade; he has multiple bleeding wounds on the left thigh and a single deep wound on the right, all venous-to-arterial mix. You are in a narrow hallway, still taking sporadic fire from an upper floor, casualty must be dragged to a casualty collection point 30 m back.\n\nUse a self-critique loop: write your initial plan, then under a heading CRITIQUE list every weakness or risky assumption, then write FINAL PLAN incorporating fixes. Be honest in the critique.\n\n(1) Care-under-fire priorities: what do you do in the hallway versus at the CCP? (2) Two tourniquets versus packing for multiple thigh wounds? (3) How do you move him under fire without losing hemorrhage control? (4) What is the role of indirect/self-aid here? (5) When do you reassess and convert tourniquets? (6) How do you communicate casualty status to the ground force commander mid-fight?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "tense interior, hard light",
+    "text": "A tense documentary photograph inside a narrow dim concrete hallway during urban combat. A SOF assault medic crouches over a downed operator with fragmentation wounds to both thighs, fastening a windlass tourniquet on the left thigh while a second tourniquet is already on the right. Dust hangs in a shaft of light from a doorway. Spent casings on the floor, weapons slung, urgency on faces. Hard directional light, shallow depth of field, horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "tense handheld, dust drift",
+    "text": "Starting frame: inside a narrow dim concrete hallway in urban combat, a SOF medic crouches over a downed operator with bleeding wounds to both thighs, fastening a windlass tourniquet on the left thigh while the right already has one, dust in a shaft of doorway light. Animation: the medic twists the windlass tight and the operator winces and grips his shoulder, dust swirls in the light shaft, casings glint. Camera shakes slightly then steadies, pushing in low along the floor. 6 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "urban combat reenactment, gritty handheld",
+    "text": "Inside a narrow dim concrete hallway during urban room-clearing, a SOF assault medic crouches over an operator hit by fragmentation in both thighs. He cinches a windlass tourniquet on the left thigh as a second one is already set on the right; the operator winces and grips the medic's shoulder. Dust drifts in a shaft of doorway light, spent casings on the floor. Gritty handheld camera shakes then pushes in low. Hard directional lighting, tense and instructional. Horizontal widescreen, 7 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 29,
+  "type": "sc",
+  "march": "hemorrhage",
+  "cat": "PROLONGED FIELD CARE",
+  "model": "Gemini",
+  "technique": "Rubric-Graded",
+  "title": "Tourniquet Conversion — Eighteen-Hour Delay",
+  "text": "Act as a JTS-published Prolonged Field Care subject-matter expert. I will give you a casualty and my draft plan; grade it. Casualty: operator with a thigh tourniquet placed 2 hours ago for a now-controlled bleed, awaiting a CASEVAC delayed an estimated 18 hours by weather. He is otherwise stable, HR 90, alert. I want to attempt tourniquet conversion to a pressure dressing to save the limb.\n\nGrade against a rubric you state explicitly first (criteria such as: conversion eligibility, time-since-application limits, wound reassessment, monitoring plan, rebleed contingency, documentation). Score each criterion 1-5 with justification, then give an overall pass/fail and the top three fixes.\n\n(1) Is this tourniquet a candidate for conversion at 2 hours, and what disqualifies a conversion? (2) What is the step-by-step safe conversion procedure? (3) What do you monitor in the 30 minutes after conversion? (4) What is your rebleed contingency over an 18-hour hold? (5) How do you manage the limb if conversion fails and the tourniquet must stay on for many hours? (6) What labs/signs would you track if you had a point-of-care analyzer?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "field hide documentary, soft",
+    "text": "A documentary photograph in a camouflaged field hide under netting, overcast daylight. A calm SOF medic carefully loosens a thigh tourniquet on a stable alert operator lying on a litter, one hand poised over a packed pressure dressing on the thigh wound, watching for rebleeding. A casualty card and analyzer rest nearby. Muted greens, tactical gear, deliberate and clinical mood. Soft diffuse light, shallow depth of field, horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "static-to-slow-pan, watchful",
+    "text": "Starting frame: in a camouflaged field hide under netting in overcast light, a SOF medic loosens a thigh tourniquet on a stable alert operator on a litter, one hand pressing a packed dressing on the thigh, a casualty card nearby. Animation: the medic slowly releases the windlass, both watch the dressing for a moment, the operator gives a small nod, the medic presses the dressing and checks a wristwatch. Camera slowly pans from the tourniquet up to their faces. Soft diffuse light. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "prolonged-care reenactment, calm",
+    "text": "In a camouflaged field hide under netting in soft overcast light, a SOF medic carefully converts a thigh tourniquet on a stable alert operator lying on a litter, slowly releasing the windlass while pressing a packed pressure dressing and watching for rebleeding. The operator nods slightly; the medic checks his watch. Calm deliberate handheld camera pans from the wound up to their faces. Muted greens, clinical and instructional. Horizontal widescreen, 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 30,
+  "type": "sc",
+  "march": "hemorrhage",
+  "cat": "CBRN",
+  "model": "Claude",
+  "technique": "Tree-of-Thought",
+  "title": "MOPP 4 Evisceration — Cholinergic Crisis",
+  "text": "You are the team medic operating in MOPP 4 after a suspected chemical attack near a contaminated objective. An operator has a penetrating abdominal wound with evisceration and moderate ongoing bleeding, AND he is showing early cholinergic signs (drooling, miosis, fasciculations). You are gloved, hooded, and your dexterity is severely limited. Decon is not yet available. You have hemostatic gauze, occlusive dressings, atropine/pralidoxime autoinjectors, and water for irrigation that may itself be contaminated.\n\nUse Tree-of-Thought: generate at least three distinct courses of action (e.g., treat-then-decon, decon-then-treat, simultaneous), branch out the likely consequences of each, prune the weak branches, and select the best path with reasoning shown.\n\n(1) Do you treat the hemorrhage, the chemical exposure, or both first, and in what order? (2) How do you manage an abdominal evisceration through a contaminated suit? (3) How many autoinjectors and on what trigger? (4) How do you protect yourself from cross-contamination while packing a wound? (5) What is the decon-while-bleeding compromise? (6) What do you warn the decon line and receiving facility about?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "CBRN documentary, hazmat tone",
+    "text": "A documentary photograph of a SOF medic in full MOPP 4 chemical protective suit, hood and mask, kneeling over an operator with a penetrating abdominal wound covered by a moist occlusive dressing. The medic holds an autoinjector against the casualty's outer thigh through the suit, dexterity clearly limited by gloves. Bleak-grey contaminated environment, harsh flat light. Tense, careful, clinical. Shallow depth of field, horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "deliberate motion, gloved hands",
+    "text": "Starting frame: a SOF medic in full MOPP 4 suit, hood and mask, kneels over an operator with an abdominal wound under a moist occlusive dressing, pressing an autoinjector against the casualty's thigh through the suit. Animation: the medic firmly presses and holds the autoinjector for several seconds then sets it aside and steadies the occlusive dressing, breathing visible in the mask. Camera slowly arcs around the gloved hands. Harsh flat grey light, faint haze. 6 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "CBRN reenactment, slow arc",
+    "text": "In a grey contaminated environment, a SOF medic in full MOPP 4 chemical suit, hood and mask, kneels over an operator with a penetrating abdominal wound covered by a moist occlusive dressing. With limited gloved dexterity the medic presses an antidote autoinjector firmly against the casualty's thigh through the suit, then secures the dressing. Camera slowly arcs around the careful hands. Harsh flat light, faint haze, tense and instructional. Horizontal widescreen, 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 31,
+  "type": "sc",
+  "march": "airway",
+  "cat": "FACIAL TRAUMA",
+  "model": "ChatGPT",
+  "technique": "Chain-of-Thought",
+  "title": "Shattered Mandible — Bleeding Airway",
+  "text": "You are the senior medic at a casualty collection point. An operator took a gunshot to the lower face; the mandible is shattered, the tongue and soft tissue are bleeding into the airway, and he is making gurgling sounds while trying to sit forward. SpO2 falling through 90 percent, agitated, blood in the oropharynx. You have suction (manual and battery), NPAs, a surgical cric kit, and supraglottic devices. CASEVAC 25 minutes out.\n\nThink step by step and externalize your reasoning before committing. Reason through why positioning matters, why an SGA may fail with this anatomy, and the indications that push you to a surgical airway.\n\n(1) What is your immediate positioning and suction strategy for a bleeding facial wound? (2) Why might an NPA or supraglottic device be inadequate here? (3) What are your specific go/no-go criteria for a surgical cricothyrotomy? (4) Walk the cric procedure landmarks and steps. (5) How do you secure the tube and confirm placement without capnography if it fails? (6) What do you monitor en route to prevent dislodgement?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "CCP documentary, urgent",
+    "text": "An urgent documentary photograph at a casualty collection point. A SOF medic supports an operator who is sitting leaning forward, lower face wounded with a shattered jaw, while suctioning blood from the mouth with a battery suction unit. The casualty's hands grip the medic's forearm; blood pools on a poncho liner. Field gear scattered, low warm portable light. Focused, controlled urgency. Shallow depth of field, horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "urgent handheld, suction motion",
+    "text": "Starting frame: at a casualty collection point a SOF medic supports an operator sitting leaning forward with a shattered lower jaw, suctioning blood from the mouth with a battery suction unit as the casualty grips his forearm. Animation: the suction tip moves through the mouth and the casualty coughs and leans further forward, the medic adjusts his support and talks to him, blood drips onto the poncho liner. Camera handheld pushes in toward the suction. Warm portable light flickers. 6 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "airway reenactment, handheld urgency",
+    "text": "At a casualty collection point in low warm light, a SOF medic supports an operator who sits leaning forward with a gunshot-shattered lower jaw, suctioning blood from the mouth with a battery suction unit while the casualty grips his forearm and coughs. The medic keeps him forward and reassures him as blood drips onto a poncho liner. Handheld camera pushes in toward the suctioning hands. Controlled urgency, tasteful and instructional. Horizontal widescreen, 7 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 32,
+  "type": "sc",
+  "march": "airway",
+  "cat": "BURN/INHALATION",
+  "model": "Gemini",
+  "technique": "Step-Back Reasoning",
+  "title": "Vehicle Fire — Inhalation Airway Edema",
+  "text": "Act as a deployed medic experienced in burn airway management. An operator was caught in a vehicle fire; he has facial burns, singed nasal hair, carbonaceous sputum, a hoarse voice, and progressive stridor. He is currently maintaining his own airway but worsening. Estimated 25 percent TBSA burns (estimate). You have an intubation kit, a bougie, a surgical airway kit, and oxygen.\n\nFirst step back and explain the natural history of inhalation-injury airway edema and why the timing of intervention is the central problem. Lay out the general principle of early definitive airway before solving this case.\n\n(1) What clinical signs tell you this airway will close, and how fast? (2) Should you secure the airway now while you still can, or wait? Defend the call. (3) If you intubate, what tube size and why, given anticipated swelling? (4) What is your surgical-airway backup plan if edema obscures the cords? (5) How do you begin fluid resuscitation for the burn without worsening airway edema? (6) What do you hand off about the airway timeline to the next provider? (7) What is your escalation trigger if no advanced airway is available?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "burn-care documentary, smoky",
+    "text": "A documentary photograph near a smoldering vehicle at dusk. A SOF medic kneels facing an operator with sooty facial burns and singed hair, holding an oxygen mask to his face while inspecting his neck and listening for stridor. Carbon smudges around the casualty's mouth, hoarse strain on his face. Drifting smoke, warm firelight glow mixed with cool dusk. Focused calm. Shallow depth of field, horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "smoke drift, gentle push-in",
+    "text": "Starting frame: near a smoldering vehicle at dusk a SOF medic kneels holding an oxygen mask to the face of an operator with sooty facial burns and singed hair, inspecting his neck. Animation: the casualty takes a labored breath and the medic tilts his head to look at the throat, smoke drifts across the frame, firelight flickers on their faces. Camera gently pushes in toward the mask. Warm glow and cool dusk mix. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "inhalation-injury reenactment, slow",
+    "text": "Near a smoldering vehicle at dusk with drifting smoke, a SOF medic kneels facing an operator with sooty facial burns, singed hair and a hoarse strained voice, holding an oxygen mask to his face and tilting the head to inspect the neck for swelling. The casualty breathes with effort. Slow handheld camera pushes in toward the mask. Warm firelight mixed with cool dusk, focused and instructional. Horizontal widescreen, 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 33,
+  "type": "sc",
+  "march": "airway",
+  "cat": "PEDIATRIC",
+  "model": "Claude",
+  "technique": "Role + Constraints",
+  "title": "Pediatric Head Injury — No Surgical Airway",
+  "text": "You are an 18D managing a host-nation child injured in crossfire. A 4-year-old (estimated 16 kg) has a depressed level of consciousness from a head injury, snoring respirations, and pooling secretions. He will not tolerate an oral airway when awake but is becoming obtunded. You have pediatric NPAs, suction, a pediatric supraglottic device, and a pediatric surgical airway is NOT recommended at this age.\n\nConstraints you MUST honor: weight-based everything with the math shown, no adult-sized hardware, acknowledge that a surgical airway is contraindicated in a small child and explain the alternative, and flag estimates.\n\n(1) How do you size and place an NPA in a 4-year-old, and what is the sizing rule? (2) How do you position a small child's airway differently from an adult's, and why? (3) When does a supraglottic device become appropriate and what size? (4) Since surgical cric is contraindicated, what is your rescue if you cannot ventilate? (5) What weight-based sedation, if any, is acceptable in this austere setting? (6) What are your handoff priorities to a pediatric-capable facility?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "pediatric care documentary, gentle",
+    "text": "A gentle documentary photograph inside a simple clinic room. A SOF medic kneels beside a small obtunded child of about four lying on a blanket, carefully placing a soft nasopharyngeal airway into one nostril while a portable suction tube rests nearby. The medic's hands are slow and precise; a helper steadies the child's head in a neutral position. Soft window light, muted earth tones, tender and clinical. Shallow depth of field, horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "tender slow motion, soft light",
+    "text": "Starting frame: inside a simple clinic a SOF medic kneels beside a small obtunded child on a blanket, gently inserting a soft nasopharyngeal airway into one nostril while a helper steadies the child's head and a suction tube rests nearby. Animation: the medic eases the airway in with a slow rotating motion, the child's chest rises more easily, the medic suctions a secretion and the helper repositions the head. Camera slowly pushes in. Soft window light. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "pediatric airway reenactment, gentle",
+    "text": "Inside a simple clinic in soft window light, a SOF medic kneels beside a small obtunded child of about four on a blanket, gently inserting a soft nasopharyngeal airway and then suctioning secretions while a helper holds the child's head in a neutral position. The child's breathing eases. Slow gentle handheld camera pushes in toward the hands. Muted earth tones, tender and instructional, tasteful. Horizontal widescreen, 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 34,
+  "type": "sc",
+  "march": "airway",
+  "cat": "MARITIME",
+  "model": "ChatGPT",
+  "technique": "Red-Team the Plan",
+  "title": "Near-Drowning — Vomiting on Rough Seas",
+  "text": "You are the medic on a fast boat extracting a casualty in 1.5 m swells. A recovered swimmer was submerged, is unconscious, vomiting seawater, with a weak gag and gurgling breaths. He is soaked, cold, and the deck is heaving. You have suction, NPAs, a supraglottic airway, oxygen, and a hypothermia kit. The transit to the ship is 20 minutes of rough water.\n\nGive your airway plan first. Then red-team it as an adversarial senior corpsman: attack assumptions about aspiration risk, device placement on a pitching deck, the vomiting patient, and cold-induced laryngospasm. Then deliver a revised final plan.\n\n(1) How do you manage an airway in a vomiting, semi-conscious near-drowning casualty? (2) Does a supraglottic device protect against aspiration here, and what are the limits? (3) How do you secure and suction on a heaving deck without losing the airway? (4) How does hypothermia change airway reactivity and your approach? (5) What position do you transport him in and why? (6) What do you tell the receiving team about aspiration and water exposure?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "maritime documentary, wet and cold",
+    "text": "A documentary photograph on the open deck of a fast boat in grey choppy seas. A drenched medic kneels and rolls a semi-conscious recovered swimmer onto his side in the recovery position, suctioning seawater from the mouth as the casualty retches. Sea spray streaks the air, the deck tilts with a swell, a hypothermia blanket lies ready. Cold flat daylight, salt-sprayed lens feel. Tense and clinical. Horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "rolling deck, dynamic handheld",
+    "text": "Starting frame: on the tilting deck of a fast boat in grey choppy seas, a drenched medic rolls a semi-conscious recovered swimmer onto his side and suctions seawater from his mouth as the casualty retches, a hypothermia blanket ready nearby. Animation: the boat pitches with a swell, water sprays across the deck, the casualty coughs and the medic braces and clears the airway, then steadies him. Camera handheld sways with the boat and pushes in. Cold flat daylight. 6 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "maritime rescue reenactment, swaying camera",
+    "text": "On the pitching open deck of a fast boat in grey choppy seas with sea spray in the air, a drenched medic rolls a semi-conscious near-drowning casualty onto his side and suctions seawater as the casualty coughs and retches, a hypothermia blanket ready. The deck heaves with each swell. Handheld camera sways with the boat and pushes toward the airway. Cold flat daylight, wet and tense, instructional. Horizontal widescreen, 7 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 35,
+  "type": "sc",
+  "march": "airway",
+  "cat": "REMOTE MEDICINE",
+  "model": "Gemini",
+  "technique": "Socratic Tutor",
+  "title": "Jungle Sepsis — Twelve-Hour Airway Watch",
+  "text": "Act as a Socratic airway tutor for a junior medic. Do NOT give me answers directly at first; instead ask me guiding questions that force me to reason, then confirm or correct. The case: a casualty 12 hours from evacuation in a remote jungle clinic has a decreasing level of consciousness from sepsis, with increasing secretions and an unprotected airway, but is still breathing spontaneously. We have an SGA, suction, NPAs, and limited oxygen.\n\nRun the session as: you ask a question, wait for my reasoning, then probe deeper. After 5-6 exchanges, summarize the correct prolonged-airway plan.\n\n(1) What questions should I be asking to decide if this airway needs intervention now? (2) How do I decide between watchful positioning and placing a device? (3) What are the risks of an SGA over a 12-hour hold? (4) How do I monitor an unintubated obtunded patient with no capnography? (5) What triggers would push me to a definitive airway? (6) How do I prevent aspiration over many hours of care?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "jungle clinic documentary, humid",
+    "text": "A documentary photograph in a dim humid jungle clinic at night. A SOF medic crouches at the head of a feverish obtunded casualty lying on a cot, keeping the airway open with a gentle jaw thrust and head tilt while a junior medic watches and learns. A suction tube and oxygen rest nearby; green foliage presses against an open window. Warm headlamp light, heavy humid atmosphere, teaching mood. Shallow depth of field, horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "humid still, slow rack focus",
+    "text": "Starting frame: in a dim humid jungle clinic at night a SOF medic crouches at the head of a feverish obtunded casualty on a cot, holding the airway open with a jaw thrust while a junior medic watches, suction and oxygen nearby. Animation: the casualty's chest rises and falls, the medic repositions the head slightly and gestures to the junior, who leans in, headlamp beams crossing. Camera holds then racks focus from the junior to the airway. Humid haze drifts. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "teaching reenactment, slow handheld",
+    "text": "In a dim humid jungle clinic at night lit by headlamps, a SOF medic crouches at the head of a feverish obtunded septic casualty on a cot, maintaining the airway with a gentle jaw thrust while quietly instructing a junior medic who watches and leans in. Suction and oxygen rest nearby; foliage presses against the window. Slow handheld camera racks focus between the teacher and the airway. Warm light, heavy humid mood, instructional. Horizontal widescreen, 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 36,
+  "type": "sc",
+  "march": "airway",
+  "cat": "TBI",
+  "model": "Claude",
+  "technique": "Decision-Matrix",
+  "title": "Penetrating TBI — Threatened Airway",
+  "text": "You are the troop medic managing an operator with a penetrating head wound after a sniper engagement. GCS is 6, he has irregular respirations, intermittent vomiting, and a blown right pupil. The airway is currently patent but threatened. You have an intubation kit with limited drugs, a supraglottic device, suction, and a surgical airway kit. You are 50 minutes from a Role 2.\n\nProduce a decision matrix as a table: Airway Option | Indication | Pros | Cons | When-I-Choose-It, covering NPA, SGA, endotracheal intubation, and surgical cric for THIS TBI patient. Then state your selection and the one parameter that would change it.\n\n(1) How does the goal of avoiding hypoxia and hypotension drive airway choice in TBI? (2) Does this GCS mandate a definitive airway, and what are the trade-offs? (3) How do you avoid spikes in intracranial pressure during airway placement? (4) What end-tidal/ventilation targets matter for TBI and how do you approximate them without capnography? (5) How do you manage vomiting and aspiration risk? (6) What head-of-bed and positioning steps apply?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "trauma documentary, controlled",
+    "text": "A documentary photograph at a field treatment point. A SOF medic kneels at the head of an unconscious operator with a head wound, head of the litter slightly raised, suctioning the mouth and preparing to place a supraglottic airway from an open kit. The casualty's right pupil looks enlarged; vomit is being cleared. A second soldier holds the head in line. Cool overcast light, muted greens, focused and clinical. Shallow depth of field, horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "controlled handheld, push-in",
+    "text": "Starting frame: at a field treatment point a SOF medic kneels at the head of an unconscious head-wounded operator on a slightly raised litter, suctioning the mouth and lifting a supraglottic airway from a kit while a soldier holds the head in line. Animation: the medic clears secretions with the suction, then begins to slide the supraglottic device toward the mouth, the casualty's chest rising. Camera pushes in steadily over the medic's shoulder. Cool overcast light. 6 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "TBI airway reenactment, steady",
+    "text": "At a field treatment point in cool overcast light, a SOF medic kneels at the head of an unconscious operator with a penetrating head wound on a slightly raised litter, suctioning the mouth and then carefully placing a supraglottic airway while a second soldier holds the head in line. Movements are deliberate to protect the brain. Steady handheld camera pushes in over the medic's shoulder. Muted greens, focused and instructional. Horizontal widescreen, 7 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 37,
+  "type": "sc",
+  "march": "airway",
+  "cat": "MASS CASUALTY",
+  "model": "ChatGPT",
+  "technique": "Structured Output",
+  "title": "Collapse Triage — One Surgical Kit",
+  "text": "You are the only advanced provider triaging airway problems at a building-collapse mass casualty. Five patients have airway concerns: (A) snoring obtunded crush victim, (B) penetrating neck wound with expanding hematoma and voice change, (C) facial burns with early stridor, (D) conscious patient with a foreign-body partial obstruction coughing forcefully, (E) agonal breathing in an entrapped patient you cannot reach. You have limited NPAs, one surgical airway kit, suction, and two minimally trained helpers.\n\nReturn the answer as a markdown table: Patient | Airway Threat | Triage Priority | Intervention | Performed By | Reassess-Interval. Then a one-paragraph note on which patient you would NOT spend the single surgical kit on and why.\n\n(1) Rank the five by airway urgency and justify the top two. (2) Which airway can be solved by positioning alone? (3) Where does the expanding-hematoma neck wound fall and why is it time-critical? (4) How do you delegate to minimally trained helpers safely? (5) What is the role of the forcefully coughing foreign-body patient in your priorities? (6) How do you make the resource-allocation call on the single surgical kit?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "rubble triage documentary, dusty",
+    "text": "A documentary photograph at a dusty building-collapse scene. A lone advanced medic moves between several casualties laid in a row amid broken concrete, kneeling to roll a snoring obtunded crush victim onto his side to open the airway, a single surgical airway kit and limited adjuncts at his knee. Other casualties wait nearby, two helpers crouched ready. Dust-filtered hard light, rubble greys, decisive triage mood. Horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "dusty handheld, sweeping move",
+    "text": "Starting frame: at a dusty building-collapse scene a lone advanced medic kneels to roll a snoring obtunded crush victim onto his side, a single surgical airway kit at his knee, other casualties in a row and two helpers crouched ready. Animation: the medic completes the roll and the snoring eases, he glances down the row of casualties and points a helper toward one, dust drifting in the light. Camera sweeps slowly along the row then settles on the medic. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "MCI triage reenactment, sweeping handheld",
+    "text": "At a dusty building-collapse mass casualty scene amid broken concrete, a lone advanced medic moves between casualties laid in a row, kneeling to roll a snoring obtunded crush victim into the recovery position to open his airway, a single surgical airway kit at his knee, two helpers ready. He scans the row and directs a helper. Sweeping handheld camera tracks along the casualties then settles on the medic. Dust-filtered hard light, decisive and instructional. Horizontal widescreen, 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 38,
+  "type": "sc",
+  "march": "airway",
+  "cat": "PARTNER FORCE",
+  "model": "Gemini",
+  "technique": "Few-Shot Anchoring",
+  "title": "Partner-Force Neck Wound — Remote Coaching",
+  "text": "Act as an 18D advising a partner-force medic through an interpreter. Their soldier has a neck wound from a knife attack with a hoarse voice, subcutaneous emphysema over the larynx, and rising work of breathing; air seems to bubble from the wound. The partner medic has basic skills, an NPA, a supraglottic device, and you are coaching remotely with a 10-minute response delay on comms.\n\nFirst study two anchor examples of clear cross-language coaching: Example A: short imperative steps, one instruction per message, confirm-back required. Example B: anatomy described by surface landmarks the partner can feel, not by jargon. Match that style.\n\n(1) How do you coach airway assessment of a laryngotracheal injury across a language barrier? (2) Why might an SGA be dangerous with a tracheal disruption, and what do you say instead? (3) Can the wound itself be used as an airway, and how would you describe that? (4) How do you structure instructions for a 10-minute comms delay? (5) What confirm-backs do you require before each step? (6) What do you tell them to monitor while awaiting evac?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "split coaching documentary, warm",
+    "text": "A documentary photograph of a partner-force medic kneeling over a soldier with a neck wound, one hand near the bruised swollen throat, while holding a radio handset to his ear and listening intently to remote coaching. The casualty has a hoarse strained look and subtle swelling over the larynx. An interpreter stands close. Dusty compound, warm afternoon light, focused cross-cultural teamwork. Shallow depth of field, horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "listening beat, slow push",
+    "text": "Starting frame: a partner-force medic kneels over a soldier with a neck wound, one hand near the swollen throat, pressing a radio handset to his ear as an interpreter stands close. Animation: the medic listens, nods, then gently adjusts the casualty's position as instructed and presses a dressing near the wound, the casualty's chest rising with effort. Camera slowly pushes in from the interpreter to the kneeling medic. Warm afternoon light, faint dust. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "remote coaching reenactment, slow handheld",
+    "text": "In a dusty compound in warm afternoon light, a partner-force medic kneels over a soldier with a knife wound to the neck and swelling over the larynx, pressing a radio handset to his ear to receive remote coaching while an interpreter stands close. The medic listens, nods, and carefully repositions the casualty and presses a dressing. Slow handheld camera pushes in from the interpreter to the medic. Focused cross-cultural teamwork, instructional. Horizontal widescreen, 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 39,
+  "type": "sc",
+  "march": "airway",
+  "cat": "CBRN",
+  "model": "Claude",
+  "technique": "Self-Critique Loop",
+  "title": "Nerve Agent — Drowning in Secretions",
+  "text": "You are the medic after a nerve-agent release; multiple casualties have copious secretions, bronchospasm, and airway compromise from cholinergic crisis. Your priority casualty is unconscious with frothing secretions, miosis, and labored breathing. You are in MOPP gear with degraded dexterity. You have atropine/pralidoxime autoinjectors, suction, NPAs, an SGA, and a BVM, all to be used through contamination.\n\nUse a self-critique loop: write your INITIAL airway plan, then a CRITIQUE section listing every flawed assumption (suctioning endless secretions, placing devices in MOPP gloves, when antidote fixes the airway versus when hardware is needed), then a FINAL PLAN.\n\n(1) How does atropine change the airway picture, and how much do you give and when? (2) Is securing a device futile until secretions are dried, or do you act now? (3) How do you suction effectively through a contaminated airway? (4) How do you ventilate a bronchospastic patient with a BVM in MOPP 4? (5) How do you protect yourself from secretions during airway care? (6) What is your decon-versus-treat sequencing for the airway?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "CBRN documentary, clinical tension",
+    "text": "A documentary photograph of a SOF medic in full MOPP gear, hood and mask, kneeling beside an unconscious casualty with frothing secretions at the mouth, suctioning the airway with one gloved hand while gripping an antidote autoinjector in the other. Grey contaminated surroundings, harsh flat light, breathing fog inside the medic's mask. Limited dexterity evident. Tense, careful, clinical. Shallow depth of field, horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "deliberate motion, slow arc",
+    "text": "Starting frame: a SOF medic in full MOPP gear kneels beside an unconscious casualty with frothing secretions, suctioning the airway with one gloved hand and holding an antidote autoinjector in the other, grey contaminated surroundings. Animation: the medic suctions the frothy secretions, then presses the autoinjector against the casualty's thigh and holds it, the casualty's chest beginning to move. Camera slowly arcs around the gloved hands. Harsh flat light, faint haze. 6 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "nerve-agent reenactment, slow arc",
+    "text": "In a grey contaminated environment, a SOF medic in full MOPP gear, hood and mask, kneels beside an unconscious casualty with frothing secretions at the mouth, suctioning the airway with one gloved hand and pressing an antidote autoinjector against the thigh with the other. Dexterity is limited; breathing fogs the mask. The casualty's chest begins to move. Camera slowly arcs around the hands. Harsh flat light, tense and instructional. Horizontal widescreen, 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 40,
+  "type": "sc",
+  "march": "airway",
+  "cat": "PROLONGED FIELD CARE",
+  "model": "ChatGPT",
+  "technique": "Rubric-Graded",
+  "title": "Cave Hide Tube — Sixteen-Hour Ventilation",
+  "text": "Act as a Prolonged Field Care airway subject-matter expert grading my plan. Casualty: an operator I intubated 4 hours ago after a blast injury; CASEVAC is now an estimated 16 hours away. I must manage a tube, sedation, and ventilation in a cave hide site with limited oxygen and no ventilator. Here is my draft plan, which you will score.\n\nState your grading rubric explicitly first (tube security, sedation strategy, ventilation targets, monitoring, contingency for dislodgement, oxygen conservation, documentation). Score each 1-5 with reasoning, give pass/fail, and list the top three fixes.\n\n(1) How do I confirm and maintain tube position over 16 hours without capnography? (2) What sedation/analgesia approach keeps him from self-extubating in austere conditions? (3) What manual ventilation rate and tidal targets do I use, and how do I conserve oxygen? (4) What is my immediate plan if the tube dislodges in a confined hide? (5) How do I monitor for tube blockage by secretions? (6) What rolling documentation does the next provider need?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "cave hide documentary, lamp-lit",
+    "text": "A documentary photograph inside a dim rocky cave hide. A SOF medic crouches beside an intubated unconscious operator on a litter, squeezing a bag-valve resuscitator attached to the endotracheal tube while a strip of tape secures the tube at the lips. A headlamp casts a warm pool of light; oxygen tubing and a small kit are arranged within reach. Cool rock shadows, intimate confined space, steady vigilance. Shallow depth of field, horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "rhythmic bagging, static-then-push",
+    "text": "Starting frame: inside a dim rocky cave hide a SOF medic crouches beside an intubated unconscious operator on a litter, squeezing a bag-valve resuscitator on the breathing tube taped at the lips, headlamp pooling warm light. Animation: the medic squeezes and releases the bag in a slow steady rhythm, the casualty's chest rising and falling, the medic glances at the chest and checks the tape. Camera holds then pushes gently in toward the bag and tube. Warm lamp glow flickers. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "prolonged ventilation reenactment, intimate",
+    "text": "Inside a dim rocky cave hide lit by a headlamp, a SOF medic crouches beside an intubated unconscious operator on a litter, rhythmically squeezing a bag-valve resuscitator on the taped endotracheal tube while watching the chest rise and fall and checking oxygen tubing. Quiet steady vigilance in the confined space. Slow handheld camera holds then pushes in toward the bag and tube. Cool rock shadows, warm lamp glow, instructional. Horizontal widescreen, 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 41,
+  "type": "sc",
+  "march": "respiration",
+  "cat": "TENSION PNEUMO",
+  "model": "Gemini",
+  "technique": "Chain-of-Thought",
+  "title": "Failing Chest Seal — Tension Physiology",
+  "text": "You are the senior medic at a CCP. An operator with a penetrating left chest wound is now in extremis: severe respiratory distress, absent breath sounds on the left, tracheal deviation to the right, distended neck veins, SpO2 78 percent and falling, HR 140. You placed a vented chest seal 10 minutes ago but he is deteriorating. You have 14-gauge needles, a finger-thoracostomy capability, and a chest tube kit. CASEVAC 30 minutes out.\n\nThink step by step and show your reasoning before acting. Reason through why the seal alone is failing and why this is now a tension physiology problem.\n\n(1) What is your immediate intervention and exact landmark for needle decompression? (2) How do you confirm the decompression worked? (3) If the needle fails or kinks, what is your next step? (4) When is finger thoracostomy indicated over a needle here? (5) How do you manage the original chest seal during and after decompression? (6) What reassessment loop catches a re-accumulating tension en route?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "critical-care documentary, urgent",
+    "text": "An urgent documentary photograph at a casualty collection point. A SOF medic kneels over an operator in severe respiratory distress with a vented chest seal on the left chest, inserting a large-bore decompression needle into the upper left chest at the correct landmark. The casualty's neck veins bulge, face strained, lips dusky. A second soldier steadies him. Cool overcast light, muted greens, intense focus. Shallow depth of field, horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "decompression beat, push-in",
+    "text": "Starting frame: at a casualty collection point a SOF medic kneels over an operator in respiratory distress with a vented chest seal, inserting a large-bore decompression needle into the upper left chest at the correct landmark, the casualty's neck veins bulging. Animation: the needle seats, a faint hiss escapes, the casualty's chest relaxes and his color improves as he takes a deeper breath; the medic steadies the catheter. Camera pushes in toward the insertion site. Cool overcast light. 6 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "tension pneumo reenactment, steady push-in",
+    "text": "At a casualty collection point in cool overcast light, a SOF medic kneels over an operator in severe respiratory distress with bulging neck veins and a vented chest seal, performing needle decompression into the upper left chest at the correct landmark. As the needle seats, the casualty's chest relaxes and his dusky color improves with a deeper breath while a soldier steadies him. Steady handheld camera pushes in toward the insertion. Muted greens, intense and instructional. Horizontal widescreen, 7 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 42,
+  "type": "sc",
+  "march": "respiration",
+  "cat": "OPEN PNEUMO",
+  "model": "Claude",
+  "technique": "Step-Back Reasoning",
+  "title": "Sucking Chest Wound — Burp the Seal",
+  "text": "You are the medic treating an operator with a large open sucking chest wound on the right anterolateral chest from shrapnel. Air audibly moves through the wound with each breath; he is tachypneic at 32, SpO2 90 percent, anxious. You have vented and non-vented chest seals, occlusive dressings, and a needle-decompression setup. Evac is 45 minutes out.\n\nStep back first: explain the physiology of an open versus tension pneumothorax and why the choice of seal and the burping technique matter. Establish the principles, then apply them.\n\n(1) Which seal do you apply and why does venting matter for this wound? (2) How do you prepare the skin for a seal that will actually adhere on a bloody, hairy chest? (3) What is the burping technique if a non-vented seal causes rising tension? (4) What signs tell you an open pneumo is converting to a tension pneumo? (5) How do you position him to optimize ventilation? (6) What is your decompression plan if tension develops? (7) What do you monitor and document over the 45-minute evac?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "field trauma documentary, focused",
+    "text": "A documentary photograph in a field setting. A SOF medic kneels applying a vented chest seal over a large open wound on the right anterolateral chest of a tachypneic anxious operator, smoothing the adhesive flat against the skin. The casualty is propped slightly upright breathing fast. Field gear nearby, warm daylight, blood traces wiped from the chest. Focused, clinical, instructional. Shallow depth of field, horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "seal application, slow push",
+    "text": "Starting frame: in a field setting a SOF medic kneels applying a vented chest seal over a large open wound on the right chest of a propped-up anxious operator, smoothing the adhesive flat. Animation: the medic presses the seal down around the edges to make it stick, the casualty breathes fast and the one-way vent flutters with each breath, the medic watches the chest. Camera slowly pushes in toward the seal. Warm daylight. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "open pneumo reenactment, slow handheld",
+    "text": "In a field setting in warm daylight, a SOF medic kneels applying a vented chest seal over a large open sucking wound on the right chest of a tachypneic anxious operator propped slightly upright, smoothing the adhesive flat and pressing the edges so it adheres while the one-way vent flutters with each fast breath. The medic watches the chest. Slow handheld camera pushes in toward the seal. Focused and instructional. Horizontal widescreen, 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 43,
+  "type": "sc",
+  "march": "respiration",
+  "cat": "HIGH ALTITUDE",
+  "model": "ChatGPT",
+  "technique": "Decision-Matrix",
+  "title": "HAPE at 4,500m — Descend or Treat",
+  "text": "You are the medic at a 4,500 m observation post. An operator with no trauma develops progressive dyspnea, a dry then productive cough with pink frothy sputum, crackles, SpO2 70 percent on exertion, and fatigue overnight. You suspect high-altitude pulmonary edema (HAPE). You have oxygen (limited), nifedipine, a portable hyperbaric (Gamow) bag, and the option to descend, though descent is hazardous in darkness.\n\nProduce a decision matrix as a table: Intervention | Mechanism | When-Indicated | Risk | Priority-Rank covering descent, oxygen, nifedipine, and the Gamow bag for THIS patient. Then state your chosen sequence and the single factor that would override it.\n\n(1) How do you differentiate HAPE from pneumonia or a cardiac cause in the field? (2) Why is descent the definitive treatment and how far must he go? (3) How do you ration limited oxygen for a multi-hour hold? (4) What is the role and dosing logic of nifedipine here (label estimates)? (5) How do you use a Gamow bag and what are its limits? (6) What is your trigger to force a risky night descent anyway?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "high-altitude documentary, thin light",
+    "text": "A documentary photograph at a 4500 meter observation post at dawn. A SOF medic kneels beside an exhausted operator sitting upright against a rock, holding an oxygen mask to his face; the casualty has labored breathing and a faint pink froth at his lips suggesting pulmonary edema. A portable hyperbaric bag lies folded nearby. Thin cold light, vast peaks behind, breath fogging. Concerned clinical mood. Shallow depth of field, horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "altitude push-in, breath fog",
+    "text": "Starting frame: at a 4500 meter observation post at dawn a SOF medic kneels beside an exhausted operator sitting upright against a rock, holding an oxygen mask to his face, faint pink froth at his lips, a folded hyperbaric bag nearby. Animation: the casualty takes labored breaths fogging the mask, the medic adjusts the seal and glances at the hyperbaric bag, wind stirring their layers. Camera gently pushes in toward the mask. Thin cold dawn light. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "HAPE reenactment, slow handheld",
+    "text": "At a high-altitude observation post at dawn with vast peaks behind, a SOF medic kneels beside an exhausted operator sitting against a rock with labored breathing and faint pink froth at his lips, holding an oxygen mask to his face and adjusting the seal while glancing toward a folded portable hyperbaric bag. Breath fogs in the thin cold air. Slow handheld camera pushes in toward the mask. Concerned and instructional. Horizontal widescreen, 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 44,
+  "type": "sc",
+  "march": "respiration",
+  "cat": "PEDIATRIC",
+  "model": "Gemini",
+  "technique": "Role + Constraints",
+  "title": "Pediatric Pneumothorax — Decompression Landmarks",
+  "text": "Act as an 18D treating a host-nation child after a building strike. A 5-year-old (estimated 18 kg) has chest trauma with rapid shallow breathing, RR 50, intercostal retractions, decreased breath sounds on the right, and SpO2 84 percent. You suspect a pneumothorax. You have pediatric needle-decompression equipment, oxygen, and pediatric-sized airway adjuncts.\n\nConstraints you MUST honor: weight-based dosing with math shown, pediatric anatomy landmarks (not adult), explicit flags on any estimate, and austere supplies only.\n\n(1) How does a child's chest wall and physiology change your read of respiratory distress? (2) What are the pediatric landmarks and needle/catheter size for decompression, and how do they differ from adults? (3) How do you avoid over- or under-treating given a child's compensatory reserve? (4) How do you deliver oxygen to a frightened child effectively? (5) What signs warn of impending respiratory arrest in a child? (6) What are your handoff priorities to a pediatric facility?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "pediatric trauma documentary, gentle",
+    "text": "A documentary photograph inside a simple shelter. A SOF medic kneels beside a frightened small child of about five with chest trauma, rapid shallow breathing and chest retractions, gently placing a small decompression catheter at the correct pediatric chest landmark while a helper holds an oxygen mask near the child's face. Soft window light, muted tones, careful precise hands. Tender, clinical, instructional. Shallow depth of field, horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "gentle precision, slow push",
+    "text": "Starting frame: inside a simple shelter a SOF medic kneels beside a small frightened child with rapid shallow breathing, placing a small decompression catheter at the pediatric chest landmark while a helper holds an oxygen mask near the child's face. Animation: the catheter seats and the child's breathing eases slightly and becomes deeper, the helper steadies the mask and the medic watches the small chest. Camera slowly pushes in toward the hands. Soft window light. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "pediatric decompression reenactment, gentle",
+    "text": "Inside a simple shelter in soft window light, a SOF medic kneels beside a frightened small child of about five with chest trauma, rapid shallow breathing and retractions, carefully performing needle decompression at the correct pediatric chest landmark while a helper holds an oxygen mask near the child's face. The child's breathing eases. Slow gentle handheld camera pushes in toward the precise hands. Muted tones, tender and instructional, tasteful. Horizontal widescreen, 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 45,
+  "type": "sc",
+  "march": "respiration",
+  "cat": "BLAST LUNG",
+  "model": "Claude",
+  "technique": "Self-Critique Loop",
+  "title": "Tunnel Blast Lung — Silent Hypoxia",
+  "text": "You are the medic after a confined-space explosion in a tunnel. An operator without obvious external chest trauma develops worsening hypoxia, hemoptysis, dyspnea, and crackles within an hour; you suspect primary blast lung injury. SpO2 82 percent on oxygen, RR 30. You have oxygen, a BVM, and limited ability to provide positive-pressure support. CASEVAC delayed an estimated 2 hours.\n\nUse a self-critique loop: write your INITIAL management, then a CRITIQUE listing risky assumptions (aggressive positive pressure causing air embolism, fluid overload, missing a co-existing pneumothorax), then a FINAL PLAN.\n\n(1) How do you recognize blast lung when external signs are minimal? (2) Why can aggressive positive-pressure ventilation be dangerous here, and how do you ventilate safely? (3) How do you manage fluids to avoid worsening pulmonary edema? (4) What co-injuries must you actively rule out? (5) How do you position and oxygenate for the 2-hour hold? (6) What deterioration signs trigger escalation, and to what?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "tunnel documentary, lamp glow",
+    "text": "A documentary photograph in a dim concrete tunnel after a blast. A SOF medic crouches beside an operator with no obvious chest wounds who is struggling to breathe, lips dusky, holding an oxygen mask to his face and watching his chest carefully. Faint dust hangs in the air; a headlamp casts a cone of light, distant rubble in shadow. Cool grey tones, quiet alarm, clinical attentiveness. Shallow depth of field, horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "dust haze, slow push-in",
+    "text": "Starting frame: in a dim concrete tunnel after a blast a SOF medic crouches beside an operator with dusky lips struggling to breathe, holding an oxygen mask to his face and watching his chest, dust hanging in a headlamp cone. Animation: the casualty's breathing grows more labored and the medic leans closer to study the chest rise, dust drifting slowly through the light. Camera pushes in toward the casualty's face and the mask. Cool grey tones. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "blast lung reenactment, slow handheld",
+    "text": "In a dim concrete tunnel after a confined-space blast, a SOF medic crouches beside an operator with no external chest wounds but dusky lips and labored breathing, holding an oxygen mask to his face and watching the chest rise carefully as silent hypoxia worsens. Dust drifts through a headlamp cone. Slow handheld camera pushes in toward the casualty's face and mask. Cool grey tones, quiet alarm, instructional. Horizontal widescreen, 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 46,
+  "type": "sc",
+  "march": "respiration",
+  "cat": "MASS CASUALTY",
+  "model": "ChatGPT",
+  "technique": "Structured Output",
+  "title": "Mortar Strike — Four Failing Lungs",
+  "text": "You are the lead medic at a mortar strike on a patrol base with four breathing-compromised casualties: (A) tension pneumo signs, (B) open sucking chest wound, (C) flail chest with paradoxical movement and hypoxia, (D) anxious hyperventilating soldier with no injury. You have two vented chest seals, three needle-decompression kits, oxygen for one patient at a time, and one assistant.\n\nReturn a markdown table: Casualty | Problem | Priority | Intervention | Resource | Who. Then a paragraph on how you allocate the single oxygen source and the psychological casualty.\n\n(1) Order the four by respiratory urgency and justify the top two. (2) Which interventions can be done simultaneously by you and the assistant? (3) How do you manage the flail chest without a ventilator? (4) How do you keep the hyperventilating soldier from consuming critical resources? (5) When do you reallocate oxygen between patients? (6) What is your reassessment loop as the situation evolves?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "MCI documentary, wide chaos",
+    "text": "A documentary photograph at a patrol base after a mortar strike. A lead medic kneels at the chest of a casualty applying a vented chest seal while gesturing to an assistant working a second casualty nearby; more breathing-compromised casualties lie in a rough row. Smoke drifts, sandbags and gear scattered, a single oxygen cylinder at the medic's side. Hard dusty light, controlled chaos, decisive leadership mood. Horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "wide chaos, slow sweep",
+    "text": "Starting frame: at a patrol base after a mortar strike a lead medic kneels applying a vented chest seal to one casualty while gesturing to an assistant on a second casualty, more breathing-compromised casualties in a rough row, a single oxygen cylinder at his side. Animation: the medic finishes the seal and points the assistant to the next patient, smoke drifting across the scene, casualties' chests rising. Camera sweeps slowly across the row then settles on the lead medic. Hard dusty light. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "respiratory MCI reenactment, sweeping handheld",
+    "text": "At a patrol base after a mortar strike with smoke drifting, a lead medic kneels applying a vented chest seal to one casualty while directing an assistant toward a second among a rough row of breathing-compromised casualties, a single oxygen cylinder at his side. He finishes the seal and points the assistant onward. Sweeping handheld camera tracks across the casualties then settles on the lead medic. Hard dusty light, controlled chaos, instructional. Horizontal widescreen, 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 47,
+  "type": "sc",
+  "march": "respiration",
+  "cat": "MARITIME",
+  "model": "Gemini",
+  "technique": "Red-Team the Plan",
+  "title": "Blunt Chest at Sea — Can't Auscultate",
+  "text": "You are the medic in a small boat returning a casualty with blunt chest trauma from a fall against a gunwale. He has bruising over the left ribs, splinting respirations, RR 28, SpO2 89 percent, and decreasing breath sounds on the left in a loud, wet, pitching environment where auscultation is nearly impossible. You have needle-decompression kits, oxygen, and chest seals. Transit is 25 minutes of rough seas.\n\nGive your plan, then red-team it as a skeptical senior provider: attack the reliability of breath-sound assessment at sea, the risk of decompressing a simple pneumothorax unnecessarily, and the difficulty of monitoring on a moving boat. Then revise.\n\n(1) How do you assess for tension pneumo when you cannot reliably auscultate? (2) What objective signs replace breath sounds in this environment? (3) When is empiric needle decompression justified versus harmful? (4) How do you secure the patient and monitor trend on a pitching deck? (5) How do you manage pain-related splinting to improve ventilation? (6) What do you hand off to the ship about your uncertainty?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "maritime documentary, wet and grey",
+    "text": "A documentary photograph in a small boat on rough grey seas. A medic braces against the pitching deck while pressing his hand and gaze over the left lower ribs of an operator with bruising and splinting respirations, assessing for tension when auscultation is impossible. Sea spray streaks the frame, the horizon tilts, a decompression kit and oxygen sit ready. Cold flat daylight, salt-sprayed feel, focused uncertainty. Horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "pitching deck, swaying handheld",
+    "text": "Starting frame: in a small boat on rough grey seas a medic braces against the pitching deck pressing his hand over the bruised left lower ribs of an operator with splinting respirations, a decompression kit ready, sea spray in the air. Animation: the boat pitches and spray sweeps across, the operator breathes shallowly and winces, the medic re-braces and watches the chest rise unevenly. Camera sways with the boat and pushes toward the ribs. Cold flat daylight. 6 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "blunt chest at sea reenactment, swaying camera",
+    "text": "In a small boat on rough grey seas with sea spray and a tilting horizon, a medic braces against the pitching deck and presses his hand over the bruised left lower ribs of an operator with splinting shallow respirations, watching the chest rise unevenly to assess for tension when he cannot auscultate. A decompression kit sits ready. Handheld camera sways with the boat and pushes toward the ribs. Cold flat daylight, focused uncertainty, instructional. Horizontal widescreen, 7 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 48,
+  "type": "sc",
+  "march": "respiration",
+  "cat": "CBRN",
+  "model": "Claude",
+  "technique": "Tree-of-Thought",
+  "title": "Chlorine Gas — Upwind or Decon",
+  "text": "You are the medic after a chlorine-gas release at an industrial objective. Several operators have coughing, chest tightness, wheezing, and worsening hypoxia from chemical pneumonitis. Your worst casualty has SpO2 80 percent, audible wheeze, and a sense of suffocation. You are in protective gear; the area is not yet decontaminated. You have oxygen, a BVM, bronchodilators, and the option to move casualties upwind.\n\nUse Tree-of-Thought: generate at least three courses of action (treat-in-place upwind, rapid evac through contamination, stage-and-decon-first), branch the consequences, prune, and select with reasoning shown.\n\n(1) What is the first action for a chlorine-exposed hypoxic casualty? (2) How does moving upwind versus decontaminating change priorities? (3) What is the role of bronchodilators and oxygen here? (4) Why is aggressive positive pressure a double-edged tool with chemical lung injury? (5) How do you protect yourself and avoid spreading contamination during respiratory care? (6) What delayed deterioration must you warn the receiving facility about?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "CBRN documentary, hazy industrial",
+    "text": "A documentary photograph at an industrial objective with a faint greenish chemical haze. A SOF medic in protective gear and mask helps a wheezing hypoxic operator who is being moved upwind, holding an oxygen mask to his face as the casualty coughs and clutches his chest. Pipes and tanks loom in the haze; flat industrial light, sense of suffocating air. Tense, careful, clinical. Shallow depth of field, horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "haze drift, tracking push",
+    "text": "Starting frame: at an industrial objective in faint greenish haze a SOF medic in protective gear holds an oxygen mask to the face of a wheezing hypoxic operator being moved upwind, who coughs and clutches his chest. Animation: the pair move a few steps away from the haze, the casualty coughs hard and the medic keeps the mask sealed and supports him, haze thinning behind them. Camera tracks alongside and pushes in toward the mask. Flat industrial light. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "chlorine exposure reenactment, tracking handheld",
+    "text": "At an industrial objective in faint greenish chemical haze, a SOF medic in protective gear and mask supports a wheezing hypoxic operator and moves him upwind while holding an oxygen mask to his face as he coughs and clutches his chest, pipes and tanks looming behind. The haze thins as they move clear. Handheld camera tracks alongside and pushes in toward the mask. Flat industrial light, tense and instructional. Horizontal widescreen, 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 49,
+  "type": "sc",
+  "march": "respiration",
+  "cat": "JUNGLE/REMOTE",
+  "model": "ChatGPT",
+  "technique": "Socratic Tutor",
+  "title": "Jungle Pneumonia — Fourteen-Hour Watch",
+  "text": "Act as a Socratic respiratory tutor for a junior medic in a remote jungle setting. Do NOT hand me the plan; ask guiding questions first, let me reason, then correct. Case: an operator 14 hours from evac develops fever, productive cough, right-sided pleuritic pain, RR 26, SpO2 90 percent, suspected pneumonia possibly with a developing effusion. We have oral and limited IV antibiotics, oxygen, and basic monitoring.\n\nRun 5-6 Socratic exchanges, then summarize the correct prolonged respiratory-care plan.\n\n(1) What questions distinguish pneumonia from a traumatic or embolic cause in this setting? (2) How do I decide which antibiotic and route in an austere hold? (3) How do I monitor respiratory trend over 14 hours without advanced tools? (4) What signs tell me an effusion or empyema is developing? (5) When does this become a needle-or-evac-now decision? (6) How do I conserve limited oxygen while keeping him safe?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "jungle clinic documentary, humid teaching",
+    "text": "A documentary photograph in a humid jungle clinic by daylight. A SOF medic sits beside a feverish operator propped on a cot, listening to the right side of his chest with a stethoscope while a junior medic watches and learns; the casualty has flushed cheeks and breathes with pleuritic guarding. Oral antibiotics and a small oxygen bottle rest on a crate. Green light filtering through foliage, heavy humid air, calm teaching mood. Horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "humid still, slow push",
+    "text": "Starting frame: in a humid jungle clinic by daylight a SOF medic listens to the right chest of a feverish operator propped on a cot with a stethoscope while a junior medic watches, antibiotics and an oxygen bottle on a crate. Animation: the casualty takes a guarded breath and winces, the medic moves the stethoscope and nods to the junior, who leans in, green light dappling through foliage. Camera slowly pushes in toward the stethoscope. Humid haze. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "jungle pneumonia reenactment, slow handheld",
+    "text": "In a humid jungle clinic in green filtered daylight, a SOF medic sits beside a feverish operator propped on a cot, listening to the right chest with a stethoscope while quietly teaching a junior medic who watches and leans in. The casualty breathes with pleuritic guarding; oral antibiotics and a small oxygen bottle rest on a crate. Slow handheld camera pushes in toward the stethoscope. Heavy humid air, calm teaching mood, instructional. Horizontal widescreen, 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 50,
+  "type": "sc",
+  "march": "respiration",
+  "cat": "PROLONGED FIELD CARE",
+  "model": "Gemini",
+  "technique": "Rubric-Graded",
+  "title": "Field Chest Drain — Twenty-Hour Hold",
+  "text": "Act as a Prolonged Field Care subject-matter expert grading my respiratory plan. Casualty: an operator with a treated pneumothorax now managed with a finger thoracostomy converted to a chest tube I placed 3 hours ago; CASEVAC is an estimated 20 hours out. I must manage the tube, drainage, and ventilation in a remote hide with no suction unit and limited oxygen. Grade my draft.\n\nState your rubric first (tube security and patency, drainage/seal management without wall suction, ongoing assessment, infection prevention, oxygen conservation, contingency for re-accumulation, documentation). Score each 1-5, give pass/fail, and list the top three fixes.\n\n(1) How do I maintain a functioning chest drain without wall suction over 20 hours? (2) How do I improvise and monitor a water-seal in the field? (3) What signs tell me the tube is occluded or the lung is re-collapsing? (4) How do I prevent and recognize empyema over a long hold? (5) How do I conserve oxygen while keeping him oxygenated? (6) What rolling documentation does the surgical team need?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "field hide documentary, lamp-lit",
+    "text": "A documentary photograph in a remote hide. A SOF medic crouches beside a stable operator on a litter, tending an improvised chest tube whose tubing runs into a sealed water-seal bottle on the ground, checking the tubing for bubbling. A headlamp lights the setup; oxygen tubing and a casualty card rest nearby. Cool shadows, muted greens, attentive prolonged-care mood. Shallow depth of field, horizontal wide frame."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "static-to-tilt, water-seal motion",
+    "text": "Starting frame: in a remote hide a SOF medic crouches beside a stable operator on a litter tending an improvised chest tube that runs into a sealed water-seal bottle on the ground, checking for bubbling, headlamp lighting the setup. Animation: the medic runs a hand along the tubing and the water in the bottle ripples and a few bubbles rise as the casualty breathes, the medic glances at the chest and notes something on a card. Camera tilts slowly from the bottle up to the medic's face. Warm lamp glow. 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "field chest drain reenactment, slow handheld",
+    "text": "In a remote hide lit by a headlamp, a SOF medic crouches beside a stable operator on a litter, tending an improvised chest tube whose tubing runs into a sealed water-seal bottle on the ground, running a hand along the tubing and watching bubbles rise as the casualty breathes, then noting findings on a casualty card. Slow handheld camera tilts from the bottle up to the medic's face. Cool shadows, muted greens, attentive and instructional. Horizontal widescreen, 8 seconds, 24fps."
+   }
+  }
+ },
+ {
+  "n": 51,
+  "type": "sc",
+  "march": "circulation",
+  "cat": "WALKING BLOOD BANK",
+  "model": "Claude",
+  "technique": "Chain-of-Thought",
+  "title": "Walking Blood Bank — Ambush Resuscitation",
+  "text": "You are the senior 18D after a complex ambush. One operator is in hemorrhagic shock: HR 140, weak radial pulse, pale, agitated, controlled extremity bleed but ongoing internal losses suspected. You have 2 units of cold-stored LTOWB and 10 pre-screened walking-blood-bank donors among the uninjured. CASEVAC is 60 minutes out.\n\nThink step by step and show your reasoning before acting. Reason through transfusion triggers, the limits of 2 prepacked units, and when to activate a fresh whole blood draw from donors.\n\n(1) What clinical triggers tell you to start transfusing now versus waiting? (2) How do you sequence the 2 units of LTOWB against suspected ongoing loss? (3) When do you activate the walking blood bank, and how do you select and draw from donors safely in the field? (4) What is your role of TXA and calcium in this resuscitation, and timing? (5) How do you avoid the lethal triad while transfusing? (6) What endpoints tell you resuscitation is working? (7) What do you hand off about volumes given and donor IDs?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "documentary photoreal, golden-hour rim light",
+    "text": "Documentary photo, vertical nine by sixteen portrait. A bearded special forces medic kneels in scrubby forest at dusk, squeezing a unit of dark-red cold-stored whole blood through a pressure cuff into the arm of a pale, sweating casualty on the ground. A second uninjured soldier sits beside them, sleeve rolled up, a fresh collection bag filling from his own arm. Dust, spent brass, low golden rim light through trees, shallow depth of field, tense and instructional realism."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow push-in, subtle handheld",
+    "text": "Starting frame: a bearded special forces medic kneels in scrubby forest at dusk, squeezing a unit of dark-red whole blood through a pressure cuff into a pale casualty on the ground while a seated donor soldier fills a collection bag from his own arm, golden rim light, dust and spent brass. Animation: the medic squeezes the cuff and the blood line pulses, the casualty blinks and his chest rises, the donor bag swells slowly. Camera: slow push-in with subtle handheld sway. Duration: 7 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "tense field resuscitation, natural dusk light",
+    "text": "A bearded special forces medic kneels in scrubby dusk forest, squeezing a pressure cuff to drive dark-red whole blood into the arm of a pale, sweating casualty lying on the ground; beside them an uninjured soldier sits with a rolled sleeve as a collection bag fills from his own arm. Slow push-in, subtle handheld motion. Low golden rim light through trees, dust, spent brass, shallow depth of field, tense and instructional realism. Duration 7 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 52,
+  "type": "sc",
+  "march": "circulation",
+  "cat": "PELVIC FRACTURE",
+  "model": "ChatGPT",
+  "technique": "Step-Back Reasoning",
+  "title": "Unstable Pelvis — Hidden Internal Bleed",
+  "text": "You are the medic for an operator thrown by a blast with an unstable pelvis: severe pelvic pain, leg-length discrepancy, hypotension with no major external bleeding, HR 130, cool clammy skin. You suspect massive internal pelvic hemorrhage. You have a pelvic binder, 1 unit of whole blood, TXA, and a litter. Evac is 50 minutes out.\n\nStep back first: explain the mechanism of pelvic-ring hemorrhage and why circulatory collapse can occur with little external blood. Establish principles, then apply.\n\n(1) How and where exactly do you place a pelvic binder, and what is the most common placement error? (2) How do you handle and move an unstable pelvis to avoid worsening bleeding? (3) What are your transfusion triggers with only 1 unit available? (4) How do you use TXA and permissive hypotension here? (5) What signs tell you the binder is or is not controlling the bleed? (6) What do you communicate to the surgical team that changes their plan?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "clinical photoreal, overhead three-quarter",
+    "text": "Documentary photo, vertical nine by sixteen portrait. A combat medic crouches over a supine soldier on hard-packed earth, cinching a bright orange pelvic binder snugly across the greater trochanters at hip level, hands pulling the straps tight. The casualty is pale and grimacing, legs slightly rotated. A single bag of whole blood hangs from a rifle stuck upright in the ground. Dusty blast debris, harsh overcast daylight, shallow depth of field, accurate device placement, tense instructional realism."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow arc, gentle tension on straps",
+    "text": "Starting frame: a combat medic crouches over a supine pale soldier on hard-packed earth, cinching a bright orange pelvic binder across the hips while a whole blood bag hangs from an upright rifle, dusty debris, overcast light. Animation: the medic pulls the binder straps tighter and presses them flat, the casualty winces and his fingers curl, the blood bag sways slightly. Camera: slow arc around the hips, gentle handheld. Duration: 6 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "field trauma realism, overcast daylight",
+    "text": "A combat medic crouches over a supine, pale, grimacing soldier on dusty hard-packed earth and cinches a bright orange pelvic binder snugly across the hips at trochanter level, pulling and pressing the straps tight; a unit of whole blood hangs from a rifle stood upright in the ground. Slow arc around the patient with gentle handheld motion. Harsh overcast daylight, blast debris, shallow depth of field, accurate clinical detail. Duration 6 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 53,
+  "type": "sc",
+  "march": "circulation",
+  "cat": "CRUSH SYNDROME",
+  "model": "Gemini",
+  "technique": "Decision-Matrix",
+  "title": "Crush Syndrome — Hyperkalemia on Release",
+  "text": "You are the medic at a building collapse. An operator has been pinned under rubble by the legs for 3 hours; extraction is imminent. You anticipate crush syndrome with hyperkalemia and shock on release. He is alert, legs numb and tense, no major external bleed. You have IV fluids, calcium, sodium bicarbonate, and limited monitoring; CASEVAC 40 minutes after extraction.\n\nProduce a decision matrix as a table: Intervention | Timing (pre- vs post-release) | Mechanism | Risk | Priority. Cover fluids, calcium, bicarbonate, and tourniquet-before-release. Then state your sequence and the single most dangerous moment.\n\n(1) What do you do BEFORE the crushing weight is lifted, and why is timing critical? (2) How do fluids before release change the outcome? (3) What ECG or clinical signs hint at hyperkalemia without a lab? (4) What is the role and risk of a pre-release tourniquet? (5) How do calcium and bicarbonate fit, with dosing logic (label estimates)? (6) How do you monitor for sudden arrest at the moment of release?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "gritty photoreal, low dusty key light",
+    "text": "Documentary photo, vertical nine by sixteen portrait. A medic lies prone half-under a collapsed concrete slab, reaching into a dusty void to start an IV line in the arm of a soldier whose legs are pinned beneath rubble. A fluid bag runs into the trapped man before the weight is lifted. Rebar, broken concrete, swirling gray dust lit by a single headlamp beam, the trapped soldier alert and gripping the medic's wrist, claustrophobic tension, instructional realism."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "static low angle, dust drift",
+    "text": "Starting frame: a medic lies prone half-under a collapsed concrete slab, reaching into a dusty void to run an IV into a soldier whose legs are pinned under rubble, single headlamp beam, swirling gray dust, rebar. Animation: dust drifts through the headlamp beam, the IV drip chamber pulses, the trapped soldier tightens his grip on the medic's wrist and breathes hard. Camera: static low angle with faint handheld tremor. Duration: 6 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "claustrophobic rescue realism, single hard light",
+    "text": "A medic lies prone half-under a collapsed concrete slab in a dusty void, reaching in to start an IV line and run fluid into a soldier whose legs are pinned beneath rubble before the weight is lifted; the trapped man is alert and grips the medic's wrist. Static low angle, faint handheld tremor. A single headlamp beam cuts swirling gray dust over rebar and broken concrete, claustrophobic tension, instructional realism. Duration 6 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 54,
+  "type": "sc",
+  "march": "circulation",
+  "cat": "PEDIATRIC",
+  "model": "Claude",
+  "technique": "Role + Constraints",
+  "title": "Pediatric Shock — Late Hypotension",
+  "text": "Act as an 18D resuscitating a host-nation child in shock after a blast. A 7-year-old (estimated 22 kg) has tachycardia at 160, cap refill 4 seconds, mottled skin, and lethargy, with a controlled extremity wound but suspected internal bleeding. You have IV/IO access capability, crystalloid, a small amount of whole blood, TXA, and calcium.\n\nConstraints you MUST honor: all doses weight-based with the math shown, pediatric shock parameters (not adult), explicit flags on estimates, and austere supplies.\n\n(1) How does pediatric shock present differently and why is hypotension a late finding? (2) What is your IO access plan and site for a 7-year-old? (3) What are weight-based volumes for crystalloid and blood, with math shown? (4) When and how much TXA, weight-based? (5) What endpoints tell you resuscitation is adequate in a child? (6) How do you keep this child warm and prevent the lethal triad? (7) What do you hand off to the pediatric surgical team?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "tender photoreal, warm side light",
+    "text": "Documentary photo, vertical nine by sixteen portrait. A special forces medic kneels beside a small mottled host-nation child of about seven lying on a blanket, drilling an intraosseous needle into the front of the child's lower leg just below the knee while steadying the small thigh with one hand. The child is pale and lethargic, a tiny IV line and a small whole-blood bag ready beside them. Dim mud-walled room, warm side light from a doorway, careful gentle hands, instructional realism."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow push-in, steady hands",
+    "text": "Starting frame: a special forces medic kneels beside a small pale host-nation child on a blanket, drilling an intraosseous needle into the lower leg below the knee while steadying the thigh, a small whole-blood bag ready, warm side light from a doorway. Animation: the IO needle seats with a small settle, the medic flushes the line, the child's eyelids flutter and chest rises faintly. Camera: slow push-in toward the leg. Duration: 6 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "gentle pediatric care realism, warm interior light",
+    "text": "A special forces medic kneels beside a small, pale, mottled host-nation child of about seven on a blanket in a dim mud-walled room, drilling an intraosseous needle into the lower leg below the knee while steadying the small thigh, a tiny whole-blood bag waiting. Slow push-in toward the leg, steady careful hands. Warm side light from a doorway, soft shadow, gentle instructional realism. Duration 6 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 55,
+  "type": "sc",
+  "march": "circulation",
+  "cat": "ARCTIC",
+  "model": "ChatGPT",
+  "technique": "Self-Critique Loop",
+  "title": "Arctic Shock — Cold Blood Dilemma",
+  "text": "You are the medic on an arctic patrol at minus 30 C. An operator in hemorrhagic shock from a controlled thigh bleed is now profoundly cold: shivering stopped, HR 50 and slowing, confused. You suspect combined shock and severe hypothermia. You have whole blood (cold, needs warming), a hypothermia rewarming kit, warmed IV fluids if you can heat them, and a 3-hour evac.\n\nUse a self-critique loop: write your INITIAL plan, then a CRITIQUE listing risky assumptions (transfusing cold blood into a cold patient, aggressive rewarming causing afterdrop, rough handling triggering arrhythmia), then a FINAL PLAN.\n\n(1) How do you prioritize hemorrhagic shock versus severe hypothermia when they conflict? (2) Why is transfusing cold blood dangerous here and how do you warm it? (3) How do you rewarm without causing afterdrop or arrhythmia? (4) Why must you handle a severely hypothermic patient gently? (5) What are your resuscitation endpoints when cold blunts normal signs? (6) What do you tell the receiving team about the rewarming timeline?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "cold photoreal, blue snow light",
+    "text": "Documentary photo, vertical nine by sixteen portrait. On a wind-scoured snowfield a medic kneels over an operator wrapped in a silver-and-orange hypothermia burrito, holding a unit of whole blood against his own body to warm it before transfusion while a warmed-fluid line runs into the casualty's arm. The patient is gray, eyes half-closed, frost on his collar. Flat blue arctic light, blowing snow, breath fog, gentle handling, tense survival realism, instructional detail."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow drift, blowing snow",
+    "text": "Starting frame: on a wind-scoured snowfield a medic kneels over an operator in a silver-and-orange hypothermia wrap, holding a unit of whole blood against his own body to warm it while a fluid line runs into the casualty, frost, blue arctic light, breath fog. Animation: snow streaks across frame, the medic gently rubs the blood unit, breath fog drifts, the casualty's eyelids flicker. Camera: slow lateral drift. Duration: 7 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "arctic survival realism, flat blue light",
+    "text": "On a wind-scoured snowfield a medic kneels over a gray, half-conscious operator cocooned in a silver-and-orange hypothermia wrap, warming a unit of whole blood against his own body before transfusion while a warmed-fluid line runs into the casualty's arm. Slow lateral drift, gentle deliberate handling. Flat blue arctic light, blowing snow, breath fog, frost on collars, tense survival realism. Duration 7 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 56,
+  "type": "sc",
+  "march": "circulation",
+  "cat": "MASS CASUALTY",
+  "model": "Gemini",
+  "technique": "Structured Output",
+  "title": "IED Mass Casualty — Three Units, Four Bleeds",
+  "text": "You are the only medic at an IED strike with four shock casualties competing for limited blood: (A) traumatic amputation, hemorrhage controlled, class III shock; (B) penetrating abdomen, distended, class IV shock; (C) chest trauma with shock and hypoxia; (D) elderly bystander with shock and a do-not-resuscitate dilemma. You have 3 units of LTOWB, TXA, calcium, and one assistant.\n\nReturn a markdown table: Casualty | Shock Class | Priority | Blood Allocation | Other Tx | Who. Then a short paragraph justifying any casualty you deprioritize and the ethics involved.\n\n(1) How do you allocate only 3 units across four shocked patients? (2) Which casualty has the best chance per unit of blood, and how do you reason that? (3) How do TXA and calcium factor across the group? (4) What do you delegate to the assistant? (5) How do you handle the bystander/DNR dilemma in a combat setting? (6) What is your reassessment loop as blood runs out or more arrives?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "chaotic photoreal, wide harsh sun",
+    "text": "Documentary photo, vertical sixteen by nine landscape. A lone medic stands at the center of a smoking IED strike triaging four casualties laid in a row on the roadside, holding up two units of whole blood and pointing decisively at the most critical patient with a distended abdomen. An assistant kneels nearby. Burning vehicle smoke, scattered gear, harsh midday sun, dust haze, urgent command posture, color-coded triage tape on wrists, tense instructional realism."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow pull-back reveal, drifting smoke",
+    "text": "Starting frame: a lone medic stands among four casualties in a row at a smoking IED strike, holding up two units of whole blood and pointing at the most critical patient, burning vehicle smoke, harsh midday sun, triage tape on wrists. Animation: smoke drifts across the row, the medic's pointing arm sweeps to the assistant, casualties shift and a hand rises weakly. Camera: slow pull-back revealing all four. Duration: 7 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "mass-casualty chaos realism, harsh sun haze",
+    "text": "A lone medic stands at the center of a smoking IED strike, triaging four casualties laid in a row on a dusty roadside, holding up two units of whole blood and pointing decisively at the most critical patient while an assistant kneels nearby. Slow pull-back revealing the whole row. Burning vehicle smoke, harsh midday sun, dust haze, scattered gear, color-coded triage tape, urgent tense realism. Duration 7 seconds, horizontal sixteen by nine landscape, 24fps."
+   }
+  }
+ },
+ {
+  "n": 57,
+  "type": "sc",
+  "march": "circulation",
+  "cat": "MARITIME",
+  "model": "Claude",
+  "technique": "Red-Team the Plan",
+  "title": "Maritime Transfusion — Lines on a Heaving Deck",
+  "text": "You are the medic on a fast boat with an operator in hemorrhagic shock from a controlled junctional wound, transiting 30 minutes of rough seas. HR 135, radial thready, agitated. You have 2 units of cold whole blood in a cooler, a pressure infuser, TXA, calcium, and a hypothermia kit, all on a heaving deck where IV access is hard and lines get yanked.\n\nGive your resuscitation plan, then red-team it as a skeptical senior corpsman: attack IV/IO security on a pitching deck, the risk of cold blood plus sea-spray hypothermia, and transfusion-reaction monitoring in chaos. Then revise.\n\n(1) How do you secure reliable access (IV vs IO) on a moving boat? (2) What is your sequence for the 2 units, and your transfusion triggers? (3) How do you warm blood and prevent hypothermia in a wet maritime environment? (4) How do you monitor for a transfusion reaction in a loud, chaotic setting? (5) When do you add TXA and calcium, and why calcium with whole blood? (6) What do you hand off to the receiving ship about volumes and timeline?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "wet photoreal, hard low sun",
+    "text": "Documentary photo, vertical nine by sixteen portrait. On the pitching deck of a gray fast assault boat a medic braces a knee against a soldier in hemorrhagic shock, squeezing whole blood through a handheld pressure infuser into a secured IO line in the shoulder. Sea spray bursts over the gunwale, the casualty is pale and wrapped against the cold. Low hard sun glinting off wet metal, motion-blurred wake, taped-down lines, gritty maritime realism, instructional accuracy."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "handheld roll, spray bursts",
+    "text": "Starting frame: on the pitching deck of a gray fast boat a medic braces over a pale soldier, squeezing whole blood through a handheld pressure infuser into a secured shoulder IO line, sea spray over the gunwale, low hard sun on wet metal. Animation: the deck rolls, spray bursts across frame, the medic pumps the infuser and steadies the line. Camera: handheld roll matching the boat. Duration: 6 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "rough-sea maritime realism, glinting low sun",
+    "text": "On the pitching deck of a gray fast assault boat a medic braces a knee against a pale soldier in shock and squeezes whole blood through a handheld pressure infuser into a taped-down IO line in the shoulder while sea spray bursts over the gunwale. Handheld camera rolling with the boat. Low hard sun glinting on wet metal, motion-blurred wake, secured lines, gritty maritime realism, instructional accuracy. Duration 6 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 58,
+  "type": "sc",
+  "march": "circulation",
+  "cat": "CBRN",
+  "model": "ChatGPT",
+  "technique": "Tree-of-Thought",
+  "title": "Radiological Shrapnel — Decon Versus Blood",
+  "text": "You are the medic with a casualty in hemorrhagic shock from shrapnel who is ALSO contaminated after a radiological dispersal device. Controlled extremity bleed, HR 140, hypotensive, but the wound and skin carry radioactive particulate. You are in protective gear; decon is delayed. You have whole blood, IV access gear, TXA, and decon supplies; CASEVAC 45 minutes out.\n\nUse Tree-of-Thought: generate at least three approaches (resuscitate-then-decon, decon-then-resuscitate, simultaneous-with-containment), branch the consequences for both the patient and your own exposure, prune, and pick the best with reasoning shown.\n\n(1) Does life-threatening shock or contamination take precedence, and how do you justify it? (2) How do you establish vascular access through or around contaminated skin? (3) How do you transfuse without spreading contamination to yourself and gear? (4) How does external contamination actually threaten the patient versus the team? (5) What is the minimum decon needed before transport? (6) What do you warn the decon line and receiving facility?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "tense photoreal, sterile cool light",
+    "text": "Documentary photo, vertical nine by sixteen portrait. A medic in full protective suit, gloves, and respirator kneels over a shrapnel-wounded soldier on a plastic decon sheet, starting an IV through a window of clean skin away from contaminated wounds, a radiation survey meter resting nearby. The casualty is pale, debris still in his clothing. Cool sterile light, yellow contamination markers around the sheet, careful gloved hands, controlled tension, instructional CBRN realism."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow push-in, faint glove tremor",
+    "text": "Starting frame: a medic in full protective suit and respirator kneels over a shrapnel-wounded soldier on a plastic decon sheet, starting an IV through clean skin away from contaminated wounds, a radiation survey meter nearby, yellow contamination markers, cool sterile light. Animation: the medic seats the cannula and tapes it, the casualty breathes, the survey meter needle twitches. Camera: slow push-in on the gloved hands. Duration: 6 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "CBRN containment realism, cool sterile light",
+    "text": "A medic in full protective suit, gloves, and respirator kneels over a pale shrapnel-wounded soldier on a plastic decon sheet, carefully starting an IV through a window of clean skin away from contaminated wounds while a radiation survey meter rests nearby. Slow push-in on the gloved hands, faint deliberate motion. Cool sterile light, yellow contamination markers, debris in clothing, controlled tension, instructional CBRN realism. Duration 6 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 59,
+  "type": "sc",
+  "march": "circulation",
+  "cat": "PROLONGED FIELD CARE",
+  "model": "Gemini",
+  "technique": "Rubric-Graded",
+  "title": "Prolonged Resuscitation — Twenty-Four-Hour Endpoints",
+  "text": "Act as a Prolonged Field Care resuscitation subject-matter expert grading my plan. Casualty: an operator I resuscitated for hemorrhagic shock with 2 units of whole blood; bleeding is controlled but CASEVAC is now an estimated 24 hours away. I must manage ongoing resuscitation, fluid balance, and monitoring in a remote hide with no lab and limited supplies. Grade my draft.\n\nState your rubric first (resuscitation endpoints, fluid strategy over time, electrolyte/calcium management, monitoring without labs, recognizing re-bleed, urine-output tracking, documentation). Score each 1-5, give pass/fail, and list the top three fixes.\n\n(1) What resuscitation endpoints do I target over a 24-hour hold (mentation, pulse character, urine output)? (2) How do I manage fluids after the initial blood without causing dilutional problems? (3) How do I monitor for and respond to re-bleeding over many hours? (4) How do I track and support calcium and acid-base without a lab? (5) How do I measure and interpret urine output as a resuscitation guide? (6) What rolling documentation does the surgical team need on arrival?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "intimate photoreal, dim lantern light",
+    "text": "Documentary photo, vertical nine by sixteen portrait. Deep inside a camouflaged hide, a medic sits cross-legged keeping watch over a stable casualty wrapped in blankets, writing trending vitals on a casualty card by dim red lantern light while a near-empty fluid bag hangs from a stick. A small monitor glows faintly, a measuring bottle for urine output beside the patient. Cramped earthen shelter, long-hold fatigue on the medic's face, quiet patient endurance, instructional realism."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "very slow push-in, flickering lantern",
+    "text": "Starting frame: deep in a camouflaged hide a tired medic sits writing trending vitals on a casualty card by dim red lantern light beside a blanket-wrapped casualty, a near-empty fluid bag on a stick, a faint glowing monitor. Animation: the lantern flickers, the medic writes and glances at the monitor, the casualty's blanket rises with slow breaths. Camera: very slow push-in. Duration: 8 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "prolonged-care endurance realism, dim red light",
+    "text": "Deep inside a cramped camouflaged hide a fatigued medic sits cross-legged keeping watch over a stable blanket-wrapped casualty, writing trending vitals on a casualty card by dim red lantern light while a near-empty fluid bag hangs from a stick and a small monitor glows faintly. Very slow push-in, flickering light. Earthen shelter, quiet endurance, long-hold exhaustion, instructional realism. Duration 8 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 60,
+  "type": "sc",
+  "march": "circulation",
+  "cat": "PARTNER FORCE",
+  "model": "Claude",
+  "technique": "Persona Debate",
+  "title": "Flank Gunshot — ATLS Versus 18D Debate",
+  "text": "Act as TWO experts debating my circulation plan, then converge. Persona A is a conventional ATLS-trained ER physician favoring measured crystalloid; Persona B is a battle-hardened 18D favoring early whole blood and permissive hypotension. Case: a partner-force soldier in hemorrhagic shock from a gunshot to the flank with suspected retroperitoneal bleeding, HR 130, hypotensive, controlled external component. I have 1 unit of whole blood, crystalloid, TXA, and a 70-minute evac, advising a partner medic through an interpreter.\n\nHave the two personas argue each major decision (fluid choice, blood pressure target, TXA, timing), then reconcile into a single field-ready plan I can relay across a language barrier.\n\n(1) Crystalloid versus the single blood unit: when do A and B agree and disagree? (2) What blood-pressure target balances perfusion against re-bleeding? (3) How and when do you give TXA in this window? (4) How do you simplify the plan into clear steps for a partner medic via interpreter? (5) What endpoints tell the partner medic it is working? (6) What single instruction matters most if comms drop?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "documentary photoreal, dusty warm light",
+    "text": "Documentary photo, vertical nine by sixteen portrait. A special forces medic guides a local partner-force medic through hanging a single unit of whole blood over a partner soldier shot in the flank, an interpreter gesturing between them. The casualty is pale on a litter, a flank pressure dressing visible. Dusty compound courtyard, warm afternoon light, the teaching hand of the SOF medic over the partner's hands, cross-cultural mentoring, tense instructional realism."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow arc, gesturing interpreter",
+    "text": "Starting frame: a special forces medic guides a partner-force medic in hanging a single unit of whole blood over a pale flank-wounded soldier on a litter while an interpreter gestures between them, dusty courtyard, warm afternoon light. Animation: the SOF medic's hand guides the partner's hands onto the line, the interpreter gestures and speaks, the casualty's chest rises. Camera: slow arc around the three. Duration: 7 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "partner-force mentoring realism, warm afternoon light",
+    "text": "A special forces medic guides a local partner-force medic through hanging a single unit of whole blood over a pale soldier shot in the flank and lying on a litter, while an interpreter gestures and translates between them. Slow arc around the group, the teaching hand of the SOF medic over the partner's hands. Dusty compound courtyard, warm afternoon light, flank pressure dressing, cross-cultural instructional realism. Duration 7 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 61,
+  "type": "sc",
+  "march": "hypothermia",
+  "cat": "ENVIRONMENTAL",
+  "model": "Claude",
+  "technique": "Chain-of-Thought",
+  "title": "Hindu Kush Hypothermia — Shivering Stopped",
+  "text": "You are a flight surgeon advising a SOF medical team over a high-frequency radio link during a winter mountain extraction in the Hindu Kush. Ambient -22C, wind 30 km/h, altitude 3,800 m. Your patient is an operator who spent an estimated 90 minutes immobile after a fall down a couloir. He presents: GCS 11, shivering has STOPPED, pale, slurred speech, HR 46, RR 8, SpO2 reads erratically at 84-90 percent, palpable radial pulse weak. Estimated core temp 29-30C (no thermometer below 34C on hand). You have a hypothermia wrap kit, one chemical heat blanket, warm IV fluid in a thermos, and a 6-hour evac window.\n\nThink step by step and show your full reasoning BEFORE giving the plan. Reason through: cessation of shivering as a severity marker, why afterdrop and rescue collapse threaten this patient, gentle handling to avoid VF, the limited role of active external rewarming in the field, and fluid warming.\n\n1) What Swiss staging classifies this patient and why?\n2) How do we move him without triggering arrest?\n3) Active vs passive rewarming priorities with this kit?\n4) What is the danger of giving cold IV fluid here?\n5) How aggressively do we manage the airway at GCS 11?\n6) What thresholds change the evac decision?\n7) What is the single most likely thing to kill him in the next hour?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "harsh photoreal, flat alpine glare",
+    "text": "Documentary photo, vertical nine by sixteen portrait. High on a snow-blasted Hindu Kush slope two SOF medics gently lower a pale, semi-conscious operator who has stopped shivering into a silver-and-orange hypothermia burrito wrap, sliding a chemical heat blanket onto his chest and tucking a warm fluid thermos beside him. Whipping spindrift, breath fog, jagged peaks behind, flat blinding alpine glare, exhausted careful movements, tense survival realism, instructional detail."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow lateral drift, whipping spindrift",
+    "text": "Starting frame: high on a snow-blasted Hindu Kush slope two medics gently wrap a pale, still operator in a silver-and-orange hypothermia burrito, sliding a heat blanket onto his chest, whipping spindrift, jagged peaks, blinding glare. Animation: spindrift streaks across frame, the medics fold and tuck the wrap, breath fog drifts, the operator's head lolls slightly. Camera: slow lateral drift. Duration: 7 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "high-altitude survival realism, blinding alpine glare",
+    "text": "High on a snow-blasted Hindu Kush slope two SOF medics gently lower a pale, semi-conscious operator who has stopped shivering into a silver-and-orange hypothermia burrito wrap, sliding a chemical heat blanket onto his chest and tucking a warm fluid thermos beside him. Slow lateral drift, careful exhausted movements. Whipping spindrift, breath fog, jagged peaks, flat blinding glare, tense survival realism. Duration 7 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 62,
+  "type": "sc",
+  "march": "hypothermia",
+  "cat": "TBI",
+  "model": "ChatGPT",
+  "technique": "Structured Output",
+  "title": "VBIED Blast TBI — Cushing's Triad",
+  "text": "Act as a JTS Prolonged Field Care subject-matter expert. Scenario: blast-injured operator in a compromised hide site, 8 hours from evac. Mechanism was a close VBIED. Findings: GCS dropped from 14 to 9 over 40 minutes, left pupil 5 mm and sluggish, right 3 mm reactive, clear fluid from the right ear, vomited once, BP 168/95, HR 52, RR 10 and irregular. No CT, no neurosurgery. You carry hypertonic saline 3 percent, TXA, basic airway kit, and a SpO2 monitor.\n\nReturn your answer ONLY as a markdown table with columns: Finding | Likely Mechanism | Immediate Action | Target/Threshold | Rationale. Add one row per key issue (Cushing response, pupillary change, possible CSF leak, hypoxia/hypotension avoidance, hypertonic use, TXA timing). After the table, give a 3-line \"if it gets worse\" addendum.\n\n1) What MAP and SpO2 targets prevent secondary brain injury here?\n2) Is hyperventilation ever justified, and when only?\n3) How does the Cushing triad change my urgency?\n4) Dose and indication for 3 percent saline in this case?\n5) Does TXA help and within what window?\n6) What positioning do I use?\n7) What findings force me to call a higher-risk immediate evac?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "tense photoreal, dim hide light",
+    "text": "Documentary photo, vertical nine by sixteen portrait. In a dim rubble hide a medic shines a penlight into the eyes of a blast-injured operator, revealing one widely blown pupil and one normal, the casualty's head propped elevated, clear fluid trickling from one ear. A small syringe of hypertonic saline and a SpO2 clip rest nearby. Close framing on the face, gray dust, single cold light source, grave focus, neurological detail, instructional realism."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow push to the eyes, dust motes",
+    "text": "Starting frame: in a dim rubble hide a medic shines a penlight into the eyes of a blast-injured operator, one pupil blown wide and one normal, head elevated, clear fluid from one ear, hypertonic saline syringe and SpO2 clip nearby. Animation: the penlight sweeps across the eyes, the blown pupil stays fixed while the other constricts slightly, dust motes drift. Camera: slow push toward the eyes. Duration: 6 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "neuro-assessment realism, single cold light",
+    "text": "In a dim rubble hide a medic shines a penlight into the eyes of a blast-injured operator with his head propped elevated, revealing one widely blown pupil and one normal pupil while clear fluid trickles from one ear; a hypertonic saline syringe and SpO2 clip rest nearby. Slow push toward the face. Gray dust, single cold light source, drifting motes, grave focus, instructional neurological realism. Duration 6 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 63,
+  "type": "sc",
+  "march": "hypothermia",
+  "cat": "DROWNING",
+  "model": "Gemini",
+  "technique": "Step-Back Reasoning",
+  "title": "Cold-Water Drowning — Warm and Dead",
+  "text": "You are a dive medical officer advising by satellite phone. A combat swimmer is pulled from 6C coastal water after an estimated 12-minute submersion during a maritime infil. On recovery: unresponsive, GCS 3, agonal breaths 3/min, carotid pulse 30 and faint, cyanotic, vomited seawater. Air temp 4C, on a heaving small boat. You have a BVM, oxygen, supraglottic airway, AED, and blankets.\n\nBefore answering, STEP BACK and state the governing principle first: in cold-water drowning, what does \"not dead until warm and dead\" actually mean physiologically, and how does the mammalian dive reflex change my approach? Then derive the specific plan from that principle.\n\n1) Do I start CPR now or is the slow pulse a reason to withhold compressions?\n2) How do rough seas and cold change airway management priorities?\n3) What is the AED's role at this core temperature?\n4) How do I rewarm on a small boat with what I have?\n5) What is the realistic rewarming-then-resuscitate sequence?\n6) When, if ever, would I stop efforts?\n7) What do I tell the receiving facility to prep?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "cold photoreal, dawn sea light",
+    "text": "Documentary photo, vertical nine by sixteen portrait. On the cramped deck of a small boat in rough gray seas a dive medical officer kneels over a cyanotic combat swimmer in a wetsuit just pulled from the water, sealing a bag-valve mask over his face and squeezing oxygen while another hand checks the carotid. Soaked dive gear, an AED open beside them, blankets ready. Cold blue dawn light, spray and chop, breath fog, urgent gentle handling, instructional maritime realism."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "handheld sway, BVM squeeze",
+    "text": "Starting frame: on a small boat in rough gray seas a dive medical officer kneels over a cyanotic combat swimmer in a wetsuit, sealing a bag-valve mask and squeezing oxygen while a hand checks the carotid, AED open, cold blue dawn light, spray. Animation: the medic squeezes the BVM and the chest rises, the boat rocks, spray crosses frame, fingers press the neck. Camera: handheld sway with the boat. Duration: 6 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "cold-water rescue realism, blue dawn light",
+    "text": "On the cramped deck of a small boat in rough gray seas a dive medical officer kneels over a cyanotic combat swimmer in a wetsuit just pulled from the water, sealing a bag-valve mask and squeezing oxygen while another hand checks the carotid, an open AED and blankets beside them. Handheld sway matching the chop. Cold blue dawn light, spray, breath fog, soaked dive gear, urgent gentle maritime realism. Duration 6 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 64,
+  "type": "sc",
+  "march": "hypothermia",
+  "cat": "FROSTBITE",
+  "model": "Claude",
+  "technique": "Decision-Matrix",
+  "title": "Frozen Feet Dilemma — Refreeze Risk",
+  "text": "You are a wilderness and military cold-injury specialist consulting remotely. An operator on a 5-day winter surveillance task reports both feet are white, waxy, hard, and numb after his boots got wet on day 2. Now day 4, ambient -18C. Toes will not blanch; he reports they felt \"wooden\" then stopped hurting. Evac is at least 30 hours out. He has a stove, dry socks, ibuprofen, and a buddy.\n\nBuild a DECISION MATRIX as a markdown table: Option (rewarm now vs keep frozen vs partial) | Pros | Cons | Refreeze Risk | Recommended When. Then commit to one recommendation with justification.\n\n1) Is field rewarming safe given a 30-hour evac and refreeze risk?\n2) If we rewarm, what water temperature and duration?\n3) What is the role of ibuprofen and is aspirin better here?\n4) How do we manage blisters if they form?\n5) Should he walk on frozen feet to self-extract?\n6) What signs would upgrade this to a true emergency evac?\n7) What documentation does the surgeon need at handoff?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "intimate photoreal, warm stove glow",
+    "text": "Documentary photo, vertical nine by sixteen portrait. Inside a snow shelter a medic examines an operator's bare foot held over a pot of warming water on a small stove, the toes white, waxy, and hard with frostbite, a buddy holding a thermometer over the pot. Dry socks and ibuprofen laid out on a mat. Warm orange stove glow against blue snow-cave shadow, breath fog, careful inspection, cold-injury detail, instructional realism."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow push-in, rising steam",
+    "text": "Starting frame: inside a snow shelter a medic examines an operator's bare frostbitten foot held over a pot of warming water on a stove, toes white and waxy, a buddy holding a thermometer, dry socks nearby, warm stove glow. Animation: steam rises from the pot, the medic turns the foot gently to inspect the toes, the buddy checks the thermometer. Camera: slow push-in on the foot. Duration: 6 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "cold-injury care realism, warm stove glow",
+    "text": "Inside a snow shelter a medic examines an operator's bare foot held over a pot of warming water on a small stove, the toes white, waxy, and hard with frostbite, while a buddy holds a thermometer over the pot and dry socks and ibuprofen wait on a mat. Slow push-in on the foot, rising steam. Warm orange stove glow against blue snow-cave shadow, breath fog, careful inspection, instructional realism. Duration 6 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 65,
+  "type": "sc",
+  "march": "hypothermia",
+  "cat": "AVALANCHE",
+  "model": "ChatGPT",
+  "technique": "Red-Team the Plan",
+  "title": "Avalanche Burial — Asphyxia or Cold?",
+  "text": "Act as an alpine rescue physician. A teammate is dug out of an avalanche after an estimated 35 minutes of burial during a ski-borne movement. On extraction: unresponsive, no obvious trauma, a clear air pocket was present, GCS 3, no detectable breathing, faint carotid pulse possibly present at ~25, estimated core temp 28C, ambient -12C. You have a BVM, oxygen, AED, and an insulated wrap.\n\nFirst give your resuscitation and rewarming plan. THEN red-team your own plan as a skeptical examiner: attack every assumption (Was there really an air pocket? Is the pulse real or perceived? Could asphyxia not hypothermia be the cause? Am I over- or under-resuscitating?). Then revise into a final plan.\n\n1) How does burial time plus air pocket change survival prognosis?\n2) Does suspected asphyxia override the cold-protection logic?\n3) How long do I check for a pulse before compressions in deep hypothermia?\n4) Number of AED shocks before warming?\n5) How do I prevent afterdrop during transport?\n6) What confounders make my pulse check unreliable?\n7) What is my termination-of-efforts logic out here?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "stark photoreal, flat overcast snow",
+    "text": "Documentary photo, vertical nine by sixteen portrait. On a churned avalanche debris field two rescuers kneel over a teammate just dug from the snow, one sealing a bag-valve mask while the other slides an insulated wrap beneath him, a buried probe and shovel stuck upright nearby. The victim is gray and motionless in ski gear, snow packed in his collar. Flat overcast alpine light, broken snow blocks, breath fog, urgent careful handling, instructional avalanche-rescue realism."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow arc, drifting snow dust",
+    "text": "Starting frame: on an avalanche debris field two rescuers kneel over a gray teammate just dug from the snow, one sealing a bag-valve mask, the other sliding an insulated wrap beneath him, a probe and shovel upright nearby, flat overcast light. Animation: the medic squeezes the BVM and the chest rises, the second rescuer tucks the wrap, fine snow dust drifts. Camera: slow arc around the pair. Duration: 7 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "avalanche-rescue realism, flat overcast light",
+    "text": "On a churned avalanche debris field two rescuers kneel over a gray, motionless teammate just dug from the snow, one sealing a bag-valve mask and squeezing oxygen while the other slides an insulated wrap beneath him, a probe and shovel stuck upright nearby. Slow arc around the pair, drifting snow dust. Flat overcast alpine light, broken snow blocks, breath fog, urgent careful handling, instructional realism. Duration 7 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 66,
+  "type": "sc",
+  "march": "hypothermia",
+  "cat": "TBI",
+  "model": "Gemini",
+  "technique": "Socratic Tutor",
+  "title": "Temple Gunshot — The Lucid Interval",
+  "text": "You are a Socratic neurocritical-care mentor. Do not give me the plan outright. Scenario: a host-nation soldier took a low-velocity round to the left temple during a partnered raid. He is talking but confused, GCS 13 (E4 V4 M5), left pupil now 4 mm and slow, bleeding controlled with a pressure dressing, BP 150/88, HR 58, SpO2 96 percent. 5 hours from a facility with CT. I have TXA, 3 percent saline, ketamine, and oxygen.\n\nTutor me by asking ME guiding questions one at a time, waiting for my reasoning, then correcting it, on: penetrating TBI priorities, the lucid-interval trap, blood pressure and oxygen targets, whether ketamine is safe in TBI, and when to escalate. Begin by asking your first question.\n\n1) Why is the \"talking and deteriorating\" pattern dangerous here?\n2) What MAP and SpO2 do I protect and why?\n3) Is ketamine analgesia contraindicated in this TBI?\n4) What is hypertonic saline's role and dose?\n5) How do I track deterioration without a CT?\n6) What handoff data matters most to the neurosurgeon?\n7) What single trend would make me push the evac timeline?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "tense photoreal, warm dusty interior",
+    "text": "Documentary photo, vertical nine by sixteen portrait. In a dim mud-walled room a medic kneels facing a seated, talking but confused host-nation soldier with a pressure dressing on his left temple, shining a penlight into the eyes to reveal one sluggish enlarged pupil. A hypertonic saline syringe and oxygen mask rest beside them. Warm dusty light from a small window, intent eye contact, controlled urgency, penetrating-head-injury detail, instructional realism."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow push to the face, subtle dust",
+    "text": "Starting frame: in a dim mud-walled room a medic kneels facing a seated, confused host-nation soldier with a temple pressure dressing, shining a penlight to reveal one sluggish enlarged pupil, hypertonic saline syringe and oxygen mask nearby, warm dusty light. Animation: the penlight sweeps the eyes, the enlarged pupil reacts slowly, the soldier's gaze drifts and refocuses. Camera: slow push toward the face. Duration: 6 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "penetrating-TBI assessment realism, warm interior light",
+    "text": "In a dim mud-walled room a medic kneels facing a seated, talking but confused host-nation soldier with a pressure dressing on his left temple, shining a penlight into the eyes to reveal one sluggish enlarged pupil while a hypertonic saline syringe and oxygen mask wait beside them. Slow push toward the face. Warm dusty window light, intent eye contact, controlled urgency, instructional realism. Duration 6 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 67,
+  "type": "sc",
+  "march": "hypothermia",
+  "cat": "HEAT INJURY",
+  "model": "Claude",
+  "technique": "Rubric-Graded",
+  "title": "Desert Heat Stroke — Cool First",
+  "text": "You are a SOF preventive-medicine and critical-care advisor. During a desert direct-action workup, an operator collapses after a loaded movement in 46C heat. Findings: altered, combative then drowsy, hot skin, core temp 41.2C rectal, HR 150, BP 95/60, RR 30, seizing briefly once. You have cold water, ice sheets, IV fluids, a fan/misting setup, and benzodiazepines.\n\nGrade my proposed plan against an explicit RUBRIC you create first (criteria: recognition speed, cooling method/target, target temperature and rate, fluid strategy, seizure and airway management, monitoring, evac trigger). Score each 0-2 and tell me where I lose points. My plan: \"Pour water on him, give 2 L saline fast, drive to the FOB.\"\n\n1) What cooling method achieves the fastest safe drop and to what target temp?\n2) When do I STOP active cooling to avoid overshoot?\n3) How much fluid, how fast, given his BP?\n4) How do I manage recurrent seizures and the airway?\n5) What labs/signs flag rhabdomyolysis and organ injury?\n6) What disqualifies \"drive to the FOB\" as adequate?\n7) What are the red flags for multi-organ failure en route?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "scorching photoreal, blown-out desert sun",
+    "text": "Documentary photo, vertical nine by sixteen portrait. In blistering desert heat a medic and a buddy drape ice-water-soaked sheets over a collapsed, flushed operator stripped to the waist in shade beside a vehicle, a misting fan blowing across him and a rectal-temperature line in place. Heat shimmer, blown-out white sun, IV fluid hanging from the open door, the patient drowsy and twitching, aggressive-cooling detail, instructional realism."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow push-in, heat shimmer and mist",
+    "text": "Starting frame: in blistering desert heat a medic and buddy drape ice-water sheets over a flushed, shirtless collapsed operator in vehicle shade, a misting fan blowing across him, IV hanging from the door, heat shimmer. Animation: mist drifts off the fan, the medics smooth the cold sheets onto his chest, the patient twitches and his head turns. Camera: slow push-in. Duration: 7 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "heat-stroke cooling realism, blown-out desert sun",
+    "text": "In blistering desert heat a medic and a buddy drape ice-water-soaked sheets over a flushed, drowsy operator stripped to the waist in the shade beside a vehicle, a misting fan blowing across him, IV fluid hanging from the open door and a temperature line in place. Slow push-in, heat shimmer and drifting mist. Blown-out white sun, aggressive-cooling detail, instructional realism. Duration 7 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 68,
+  "type": "sc",
+  "march": "hypothermia",
+  "cat": "ALTITUDE",
+  "model": "ChatGPT",
+  "technique": "Tree-of-Thought",
+  "title": "4,900m Ridge — HAPE Versus HACE",
+  "text": "Act as a high-altitude medicine consultant on a radio relay. On a 4,900 m ridge objective, an operator develops a dry cough turning productive and pink, severe dyspnea at rest, ataxia, and confusion over 6 hours. HR 130, RR 36, SpO2 61 percent on room air, crackles bilaterally, mild fever absent. You have dexamethasone, nifedipine, acetazolamide, a portable hyperbaric (Gamow) bag, and limited oxygen. Descent is weather-blocked for ~8 hours.\n\nUse Tree-of-Thought: lay out at least three branching hypotheses (HAPE vs HACE vs combined HAPE+HACE vs pneumonia), evaluate the evidence for each branch, prune the unlikely ones, and converge on the working diagnosis and treatment.\n\n1) Which condition or combination best fits, and why prune the others?\n2) Drug choices and doses for HAPE vs HACE here?\n3) How do I use the Gamow bag and oxygen when descent is blocked?\n4) Is exertion (self-descent) helpful or harmful right now?\n5) What is the single most effective intervention if I can only do one?\n6) What deterioration forces a weather-risk descent anyway?\n7) What do I monitor to confirm I am on the right branch?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "thin-air photoreal, cold blue light",
+    "text": "Documentary photo, vertical nine by sixteen portrait. On a windswept 4,900-meter rocky ridge a medic zips an operator into an orange portable hyperbaric Gamow bag, the gasping patient propped sitting with pink frothy sputum at his lips and an oxygen mask, blister packs of dexamethasone and nifedipine open on a rock. Towering peaks, thin cold blue light, blowing cloud, breath fog, urgent altitude-medicine detail, instructional realism."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow arc, blowing cloud",
+    "text": "Starting frame: on a windswept 4,900-meter ridge a medic zips a gasping operator into an orange portable Gamow hyperbaric bag, pink frothy sputum at his lips, oxygen mask, dexamethasone and nifedipine on a rock, thin blue light. Animation: the medic seals the bag's zipper, cloud blows past, the patient's chest heaves and breath fog escapes the mask. Camera: slow arc around the bag. Duration: 7 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "high-altitude emergency realism, thin cold light",
+    "text": "On a windswept 4,900-meter rocky ridge a medic zips a gasping operator with pink frothy sputum into an orange portable hyperbaric Gamow bag, the patient propped sitting with an oxygen mask while dexamethasone and nifedipine blister packs lie open on a rock. Slow arc around the bag, blowing cloud. Towering peaks, thin cold blue light, breath fog, urgent altitude-medicine detail, instructional realism. Duration 7 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 69,
+  "type": "sc",
+  "march": "hypothermia",
+  "cat": "ENVIRONMENTAL",
+  "model": "Gemini",
+  "technique": "Self-Critique Loop",
+  "title": "Litter in the Rain — Lethal Triad",
+  "text": "You are a prolonged field care instructor. A casualty with a junctional hemorrhage controlled by a junctional tourniquet has now been on the ground 5 hours in cold rain at 6C, soaked, on a litter. He has the lethal-triad setup: estimated core temp 34C, on his third unit of cold-stored fluid, and his blood is oozing from previously dry wounds. HR 124, BP 88/54, GCS 14. You have a hypothermia prevention kit, a fluid warmer, calcium, and TXA.\n\nGive your management plan, then run a SELF-CRITIQUE LOOP: list what could be wrong with your plan, revise, and repeat once more before finalizing. Explicitly tie hypothermia to coagulopathy.\n\n1) How does hypothermia drive the coagulopathy I am seeing?\n2) Why is warming fluids and the patient now a hemostatic intervention?\n3) Where does calcium fit (citrate, transfusion) and what dose?\n4) Is more crystalloid helping or worsening the triad?\n5) What is my rewarming sequence on a litter in the rain?\n6) How do I balance permissive hypotension against rewarming perfusion?\n7) What endpoint tells me the triad is breaking favorably?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "wet photoreal, flat gray rain light",
+    "text": "Documentary photo, vertical nine by sixteen portrait. In cold gray rain a medic crouches over a soaked casualty on a litter, tucking a hypothermia-prevention wrap around him while running a fluid line through an inline warmer, a junctional tourniquet at the groin and dark blood oozing from a dressing. Standing rainwater, mud, the patient shivering and pale, dripping ponchos overhead, dim flat light, lethal-triad tension, instructional realism."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "static wide, falling rain",
+    "text": "Starting frame: in cold gray rain a medic crouches over a soaked casualty on a litter, tucking a hypothermia wrap and running a fluid line through an inline warmer, a junctional tourniquet at the groin, dark blood oozing from a dressing, mud and standing water. Animation: rain falls steadily, the medic presses the wrap closed and adjusts the warmer line, the casualty shivers. Camera: static wide with slight handheld. Duration: 6 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "lethal-triad field realism, flat gray rain light",
+    "text": "In cold gray rain a medic crouches over a soaked, shivering casualty on a litter, tucking a hypothermia-prevention wrap around him while running a fluid line through an inline warmer, a junctional tourniquet at the groin and dark blood oozing from a dressing. Static wide shot, falling rain, slight handheld. Standing rainwater, mud, dripping ponchos, dim flat light, lethal-triad tension, instructional realism. Duration 6 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 70,
+  "type": "sc",
+  "march": "pain",
+  "cat": "ANALGESIA",
+  "model": "Claude",
+  "technique": "Chain-of-Thought",
+  "title": "Open Femur in Hide — Able to Fight",
+  "text": "You are a SOF anesthesia provider advising over radio. A 80 kg operator has an open mid-shaft femur fracture from a fall, hemorrhage controlled, in a hide site 4 hours from evac. He is in severe pain (9/10), HR 118, BP 102/64, RR 18, SpO2 97 percent, fully alert and able to fight if needed. You carry ketamine, fentanyl OTFC lozenges, morphine, midazolam, and ondansetron, plus monitoring.\n\nThink step by step and show your dosing math before recommending. Per TCCC analgesia options, walk through the \"able to fight\" pathway versus IV/IO options.\n\n1) Is the TCCC \"mild to moderate pain, able to fight\" option (meloxicam + acetaminophen combat pill pack) appropriate, or is he past it?\n2) If using ketamine analgesia, what is the IV dose (0.2-0.3 mg/kg) and IM dose (0.5-1 mg/kg) for him?\n3) How do I titrate and re-dose ketamine while keeping him able to participate?\n4) When is OTFC fentanyl (800 mcg buccal) preferable and what are the monitoring needs?\n5) What antiemetic and at what dose?\n6) How does his BP influence opioid vs ketamine choice?\n7) What endpoints tell me I have adequate analgesia without oversedation?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "low-light photoreal, dim green hide glow",
+    "text": "Documentary photo, vertical nine by sixteen portrait. In a concealed hide a medic kneels beside an alert operator with a splinted open femur fracture, pushing a small dose of ketamine through an IV line while watching a glowing pulse-oximeter clip on the finger. A drug pouch with labeled vials lies open, the operator still gripping his rifle. Dim green ambient glow, camo netting shadow, controlled calm, analgesia detail, instructional realism."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow push-in, glowing monitor",
+    "text": "Starting frame: in a concealed hide a medic kneels beside an alert operator with a splinted femur fracture, pushing ketamine through an IV line while watching a glowing pulse-oximeter clip, a labeled drug pouch open, the operator gripping his rifle, dim green glow. Animation: the medic slowly depresses the syringe, the oximeter number glows and ticks, the operator exhales and his grip eases. Camera: slow push-in. Duration: 6 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "field analgesia realism, dim green ambient light",
+    "text": "In a concealed hide a medic kneels beside an alert operator with a splinted open femur fracture, slowly pushing a small dose of ketamine through an IV line while watching a glowing pulse-oximeter clip on the finger, a labeled drug pouch open and the operator still gripping his rifle. Slow push-in toward the line. Dim green ambient glow, camo netting shadow, controlled calm, instructional analgesia detail. Duration 6 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 71,
+  "type": "sc",
+  "march": "pain",
+  "cat": "PROCEDURAL SEDATION",
+  "model": "ChatGPT",
+  "technique": "Structured Output",
+  "title": "Dusky Foot Reduction — Field Sedation",
+  "text": "Act as a critical-care provider supervising a procedural sedation by radio. I must reduce a grossly dislocated ankle with neurovascular compromise (dusky foot, weak pulse) on a 70 kg casualty during prolonged field care, 10 hours from evac. Available: ketamine, midazolam, fentanyl, ondansetron, oxygen, BVM, pulse oximetry, no capnography.\n\nReturn a structured plan with these exact sections: PRE-SEDATION CHECK, DRUG + DOSE + ROUTE, MONITORING PLAN, AIRWAY RESCUE STEPS, REDUCTION ENDPOINT, POST-REDUCTION CARE. Give numeric ketamine dissociative dose (1-2 mg/kg IV / 4-5 mg/kg IM) and timing.\n\n1) What is my dissociative ketamine dose for him and why that route?\n2) Do I add midazolam, and what is the emergence-reaction tradeoff?\n3) How do I monitor ventilation without capnography?\n4) What is my plan if he develops laryngospasm or apnea?\n5) How will I confirm successful reduction and restored perfusion?\n6) What is the re-dose plan if reduction fails on first attempt?\n7) What recovery criteria let me declare him safe post-sedation?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "clinical photoreal, focused task light",
+    "text": "Documentary photo, vertical nine by sixteen portrait. Under a headlamp beam a medic grips a casualty's grossly dislocated dusky-blue foot to traction and reduce the ankle, the sedated patient slack-jawed under dissociative ketamine with a pulse-oximeter glowing on the finger and a bag-valve mask staged within reach. A second responder steadies the knee. Dark austere shelter, single focused task light, intent procedural concentration, sedation detail, instructional realism."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow push to the ankle, steady hands",
+    "text": "Starting frame: under a headlamp a medic grips a casualty's dusky-blue dislocated foot to reduce the ankle, the sedated patient slack-jawed with a glowing oximeter and a staged bag-valve mask, a second responder steadying the knee, dark shelter. Animation: the medic applies slow steady traction, the foot rotates and seats with a settle, the patient's chest rises evenly. Camera: slow push toward the ankle. Duration: 6 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "procedural-sedation realism, single focused light",
+    "text": "Under a headlamp beam a medic grips a casualty's grossly dislocated dusky-blue foot and applies steady traction to reduce the ankle, the patient sedated and slack-jawed under dissociative ketamine with a glowing pulse-oximeter and a staged bag-valve mask while a second responder steadies the knee. Slow push toward the ankle. Dark austere shelter, single focused task light, intent concentration, instructional sedation detail. Duration 6 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 72,
+  "type": "sc",
+  "march": "pain",
+  "cat": "PEDIATRIC",
+  "model": "Gemini",
+  "technique": "Few-Shot Anchoring",
+  "title": "Scalded Child — Weight-Based Analgesia",
+  "text": "You are a pediatric emergency and austere-care expert advising a medic. During a stability operation a child (estimated 5 years, estimated 18 kg) has a partial-thickness scald to one arm and chest and is screaming, terrified, HR 150, otherwise stable. You have ketamine, intranasal fentanyl, oral acetaminophen, a MAD atomizer, and a parent present. No IV yet.\n\nI will anchor you with the pattern: for adults we weight-base ketamine analgesia at 0.2-0.3 mg/kg IV. Apply the SAME weight-based reasoning to this child and SHOW the per-kilogram calculations explicitly for each option you propose, citing pediatric ranges.\n\n1) What is the intranasal fentanyl dose for an 18 kg child (~1.5 mcg/kg) and max volume per nostril?\n2) What is a pediatric ketamine analgesic dose IM if IN fails, with the math?\n3) How do I dose acetaminophen for him?\n4) How does involving the parent reduce drug requirement?\n5) What monitoring is mandatory after IN fentanyl or IM ketamine in a child?\n6) What weight-estimation method should I trust without a scale?\n7) What signs of oversedation are different or subtler in children?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "tender photoreal, soft warm light",
+    "text": "Documentary photo, vertical nine by sixteen portrait. A medic kneels to spray intranasal medication from a small atomizer into the nose of a frightened crying child of about five with a partial-thickness scald across one arm and chest, the child held gently in a parent's lap. A pulse-oximeter on the tiny finger, soft clean dressings ready. Warm soft daylight in a simple room, reassuring calm posture, pediatric care detail, tasteful instructional realism."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow push-in, calming motion",
+    "text": "Starting frame: a medic kneels spraying an intranasal atomizer into the nose of a crying child of about five with a scald on one arm and chest, the child in a parent's lap, an oximeter on the tiny finger, warm soft daylight. Animation: the medic depresses the atomizer, the child's crying eases and breathing slows, the parent strokes the child's hair. Camera: slow push-in. Duration: 6 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "pediatric analgesia realism, soft warm light",
+    "text": "A medic kneels to spray intranasal medication from a small atomizer into the nose of a frightened, crying child of about five with a partial-thickness scald across one arm and chest, the child held gently in a parent's lap with a pulse-oximeter on the tiny finger and soft dressings ready. Slow push-in, calming motion. Warm soft daylight in a simple room, reassuring posture, tasteful instructional realism. Duration 6 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 73,
+  "type": "sc",
+  "march": "pain",
+  "cat": "ANALGESIA",
+  "model": "Claude",
+  "technique": "Role + Constraints",
+  "title": "Forearm GSW Under Threat — Pill Pack Only",
+  "text": "You are a TCCC instructor. CONSTRAINTS: assume no IV access yet, a casualty actively engaged minutes ago, and that I have only the combat pill pack and OTFC fentanyl available right now. The casualty is a 90 kg operator with a through-and-through forearm gunshot, bleeding controlled by a tourniquet, alert, oriented, pain 7/10, HR 96, BP 128/80, SpO2 98 percent, still armed and we may need to move under threat.\n\nWork strictly within those constraints. Do not propose drugs I did not list. If a constraint makes a choice unsafe, say so and stop.\n\n1) Given he may still need to fight, is OTFC fentanyl (800 mcg transbuccal) appropriate or does it risk sedation in a tactical setting?\n2) What does the combat pill pack contain and is meloxicam plus acetaminophen sufficient here?\n3) How do I secure the OTFC lozenge so it is not aspirated if he goes down?\n4) What re-dosing interval and ceiling apply to OTFC?\n5) What monitoring can I realistically do while moving under threat?\n6) When would I abandon the \"able to fight\" pathway?\n7) What do I document for the next provider about doses and timing?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "gritty photoreal, hard dusty light",
+    "text": "Documentary photo, vertical nine by sixteen portrait. Crouched behind cover a medic tucks an oral fentanyl lozenge on a stick into the cheek of an alert, armed operator with a tourniquet on a through-and-through forearm gunshot, taping the lozenge stick to his finger so it cannot be lost. The operator still scans over his rifle. Dusty wall, hard slanting light, spent brass, taped lozenge detail, ready-to-move tension, instructional realism."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "handheld, alert scanning",
+    "text": "Starting frame: crouched behind cover a medic tucks an oral fentanyl lozenge on a stick into the cheek of an alert armed operator with a forearm tourniquet, taping the stick to his finger, the operator scanning over his rifle, dusty wall, hard light. Animation: the medic seats the lozenge and tapes the stick, the operator shifts his rifle and keeps scanning, dust drifts. Camera: handheld, slight reframe. Duration: 6 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "tactical analgesia realism, hard dusty light",
+    "text": "Crouched behind cover a medic tucks an oral fentanyl lozenge on a stick into the cheek of an alert, armed operator wearing a tourniquet on a through-and-through forearm gunshot, taping the lozenge stick to his finger while the operator keeps scanning over his rifle. Handheld camera with a slight reframe. Dusty wall, hard slanting light, spent brass, taped-lozenge detail, ready-to-move tension, instructional realism. Duration 6 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 74,
+  "type": "sc",
+  "march": "pain",
+  "cat": "SEDATION",
+  "model": "ChatGPT",
+  "technique": "Red-Team the Plan",
+  "title": "Bucking the Tube — Flight Sedation Budget",
+  "text": "Act as an aeromedical critical-care nurse. I have an intubated, ventilated polytrauma casualty (chest seal in place, pelvic binder on, two units blood given) for a 3-hour rotary evac. He is 75 kg, currently lightly sedated and starting to buck the tube; BP 100/62, HR 110. Available: ketamine, midazolam, fentanyl, and a limited supply of each.\n\nPropose an analgesia-and-sedation infusion/bolus regimen. Then RED-TEAM it: argue against your own choices from the standpoint of hemodynamic collapse, oversedation masking deterioration, and running out of drug mid-flight. Revise into a final regimen with conservation in mind.\n\n1) What ketamine-based regimen maintains sedation while supporting BP?\n2) What bolus dose do I give right now for the bucking, and units?\n3) How do I avoid stacking benzodiazepine and opioid into hypotension?\n4) How do I budget limited drug across a 3-hour flight?\n5) What vitals trend would tell me I am oversedating and hiding shock?\n6) What is my plan if the IV fails mid-flight?\n7) What handoff numbers does the receiving ICU need?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "cinematic photoreal, blue cabin light",
+    "text": "Documentary photo, vertical nine by sixteen portrait. Inside a vibrating helicopter cabin a flight medic leans over an intubated, ventilated polytrauma casualty on a litter, pushing a sedation bolus through an IV port while watching a vital-signs monitor, the endotracheal tube secured and a chest seal and pelvic binder visible. Two empty blood bags hang above. Cold blue cabin light, motion blur outside the window, headset and restraints, critical-care detail, instructional realism."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slight vibration, scrolling window",
+    "text": "Starting frame: inside a helicopter cabin a flight medic leans over an intubated ventilated casualty on a litter, pushing a sedation bolus through an IV port while watching a vital-signs monitor, secured tube, chest seal, pelvic binder, two empty blood bags above, cold blue light. Animation: the medic depresses the syringe, the monitor traces scroll, the cabin vibrates and the window blurs with motion. Camera: locked with subtle vibration. Duration: 7 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "aeromedical critical-care realism, blue cabin light",
+    "text": "Inside a vibrating helicopter cabin a flight medic leans over an intubated, ventilated polytrauma casualty on a litter, pushing a sedation bolus through an IV port while watching a vital-signs monitor, the secured endotracheal tube, chest seal, and pelvic binder visible and two empty blood bags hanging above. Locked camera with subtle vibration, motion-blurred window. Cold blue cabin light, headset and restraints, critical-care detail, instructional realism. Duration 7 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 75,
+  "type": "sc",
+  "march": "pain",
+  "cat": "BURN ANALGESIA",
+  "model": "Gemini",
+  "technique": "Decision-Matrix",
+  "title": "30% TBSA Burns — Dressing-Change Pain",
+  "text": "You are a burn-center anesthesiologist consulting remotely. A 68 kg operator has 30 percent TBSA burns (deep partial and full thickness) from a fuel fire, 6 hours from a burn-capable facility, fluid resuscitation started. Pain is severe and dressing changes are needed. Available: ketamine, morphine, fentanyl, midazolam, ondansetron.\n\nBuild a DECISION MATRIX (markdown table) comparing analgesia options for background pain vs procedural dressing-change pain: Drug | Background Dose | Procedural Dose | Pros | Cons | Best Use. Then recommend a regimen.\n\n1) Why is ketamine often preferred for burn procedural pain, and at what dose IV/IM?\n2) How do I handle escalating opioid tolerance over a long evac?\n3) What background analgesia keeps him comfortable without compromising fluid-status assessment?\n4) How do burns change my opioid pharmacokinetics over time?\n5) What antiemetic plan supports repeated dosing?\n6) How do I pre-medicate before a dressing change specifically?\n7) What signs tell me analgesia is failing versus worsening shock?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "clinical photoreal, soft even light",
+    "text": "Documentary photo, vertical nine by sixteen portrait. A medic in gloves slowly unwinds an old dressing from an operator's deeply burned arm and chest during a dressing change, the patient calm and dissociated under ketamine analgesia with a glowing pulse-oximeter and a fluid line running. Clean dressing supplies laid out on a sterile field, a labeled syringe beside the patient. Soft even light, deep partial-thickness burn detail, focused gentle technique, tasteful instructional realism."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow push-in, gentle unwinding",
+    "text": "Starting frame: a gloved medic slowly unwinds an old dressing from an operator's burned arm and chest during a dressing change, the patient calm and dissociated with a glowing oximeter and a fluid line, clean supplies on a sterile field, a labeled syringe nearby, soft light. Animation: the medic peels the dressing away gently, the patient breathes steadily, the oximeter glows. Camera: slow push-in on the wound. Duration: 6 seconds. 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "burn-care procedural realism, soft even light",
+    "text": "A gloved medic slowly unwinds an old dressing from an operator's deeply burned arm and chest during a dressing change, the patient calm and dissociated under ketamine analgesia with a glowing pulse-oximeter and a running fluid line, clean dressing supplies on a sterile field and a labeled syringe beside the patient. Slow push-in on the wound, gentle unwinding. Soft even light, deep partial-thickness burn detail, focused technique, tasteful instructional realism. Duration 6 seconds, vertical nine by sixteen portrait, 24fps."
+   }
+  }
+ },
+ {
+  "n": 76,
+  "type": "sc",
+  "march": "pain",
+  "cat": "ANALGESIA",
+  "model": "Claude",
+  "technique": "Socratic Tutor",
+  "title": "Hypotensive Crush Injury — Perfusion First",
+  "text": "You are a Socratic anesthesia tutor. Do not hand me doses immediately. A 60 kg female interpreter has a crush injury to the lower leg after a vehicle rollover, severe pain, HR 130, BP 88/58, RR 24, alert and anxious. I have ketamine, fentanyl, morphine, TXA, and IV fluids. Evac is 5 hours.\n\nTeach me by asking one guiding question at a time and reacting to my answers, leading me toward the safest analgesic choice in a hypotensive, possibly hemorrhaging patient. Begin with your first question.\n\n1) Why might morphine be a poor first choice given her BP?\n2) Why is ketamine often considered hemodynamically friendlier here, and at what analgesic dose?\n3) How does her possible occult hemorrhage change my drug selection?\n4) What is the role of fixing perfusion before chasing the pain score?\n5) How do I titrate to comfort without dropping her pressure?\n6) What monitoring confirms I am not masking shock?\n7) What endpoint tells me I have it right?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "clinical close-up, shallow depth of field",
+    "text": "A combat medic kneeling beside a pale young female interpreter lying on a tan tarp at dusk, her lower leg crushed and splinted. The medic holds a labeled ketamine syringe in one gloved hand while the other rests on her wrist taking a pulse. A blood-pressure cuff and a small monitor reading 88 over 58 sit on the ground beside spent IV fluid wrappers. Warm low sunlight, dust in the air, documentary realism, sharp focus on the syringe and the cuff. Horizontal wide aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow push-in, subtle hand motion",
+    "text": "Starting frame: a combat medic kneeling beside a pale female interpreter on a tan tarp at dusk, holding a labeled ketamine syringe while the other gloved hand takes her wrist pulse, a blood-pressure cuff and small monitor reading 88 over 58 on the ground, dust in warm low light. Animation: the medic slowly depresses the syringe plunger a few millimetres, glances at the monitor, the patient breathes shallowly, dust drifts. Camera does a slow push-in toward the syringe and cuff. Duration 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "handheld documentary realism",
+    "text": "A combat medic kneels beside a pale young female interpreter with a crushed, splinted lower leg on a tan tarp at dusk. He holds a labeled ketamine syringe, takes her radial pulse, and watches a small monitor reading 88 over 58 beside a blood-pressure cuff. She breathes shallowly and anxiously. Slow titration motion, gentle dust drifting in warm low sunlight, handheld documentary camera with a slow push-in. Tasteful, instructional, clinically accurate. Duration 8 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 77,
+  "type": "sc",
+  "march": "pain",
+  "cat": "DENTAL/FACIAL",
+  "model": "ChatGPT",
+  "technique": "Step-Back Reasoning",
+  "title": "Shrapnel to the Jaw — Airway Versus Comfort",
+  "text": "Act as a maxillofacial and pain-management consultant. An operator took shrapnel to the jaw and cheek; airway currently patent but swelling, severe pain 9/10, trismus, bleeding controlled with packing, talking with difficulty. 70 kg, HR 110, BP 130/84, SpO2 96 percent. 7 hours to surgical care. You have ketamine, fentanyl, an antiemetic, and basic airway adjuncts.\n\nSTEP BACK first: before choosing an analgesic, state the overriding principle in facial trauma (the airway can fail fast, and sedation can precipitate obstruction). Derive your analgesia plan from that principle.\n\n1) Why does facial trauma change which analgesics are \"safe by default\"?\n2) Is ketamine analgesia preferable here for airway-reflex preservation, and at what dose?\n3) What are the specific risks of opioids in evolving facial swelling?\n4) How do I provide analgesia while keeping a surgical airway plan ready?\n5) What positioning balances airway, bleeding, and comfort?\n6) What signs mean I move from analgesia to definitive airway?\n7) What do I relay to the surgeon about timing of swelling onset?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "tight portrait, dramatic side light",
+    "text": "A bearded operator sits upright leaning slightly forward, a swollen shrapnel wound to the right jaw and cheek packed with gauze, blood controlled. A medic beside him holds a ketamine syringe in one hand and a ready suction catheter and airway kit laid open nearby. The patient grimaces in pain, mouth barely open with trismus. Tense field-aid-station lighting, sharp focus on the packed jaw and airway gear, documentary realism. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "static frame with breathing and reach",
+    "text": "Starting frame: a bearded operator sitting upright leaning forward with a swollen gauze-packed shrapnel wound to the right jaw, a medic beside him holding a ketamine syringe with a suction catheter and open airway kit ready nearby, tense aid-station light. Animation: the patient breathes carefully with shallow chest rise, the medic glances at the open airway kit and reaches a hand toward the suction catheter without grabbing it, slight swelling tension. Camera holds steady with a faint drift toward the jaw. Duration 6 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "steady medium shot, naturalistic",
+    "text": "A bearded operator sits upright leaning forward with a swollen shrapnel wound to the right jaw packed with gauze, bleeding controlled but airway threatened. A field medic beside him holds a labeled ketamine syringe while a suction catheter and open airway kit sit ready. The patient breathes carefully through trismus as the medic monitors swelling and reaches toward the suction. Tense aid-station lighting, naturalistic colors, steady medium shot with slight drift, clinically accurate and tasteful. Duration 7 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 78,
+  "type": "sc",
+  "march": "antibiotics",
+  "cat": "PROLONGED CARE",
+  "model": "Claude",
+  "technique": "Chain-of-Thought",
+  "title": "Open Tibia at Day Four — Redness or Infection",
+  "text": "You are a JTS Prolonged Field Care infectious-disease advisor on a daily radio check. A 85 kg operator has an open tibia-fibula fracture, debrided and splinted 36 hours ago, now 4 days from evac. Wound edges are reddening, mild warmth, low-grade fever 38.2C, no systemic compromise. We started ertapenem at injury. Supplies: remaining ertapenem 1 g daily, moxifloxacin 400 mg, and clean dressing materials.\n\nThink step by step and show reasoning before the plan. Per TCCC/JTS field antibiotic guidance for open fractures and prolonged care, reason through coverage, route, and duration.\n\n1) Was ertapenem 1 g IV/IM daily the correct empiric choice for an open fracture, and why?\n2) If IV access is failing, is moxifloxacin 400 mg PO daily an acceptable bridge?\n3) How do I distinguish expected inflammation from early infection at the wound?\n4) When does local redness warrant a change or escalation in antibiotics?\n5) How long do I continue antibiotics in prolonged field care for an open fracture?\n6) What wound-care steps matter as much as the antibiotic?\n7) What findings would convert this to an urgent surgical evac?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "overhead clinical close-up",
+    "text": "Overhead close-up of an open lower-leg wound on a splinted tibia, edges reddening with mild surrounding warmth, four days into field care. A gloved medic peels back a clean dressing to inspect while holding a radio handset to his ear with the other hand. A vial of ertapenem and moxifloxacin tablets rest on a clean gauze field beside the leg. Even diagnostic daylight, sharp realistic detail on the wound edges, documentary medical style. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "top-down, slow dressing peel",
+    "text": "Starting frame: an overhead close-up of an open splinted tibia wound with reddening edges four days into care, a gloved medic peeling back a clean dressing while holding a radio handset, an ertapenem vial and moxifloxacin tablets on gauze beside the leg, even daylight. Animation: the medic slowly lifts the dressing fully, leans in to inspect the reddened edges, speaks into the radio handset. Camera holds top-down with a slow zoom onto the wound edge. Duration 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "top-down inspection, documentary",
+    "text": "Top-down view of a medic at a daily radio check inspecting an open lower-leg wound on a splinted tibia, edges reddening with mild warmth four days into prolonged field care. He peels back a clean dressing with one gloved hand and holds a radio handset to his ear with the other, an ertapenem vial and moxifloxacin tablets on gauze nearby. Even diagnostic daylight, realistic wound texture, slow inspecting motion, documentary medical style. Duration 8 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 79,
+  "type": "sc",
+  "march": "antibiotics",
+  "cat": "SEPSIS",
+  "model": "ChatGPT",
+  "technique": "Structured Output",
+  "title": "Day-Three Abdomen — Septic Shock, No Pressor",
+  "text": "Act as a critical-care sepsis expert advising by satphone. A casualty 3 days post penetrating abdominal injury (damage-control wound packed, awaiting evac) now has fever 39.4C, HR 132, BP 86/50, RR 28, mottled knees, confused, urine output dropping. 70 kg. Available: ertapenem, moxifloxacin, IV crystalloid, limited blood, vasopressor not available.\n\nReturn a structured response with sections: RECOGNITION (why this is septic shock), RESUSCITATION (fluid plan and targets), ANTIBIOTICS (drug, dose, timing), SOURCE CONTROL (field options), MONITORING, EVAC PRIORITY. Be numeric.\n\n1) What objective findings make this septic shock, not just fever?\n2) What is my fluid resuscitation volume and endpoint without a pressor?\n3) Which antibiotic and dose covers an abdominal source here?\n4) How fast must antibiotics go in after recognition?\n5) What field source-control options exist for a packed abdomen?\n6) What do I do for blood pressure if fluids fail and I have no vasopressor?\n7) What makes this the top evac priority on the manifest?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "low-key tent lighting, clinical realism",
+    "text": "A casualty lies on a field cot three days after an abdominal injury, abdomen packed and dressed, skin pale with mottled knees, confused expression. A medic holds a satellite phone to one ear while squeezing a crystalloid IV bag running into the patient. A near-empty urine collection bag hangs at the cot side. Dim shelter lighting, sweat sheen, sharp focus on the mottled knees and IV line, somber documentary realism. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow drift, IV squeeze motion",
+    "text": "Starting frame: a pale, confused casualty on a field cot three days post abdominal injury with a packed dressed abdomen and mottled knees, a medic holding a satphone to one ear while squeezing a crystalloid IV bag, a near-empty urine bag hanging at the cot side, dim shelter light. Animation: the medic squeezes the IV bag in rhythm, the patient's chest rises rapidly and shallowly, head turns weakly. Camera drifts slowly along the body toward the mottled knees. Duration 8 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "somber handheld, shallow focus",
+    "text": "A pale, confused casualty lies on a field cot three days after an abdominal injury, abdomen packed and dressed, knees mottled, breathing fast and shallow. A medic holds a satellite phone to one ear while squeezing a crystalloid IV bag running into the patient, a near-empty urine bag at the cot side. Dim shelter lighting, sweat sheen, somber handheld camera drifting toward the mottled knees, clinically accurate signs of septic shock, tasteful. Duration 8 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 80,
+  "type": "sc",
+  "march": "antibiotics",
+  "cat": "INFECTION",
+  "model": "Gemini",
+  "technique": "Rubric-Graded",
+  "title": "Crepitus and Foul Odor — Necrotizing Infection",
+  "text": "You are a wound-infection specialist grading a junior medic's plan. A 75 kg operator has a large soft-tissue blast wound to the thigh, 5 days old in prolonged field care, now with foul odor, gray necrotic edges, crepitus on palpation, and rapidly spreading erythema with severe pain out of proportion. Fever 38.9C, HR 120. You suspect necrotizing soft-tissue infection.\n\nGrade the plan below against a RUBRIC you define first (criteria: recognition of necrotizing infection, antibiotic breadth, surgical urgency, resuscitation, analgesia, evac escalation). Score each 0-2. Plan to grade: \"Give moxifloxacin, redress the wound, recheck in the morning.\"\n\n1) What clinical signs flag necrotizing soft-tissue infection here?\n2) Why is the graded plan dangerously inadequate?\n3) What broad antibiotic coverage is indicated, with available agents?\n4) Why is surgical debridement, not antibiotics, the definitive treatment?\n5) How urgently must this casualty be evacuated and why?\n6) What resuscitation supports him while awaiting surgery?\n7) What is the realistic prognosis trajectory if evac is delayed 12 hours?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "macro wound detail, harsh light",
+    "text": "Close-up of a large soft-tissue thigh wound five days old, with gray necrotic edges, foul dark exudate, and a wide halo of spreading red erythema across the skin. A gloved medic presses gently at the margin, the skin dimpling where gas crepitus lies beneath. A flushed, sweating patient grimaces in the background blur. Harsh overhead field light, stark clinical realism, sharp detail on the necrotic tissue and erythema border. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "macro, gentle palpation motion",
+    "text": "Starting frame: a close-up of a five-day-old thigh wound with gray necrotic edges, foul exudate, and a spreading red halo, a gloved medic pressing gently at the margin where the skin dimples over crepitus, a flushed grimacing patient blurred behind, harsh overhead light. Animation: the medic presses and releases at the wound margin, the skin tents and gas crackles subtly, the patient flinches and grimaces. Camera holds macro with a faint tremor. Duration 6 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "clinical macro, stark realism",
+    "text": "A macro view of a large five-day-old thigh blast wound with gray necrotic edges, foul dark exudate, and a spreading red erythema halo. A gloved medic palpates the margin and the skin dimples over subcutaneous gas crepitus while a flushed, sweating patient grimaces behind. Harsh overhead field light, stark clinical realism showing signs of necrotizing soft-tissue infection, gentle press-and-release motion. Tasteful and instructional. Duration 6 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 81,
+  "type": "sc",
+  "march": "antibiotics",
+  "cat": "PROLONGED CARE",
+  "model": "Claude",
+  "technique": "Role + Constraints",
+  "title": "Two Casualties — Rationing the Antibiotics",
+  "text": "You are a deployed physician assistant. CONSTRAINTS: the only antibiotics on hand are moxifloxacin 400 mg tablets and a few doses of ertapenem 1 g; no refrigeration; one casualty can take PO, the other cannot. Casualty A: penetrating chest wound, chest seal in place, eating and drinking, day 2. Casualty B: abdominal wound, NPO, vomiting, day 2, IV access intact.\n\nWork within these constraints only. Allocate the limited antibiotics rationally between the two casualties and justify the triage.\n\n1) Which casualty gets the IV/IM ertapenem and which the PO moxifloxacin, and why?\n2) What is the correct empiric choice for a penetrating chest wound per TCCC?\n3) What is the correct empiric choice for a penetrating abdominal wound?\n4) How does the vomiting casualty's NPO status drive route selection?\n5) How do I stretch a limited ertapenem supply across days?\n6) When would I deviate and give both casualties the same drug?\n7) What signs tell me my chosen coverage is failing?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "two-subject composition, even light",
+    "text": "Two casualties lie on adjacent litters in a field shelter. Left casualty has a chest seal on the bare chest and sips water, alert. Right casualty has an abdominal dressing, an IV line running, looking nauseated with an emesis bag. Between them a medic holds an ertapenem vial in one hand and a strip of moxifloxacin tablets in the other, deciding allocation. Even daylight through a tent flap, documentary realism, balanced symmetric framing. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "static framing, decision gesture",
+    "text": "Starting frame: two casualties on adjacent litters, the left with a chest seal sipping water, the right with an abdominal dressing and IV looking nauseated with an emesis bag, a medic between them holding an ertapenem vial in one hand and moxifloxacin tablets in the other, even tent daylight. Animation: the medic looks from one casualty to the other, then steps toward the right IV casualty raising the ertapenem vial. Camera holds the balanced frame with a slight push-in. Duration 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "balanced two-shot, naturalistic",
+    "text": "Two casualties lie on adjacent litters in a field shelter. The left casualty has a chest seal and sips water, alert. The right casualty has an abdominal dressing, a running IV, and looks nauseated holding an emesis bag. A medic stands between them holding an ertapenem vial and a strip of moxifloxacin tablets, glancing between them before moving toward the IV casualty. Even daylight, documentary realism, balanced framing with a slow push-in. Duration 8 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 82,
+  "type": "sc",
+  "march": "antibiotics",
+  "cat": "BURN INFECTION",
+  "model": "ChatGPT",
+  "technique": "Self-Critique Loop",
+  "title": "Greenish Burn Exudate — Colonization or Sepsis",
+  "text": "Act as a burn-and-infection consultant. A 70 kg casualty with 25 percent TBSA burns is now day 4 in prolonged care. Burn wounds show increasing exudate, a greenish tinge, and the surrounding skin is newly erythematous; temp 38.7C, HR 118. Fluid resuscitation completed earlier. Available: moxifloxacin, ertapenem, silver-impregnated dressings, clean water.\n\nGive your plan, then run a SELF-CRITIQUE LOOP: identify weaknesses (Am I treating colonization as infection? Is systemic antibiotic even indicated for burn wounds? Am I missing burn-wound sepsis?), revise, and repeat once before finalizing.\n\n1) Is routine systemic antibiotic prophylaxis indicated for burns, and what does that mean here?\n2) What signs separate normal burn colonization from invasive burn-wound infection?\n3) Which antibiotic and dose if systemic therapy is now warranted?\n4) What is the role of topical antimicrobial dressings here?\n5) How does burn-wound sepsis present differently and how do I catch it early?\n6) What wound-care actions reduce infection risk independent of antibiotics?\n7) What change forces an urgent evac upgrade?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "clinical close-up, cool light",
+    "text": "Close-up of a burned forearm and torso four days after injury, the healing burn surface weeping increasing exudate with a greenish tinge and a ring of newly reddened skin around the margins. A gloved medic lifts a silver-impregnated dressing to inspect, a sweating flushed patient out of focus behind. Cool diffuse shelter light, sharp realistic burn texture, the greenish exudate and erythema clearly visible. Documentary medical style. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "close-up, dressing lift",
+    "text": "Starting frame: a close-up of a four-day-old burn on a forearm and torso weeping greenish-tinged exudate with newly reddened margins, a gloved medic lifting a silver-impregnated dressing to inspect, a flushed sweating patient blurred behind, cool shelter light. Animation: the medic peels the silver dressing back fully, the moist greenish surface glistens, the patient's chest rises with a wince. Camera holds the close-up with a slow zoom onto the margin. Duration 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "clinical close-up, cool diffuse light",
+    "text": "A close-up of a four-day-old burn across a forearm and torso, the surface weeping increasing exudate with a greenish tinge and a ring of newly reddened skin at the margins. A gloved medic lifts a silver-impregnated dressing to inspect as a flushed, sweating patient winces. Cool diffuse shelter light, realistic burn texture showing possible invasive burn-wound infection, slow careful dressing lift, documentary medical style. Tasteful. Duration 7 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 83,
+  "type": "sc",
+  "march": "antibiotics",
+  "cat": "SEPSIS",
+  "model": "Gemini",
+  "technique": "Tree-of-Thought",
+  "title": "Febrile in Field — Hunting the Source",
+  "text": "You are an austere critical-care physician. A 65 kg casualty in prolonged field care, day 6 after a penetrating extremity injury, becomes febrile 39.1C, HR 128, BP 92/58, confused. The wound looks clean, but he has a central-line-adjacent IV, a urinary catheter placed 4 days ago, and crackles at the right base. Available: ertapenem, moxifloxacin, IV fluids.\n\nUse Tree-of-Thought: branch the possible infection sources (wound, line-associated, catheter-associated UTI, pneumonia), weigh the evidence for each, prune unlikely branches, and converge on the most probable source and treatment.\n\n1) Which source is most likely given the clean wound and the lines/catheter?\n2) How do I gather evidence in the field to discriminate sources?\n3) What empiric antibiotic and dose covers the likely source(s)?\n4) What non-drug source control matters (remove line, change catheter)?\n5) How do I resuscitate while I narrow the source?\n6) What if two sources are plausible at once?\n7) What deterioration trend changes my whole approach?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "wide bedside view, source-hunt framing",
+    "text": "A febrile, confused casualty on a field cot six days into care, flushed and sweating. A medic leans over checking multiple possible infection sources at once: a hand on a peripheral IV line near the arm, a urinary catheter bag at the cot side, and a stethoscope at the right chest base. A clean extremity dressing is visible on the leg. Soft daylight, documentary realism, the IV line, catheter, and stethoscope all in frame. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow pan across sources",
+    "text": "Starting frame: a febrile confused casualty on a field cot six days into care, a medic leaning over with a hand on the IV line, a urinary catheter bag at the cot side, a stethoscope at the right chest base, a clean leg dressing visible, soft daylight. Animation: the medic moves the stethoscope to listen at the chest base, then glances toward the catheter bag, the patient breathes rapidly. Camera slowly pans from the IV line across the body to the catheter. Duration 8 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "investigative slow pan, naturalistic",
+    "text": "A febrile, confused casualty lies on a field cot six days into care, flushed and sweating, while a medic hunts for the infection source: a hand on the peripheral IV line, a urinary catheter bag at the cot side, and a stethoscope listening at the right chest base, with a clean leg dressing visible. Soft daylight, documentary realism, an investigative slow pan moving across each possible source as the patient breathes rapidly. Tasteful and instructional. Duration 8 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 84,
+  "type": "sc",
+  "march": "antibiotics",
+  "cat": "PROPHYLAXIS",
+  "model": "Claude",
+  "technique": "Decision-Matrix",
+  "title": "Three Casualties — Field Antibiotic Triage",
+  "text": "You are a TCCC subject-matter expert. Three casualties from a single contact need wound antibiotic decisions in the field before evac. A: penetrating eye injury, can take PO. B: open femur fracture, IV access intact. C: superficial fragment wounds only, can take PO. 70-90 kg range. Available: moxifloxacin 400 mg PO, ertapenem 1 g IV/IM.\n\nBuild a DECISION MATRIX (markdown table): Casualty | Wound Type | Recommended Antibiotic | Dose/Route | Rationale. Then state which casualty does NOT need field antibiotics and why.\n\n1) What is the TCCC-recommended field antibiotic when a casualty can take PO?\n2) What is the recommended agent when PO is not possible or for serious wounds?\n3) Does the eye injury have any special antibiotic consideration?\n4) Does the superficial-fragment casualty need systemic antibiotics at all?\n5) How does the timing-from-injury affect benefit?\n6) How do I prioritize a limited number of ertapenem doses?\n7) What documentation travels with each casualty?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "three-subject layout, even light",
+    "text": "Three casualties laid in a row on litters at a casualty collection point. First has an eye shield taped over a penetrating eye injury and holds a water cup. Second has an open femur fracture splinted with an IV line running. Third has minor fragment dressings and sits up alert. A medic stands at center holding moxifloxacin tablets in one hand and an ertapenem vial in the other, looking down the row. Even daylight, documentary realism, all three casualties clearly distinguishable. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "static wide, sorting motion",
+    "text": "Starting frame: three casualties in a row on litters, first with a taped eye shield holding water, second with a splinted open femur and IV, third with minor dressings sitting up, a medic at center holding moxifloxacin tablets and an ertapenem vial, even daylight. Animation: the medic looks down the row, steps toward the femur casualty raising the ertapenem vial, then turns toward the eye-injury casualty offering the tablets. Camera holds the wide frame with a gentle drift. Duration 8 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "wide triage shot, documentary",
+    "text": "Three casualties lie in a row on litters at a casualty collection point: one with a taped eye shield over an eye injury holding water, one with a splinted open femur and running IV, one with minor fragment dressings sitting up alert. A medic at center holds moxifloxacin tablets and an ertapenem vial, sorting who needs which by moving between them. Even daylight, documentary realism, wide framing with a gentle drift. Tasteful, instructional. Duration 8 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 85,
+  "type": "sc",
+  "march": "wounds",
+  "cat": "BURNS",
+  "model": "ChatGPT",
+  "technique": "Chain-of-Thought",
+  "title": "Vehicle Fire Burns — Airway on the Clock",
+  "text": "You are a burn-center physician advising over radio. An 80 kg operator is pulled from a vehicle fire with burns to the entire anterior torso, both full arms, and the face; singed nasal hair, hoarse voice, soot in the mouth. Alert, in pain, HR 120, BP 118/76, RR 24. 6 hours from a burn-capable facility. You have IV access, crystalloid, a clean sheet, and basic airway gear.\n\nThink step by step and show your math. Estimate TBSA with the Rule of Nines and compute fluid needs.\n\n1) What TBSA does the Rule of Nines give for anterior torso, both arms, and face?\n2) Using a modern formula (2 mL x kg x percent TBSA), what is the 24-hour fluid estimate and the first-8-hour rate?\n3) Why are the airway findings (hoarse voice, soot, singed hair) an emergency, and what is my window?\n4) How do I dress these burns in the field and what do I avoid?\n5) What analgesia fits a large burn (see ketamine dosing)?\n6) What monitoring confirms adequate resuscitation (urine output target)?\n7) What makes this airway and this casualty the top evac priority?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "dramatic medium shot, warm-cool contrast",
+    "text": "An operator pulled from a vehicle fire lies supine, burns across the entire anterior torso, both arms, and face, singed nasal hair and soot around the mouth, hoarse and alert in pain. A medic kneels checking the airway with a penlight while a crystalloid IV runs and a clean white sheet is draped to the waist. Smoldering vehicle blurred behind. Warm firelight mixed with cool dusk, documentary realism, sharp focus on the sooty face and airway check. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "push-in, airway check motion",
+    "text": "Starting frame: an operator with extensive anterior torso, arm, and facial burns supine, soot around the mouth and singed nasal hair, a medic kneeling checking the airway with a penlight, a crystalloid IV running, a smoldering vehicle blurred behind in warm firelight and cool dusk. Animation: the medic shines the penlight into the mouth, the patient breathes hoarsely with strained neck, smoke drifts behind. Camera pushes in slowly toward the sooty face. Duration 8 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "cinematic handheld, firelight",
+    "text": "An operator pulled from a vehicle fire lies supine with burns across the entire anterior torso, both arms, and face, soot around the mouth and singed nasal hair, breathing hoarsely. A medic kneels checking the airway with a penlight as a crystalloid IV runs and a clean sheet is draped, a smoldering vehicle behind. Warm firelight mixed with cool dusk, documentary realism, handheld camera pushing in toward the sooty face conveying an airway on the clock. Tasteful. Duration 8 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 86,
+  "type": "sc",
+  "march": "wounds",
+  "cat": "SOFT TISSUE",
+  "model": "Gemini",
+  "technique": "Structured Output",
+  "title": "Contaminated Thigh Avulsion — Tourniquet Conversion",
+  "text": "Act as a combat wound-care expert. A 90 kg operator has a large avulsion of the lateral thigh from a fragment, bleeding controlled with a tourniquet placed 70 minutes ago, exposed muscle, gross contamination with dirt and cloth. Evac is 5 hours. You have irrigation fluid, hemostatic gauze, pressure dressings, antibiotics, and analgesia.\n\nReturn your plan as a structured checklist with sections: TOURNIQUET CONVERSION DECISION, IRRIGATION/DEBRIDEMENT, DRESSING, ANTIBIOTIC, ANALGESIA, REASSESSMENT SCHEDULE. Be specific and time-stamped.\n\n1) At 70 minutes, do I attempt tourniquet conversion to a pressure dressing, and how?\n2) What irrigation volume and technique for gross contamination in the field?\n3) Do I debride visible contaminant or leave the wound alone for surgery?\n4) What dressing strategy keeps it clean over 5 hours?\n5) Which antibiotic and dose for this contaminated soft-tissue wound?\n6) What analgesia regimen supports the irrigation procedure?\n7) How often do I reassess perfusion and the tourniquet?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "close-up irrigation, action freeze",
+    "text": "Close-up of a large lateral thigh avulsion exposing muscle, grossly contaminated with dirt and cloth fragments, a tourniquet seated high on the thigh above it. A gloved medic irrigates the wound with a stream of fluid from a squeeze bottle, debris washing out. Clean gauze, a pressure dressing, and antibiotic vials staged nearby. Bright field light, sharp realistic muscle and fluid detail, droplets frozen mid-air. Documentary medical style. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "close-up, flowing irrigation",
+    "text": "Starting frame: a close-up of a contaminated lateral thigh avulsion exposing muscle with a tourniquet seated high above, a gloved medic squeezing a stream of irrigation fluid onto the wound, gauze and antibiotic vials staged nearby, bright field light. Animation: the irrigation fluid flows steadily over the wound, dirt and cloth debris wash out and run off, the medic adjusts the angle of the bottle. Camera holds the close-up with a faint handheld tremor. Duration 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "close-up procedural, realistic fluids",
+    "text": "A close-up of a large lateral thigh avulsion exposing muscle, grossly contaminated with dirt and cloth, a tourniquet seated high on the thigh above it. A gloved medic irrigates the wound with a steady stream of fluid from a squeeze bottle, debris washing out, with gauze, a pressure dressing, and antibiotic vials staged nearby. Bright field light, realistic muscle and flowing fluid, procedural close-up with slight handheld motion. Tasteful, instructional. Duration 7 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 87,
+  "type": "sc",
+  "march": "wounds",
+  "cat": "JUNCTIONAL",
+  "model": "Claude",
+  "technique": "Red-Team the Plan",
+  "title": "Pulsatile Groin Bleed — Junctional Control",
+  "text": "You are a vascular and trauma surgeon advising remotely. A 75 kg operator has a deep groin wound from a fragment with pulsatile bleeding in the junctional zone where a limb tourniquet cannot reach. You packed it with hemostatic gauze and applied a junctional tourniquet; bleeding slowed but oozes. HR 124, BP 94/60, alert. TXA given. 4 hours to surgery.\n\nGive your hemorrhage-control plan, then RED-TEAM it: attack each assumption (Is the packing actually controlling the source? Is the junctional device seated correctly? Am I under-resuscitating? Am I missing a second bleed?). Revise into a final plan.\n\n1) How do I confirm the packing and junctional device are truly controlling the source?\n2) What is the correct re-packing technique if it keeps oozing?\n3) Was TXA timing correct and what is the dose (2 g IV)?\n4) How do I resuscitate toward a permissive-hypotension target here?\n5) What if there is a concurrent intra-abdominal source?\n6) How do I prevent the lethal triad over 4 hours?\n7) What do I tell the surgeon to prep on arrival?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "focused close-up, tense lighting",
+    "text": "Close-up of a deep groin wound in the junctional zone, packed tight with hemostatic gauze and compressed by a junctional tourniquet strapped across the pelvis, a faint ooze at the edge. A gloved medic presses both hands firmly over the packed site. An empty TXA syringe and a blood product bag rest beside the patient, who is pale and alert. Tense low field light, documentary realism, sharp focus on the junctional device and packed wound. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "close-up, firm pressure hold",
+    "text": "Starting frame: a close-up of a deep junctional groin wound packed with hemostatic gauze under a junctional tourniquet across the pelvis with a faint ooze, a gloved medic pressing both hands firmly over it, an empty TXA syringe and blood bag beside a pale alert patient, tense low light. Animation: the medic leans into the pressure, checks the ooze at the edge, then tightens the junctional strap a notch. Camera holds the close-up with a slight push toward the device. Duration 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "tense close-up, naturalistic",
+    "text": "A close-up of a deep groin wound in the junctional zone packed with hemostatic gauze and compressed by a junctional tourniquet across the pelvis, a faint ooze at the edge. A gloved medic presses both hands firmly over the site, then tightens the strap, an empty TXA syringe and a blood product bag beside the pale alert patient. Tense low field light, documentary realism, close-up with a slight push toward the device. Tasteful, clinically accurate. Duration 7 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 88,
+  "type": "sc",
+  "march": "wounds",
+  "cat": "BURNS",
+  "model": "ChatGPT",
+  "technique": "Rubric-Graded",
+  "title": "40% Flame Burn — Grading the Resuscitation",
+  "text": "Act as a burn resuscitation expert grading a plan. A 70 kg casualty has an estimated 40 percent TBSA flame burn, 3 hours post-injury, IV access via a single line, mentation intact, no airway compromise yet. The medic's plan: \"Run 2 liters wide open, wrap in wet towels, give morphine, recheck at the FOB.\"\n\nDefine a RUBRIC first (criteria: fluid formula accuracy, fluid endpoint/titration, hypothermia avoidance, dressing choice, analgesia, monitoring, airway surveillance) and score each item 0-2. Identify the two most dangerous errors.\n\n1) What is the correct first-8-hour fluid rate (2 mL x kg x percent TBSA, half in 8 h)?\n2) Why is \"wide open\" fluid wrong and what endpoint should guide titration?\n3) Why are wet towels dangerous in a large burn?\n4) What dry dressing approach is correct?\n5) What analgesic is preferred for a 40 percent burn and at what dose?\n6) What monitoring confirms adequate resuscitation?\n7) What airway sign would change everything?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "wide bedside scene, clinical realism",
+    "text": "A casualty with an extensive flame burn covering roughly forty percent of the body lies on a litter three hours post-injury, alert and in pain, skin charred and blistered across torso and limbs. A single IV line runs crystalloid into one arm. A medic kneels writing a fluid rate on a casualty card, a clean dry sheet at the side and a calculator-style notepad visible. Even shelter daylight, documentary realism, sharp focus on the IV line and the casualty card. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow drift, writing motion",
+    "text": "Starting frame: a casualty with a forty-percent flame burn on a litter three hours post-injury, a single crystalloid IV in one arm, a medic kneeling writing a fluid rate on a casualty card, a clean dry sheet at the side, even shelter daylight. Animation: the medic writes the rate, glances at the IV drip chamber counting drops, then adjusts the roller clamp. The patient breathes in pain. Camera drifts slowly from the casualty card to the IV line. Duration 8 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "documentary bedside, even light",
+    "text": "A casualty with an extensive flame burn covering about forty percent of the body lies on a litter three hours post-injury, alert and in pain, with a single crystalloid IV in one arm. A medic kneels writing a fluid rate on a casualty card, then checks the IV drip chamber and adjusts the roller clamp, a clean dry sheet at the side. Even shelter daylight, documentary realism, slow drift from the card to the IV line emphasizing titrated resuscitation. Tasteful. Duration 8 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 89,
+  "type": "sc",
+  "march": "wounds",
+  "cat": "CHEST",
+  "model": "Gemini",
+  "technique": "Step-Back Reasoning",
+  "title": "Sealed Chest Wound — Tension Pneumothorax",
+  "text": "You are a trauma surgeon on radio. A 85 kg operator has a penetrating wound to the right anterior chest, a chest seal applied, but over 30 minutes he develops worsening dyspnea, rising HR 132, falling BP 88/56, distended neck veins, and tracheal deviation suspected. SpO2 falling to 88 percent. You have needle-decompression kits, a finger-thoracostomy capability, and a working chest seal.\n\nSTEP BACK and state the governing principle first (a sealed penetrating chest wound can convert an open pneumothorax into a tension pneumothorax). Derive your immediate actions from that principle.\n\n1) Why did sealing the wound possibly cause this deterioration?\n2) Is burping the seal the first move, and how?\n3) What is the needle-decompression landmark and catheter choice?\n4) When do I escalate to finger thoracostomy?\n5) How do I confirm decompression worked?\n6) What recurrence plan do I set for the next 4 hours?\n7) What do I hand off about the seal, the decompression, and timing?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "dramatic close-up, decompression moment",
+    "text": "An operator supine and struggling to breathe with a chest seal on the right anterior chest, distended neck veins and a faint tracheal shift visible at the throat. A medic positions a large-bore decompression needle at the chest landmark below the collarbone, the other hand steadying the chest. A pulse oximeter reads 88. Tense field light, documentary realism, sharp focus on the chest seal, neck veins, and the decompression needle. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "close-up, needle placement motion",
+    "text": "Starting frame: an operator supine struggling to breathe with a right-chest seal, distended neck veins, faint tracheal shift, a medic positioning a large-bore decompression needle at the landmark below the collarbone, a pulse oximeter reading 88, tense field light. Animation: the medic firmly inserts the needle, a faint rush of air escapes, the chest relaxes slightly and neck veins soften, the oximeter ticks upward. Camera holds the close-up with a small push toward the needle. Duration 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "tense close-up, naturalistic",
+    "text": "An operator lies supine struggling to breathe with a chest seal on the right anterior chest, distended neck veins and a faint tracheal shift, a pulse oximeter reading 88. A medic places a large-bore decompression needle at the landmark below the collarbone and inserts it firmly, a faint rush of air escaping as the chest relaxes and neck veins soften. Tense field light, documentary realism, close-up with a small push toward the needle, clinically accurate tension pneumothorax relief. Tasteful. Duration 7 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 90,
+  "type": "sc",
+  "march": "wounds",
+  "cat": "PEDIATRIC",
+  "model": "Claude",
+  "technique": "Few-Shot Anchoring",
+  "title": "Scalded Child — Pediatric Burn Math",
+  "text": "You are a pediatric trauma and burn expert advising a medic during a village medical engagement. A child (estimated 6 years, estimated 20 kg) has scald burns to one whole leg and the buttocks from a cooking accident, crying, HR 140, otherwise stable, parent present. You have IV/IO capability, crystalloid, analgesia, and clean dressings.\n\nAnchor on the adult pattern: adults use 2 mL x kg x percent TBSA for burn fluids and the Rule of Nines. Apply pediatric-adjusted reasoning and SHOW the calculations, noting where pediatric anatomy changes the percentages.\n\n1) What TBSA does a whole leg plus buttocks give using a pediatric-adjusted Rule of Nines?\n2) What is the fluid estimate for a 20 kg child and the first-8-hour rate?\n3) Why do children's body proportions change the Rule of Nines?\n4) What analgesia and weight-based dose for this child?\n5) How do I avoid hypothermia in a small burned child?\n6) What urine-output target confirms adequate pediatric resuscitation?\n7) What thresholds make this an urgent evac despite \"stable\" vitals?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "gentle close framing, warm light",
+    "text": "A young child of about six lies on a clean mat during a village medical engagement, scald burns covering one whole leg and the buttocks, crying softly, a parent crouched holding the small hand. A medic kneels gently applying a clean non-stick dressing to the burned leg, an IV or IO line and crystalloid bag staged nearby. Warm soft daylight, compassionate documentary realism, tasteful framing that keeps the child covered and dignified, focus on the dressing and the held hand. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "gentle drift, soothing motion",
+    "text": "Starting frame: a young child on a clean mat with scald burns to one whole leg and the buttocks, crying softly with a parent holding the small hand, a medic kneeling applying a clean non-stick dressing, an IV bag staged nearby, warm soft daylight. Animation: the medic smooths the dressing gently over the leg, the parent strokes the child's hand, the child's crying eases slightly. Camera drifts softly from the dressing up to the held hands. Duration 8 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "compassionate handheld, soft light",
+    "text": "A young child about six lies on a clean mat at a village medical engagement with scald burns to one whole leg and the buttocks, crying softly while a parent holds the small hand. A medic kneels gently applying a clean non-stick dressing as a crystalloid IV bag is staged nearby. Warm soft daylight, compassionate documentary realism, a gentle handheld drift from the dressing to the held hands, tasteful framing that keeps the child covered and dignified. Duration 8 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 91,
+  "type": "sc",
+  "march": "wounds",
+  "cat": "ABDOMINAL",
+  "model": "ChatGPT",
+  "technique": "Self-Critique Loop",
+  "title": "Eviscerated Bowel — Reduce or Cover?",
+  "text": "Act as a damage-control surgery consultant. A 90 kg operator has a penetrating abdominal wound with a small loop of bowel eviscerated, moderate ooze, abdomen tender, HR 120, BP 96/62, alert. 6 hours to surgery. You have moist sterile dressings, irrigation, antibiotics, TXA, and analgesia.\n\nGive your management plan, then run a SELF-CRITIQUE LOOP: list errors (Did I try to reduce the bowel? Did I let it dry out? Wrong antibiotic? Over- or under-resuscitating?), revise, repeat once, then finalize.\n\n1) Do I reduce the eviscerated bowel back in, or not, and why?\n2) How do I dress eviscerated bowel to keep it viable?\n3) Which antibiotic and dose for a penetrating abdominal wound?\n4) What fluid/blood strategy and BP target while awaiting surgery?\n5) What is TXA's role and dose here?\n6) What analgesia fits without obscuring the abdominal exam?\n7) What deterioration signs flag a major vascular or hollow-viscus catastrophe?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "clinical close-up, restrained framing",
+    "text": "Close-up of a penetrating abdominal wound with a small loop of bowel eviscerated and glistening, moderate ooze, the medic NOT pushing it back but covering it with moist sterile dressings. Gloved hands lay damp gauze over the exposed loop while irrigation fluid and antibiotic vials sit nearby. The pale alert patient is blurred above. Even diagnostic field light, documentary realism, tasteful restrained focus on the gloved hands and moist dressing. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "close-up, dressing application",
+    "text": "Starting frame: a close-up of a penetrating abdominal wound with a small eviscerated bowel loop covered by moist sterile dressings, gloved hands laying damp gauze over it, irrigation fluid and antibiotic vials nearby, a pale alert patient blurred above, even field light. Animation: the medic gently moistens and smooths the gauze over the exposed loop without pushing it in, the abdomen rises slightly with breathing. Camera holds the close-up with a faint drift. Duration 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "restrained clinical close-up",
+    "text": "A close-up of a penetrating abdominal wound with a small loop of bowel eviscerated and glistening. A medic deliberately does not push it back in but covers it with moist sterile dressings, gloved hands smoothing damp gauze over the exposed loop, irrigation fluid and antibiotic vials nearby, a pale alert patient breathing above. Even diagnostic field light, documentary realism, restrained tasteful close-up with a faint drift, clinically accurate evisceration care. Duration 7 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 92,
+  "type": "sc",
+  "march": "wounds",
+  "cat": "BLAST",
+  "model": "Gemini",
+  "technique": "Tree-of-Thought",
+  "title": "IED Polytrauma — Sorting the Threats",
+  "text": "You are a blast-injury specialist. A dismounted operator (80 kg) is hit by an IED: bilateral lower-leg mangling with tourniquets on, perineal soiling, a chest that \"doesn't feel right,\" and he is confused. HR 140, BP 84/52, SpO2 92 percent, pale. 4 hours to surgery. You have blood products (2 units), TXA, chest tools, junctional control, and antibiotics.\n\nUse Tree-of-Thought: branch the competing threats (hemorrhagic shock from limbs vs occult truncal/junctional bleed vs blast lung vs TBI), evaluate each branch, prune, and converge on a prioritized action sequence.\n\n1) Which threat most likely explains the shock, and which to chase first?\n2) How do blast-lung findings change my fluid and oxygen plan?\n3) What junctional/pelvic source could be hiding given perineal soiling?\n4) How do I sequence blood, TXA, and hemorrhage control?\n5) How does possible TBI change my BP target?\n6) What antibiotic coverage for these dirty blast wounds?\n7) What single deterioration would make me re-rank the whole tree?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "wide trauma scene, low contrast dust",
+    "text": "A dismounted operator lies on the ground after an IED blast, both lower legs mangled with tourniquets high on each thigh, perineal soiling, pale and confused. A medic kneels with two units of blood product staged, one hand on the operator's chest sensing breathing, the other reaching for a chest-decompression kit. Junctional control gear and antibiotic vials laid out. Dusty low light, documentary realism, multiple injuries readable, sharp focus on the tourniquets and blood bags. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "slow survey pan, assessment motion",
+    "text": "Starting frame: a dismounted operator after an IED blast with both lower legs mangled under high thigh tourniquets, perineal soiling, pale and confused, a medic kneeling with two blood units staged, one hand on the chest, the other near a chest kit, dusty low light. Animation: the medic presses the chest feeling for breathing, glances at the pale legs, then lifts a blood unit. The operator breathes rapidly. Camera does a slow survey pan from the legs up to the chest. Duration 8 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "gritty handheld, survey pan",
+    "text": "A dismounted operator lies on the ground after an IED blast, both lower legs mangled with tourniquets high on each thigh, perineal soiling, pale and confused. A medic kneels with two units of blood staged, presses the chest to sense breathing, then reaches for a chest-decompression kit, junctional gear and antibiotics laid out. Dusty low light, gritty documentary realism, a slow survey pan from the legs to the chest sorting the competing threats. Tasteful, clinically accurate. Duration 8 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 93,
+  "type": "sc",
+  "march": "splinting",
+  "cat": "PELVIC",
+  "model": "Claude",
+  "technique": "Chain-of-Thought",
+  "title": "Rooftop Fall — Unstable Pelvic Hemorrhage",
+  "text": "You are an orthopedic trauma surgeon advising by radio. An 85 kg operator fell from a rooftop; he has pelvic pain, instability on gentle palpation, blood at the urethral meatus, scrotal bruising, HR 130, BP 86/54, pale, abdomen soft. 5 hours to surgery. You have a commercial pelvic binder, blood products, TXA, and analgesia.\n\nThink step by step and show reasoning before acting. Reason through why an unstable pelvis is a hemorrhage problem, not just a bone problem.\n\n1) How do I correctly place a pelvic binder and at what anatomical level?\n2) Why should I NOT spring or rock the pelvis to test stability?\n3) Given urethral blood, what do I avoid (catheterization) and why?\n4) How do binding plus blood plus TXA work together to control bleeding?\n5) What BP target do I aim for in this likely pelvic hemorrhage?\n6) How do I package and move him to avoid disrupting clot?\n7) What handoff details does the surgeon need for angio/fixation planning?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "focused mid close-up, careful framing",
+    "text": "An operator supine after a rooftop fall, a commercial pelvic binder being wrapped snugly at the level of the greater trochanters, pale and in pain, a trace of blood at the urethral meatus and scrotal bruising noted tastefully. A medic cinches the binder buckle while a blood product bag and TXA syringe rest nearby. Even field light, documentary realism, sharp focus on the pelvic binder placement and the cinching hands. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "close-up, binder cinch motion",
+    "text": "Starting frame: an operator supine after a rooftop fall with a commercial pelvic binder wrapped at the level of the greater trochanters, pale and in pain, a medic cinching the binder buckle, a blood product bag and TXA syringe nearby, even field light. Animation: the medic pulls the binder straps tight and clicks the buckle, the binder compresses snugly, the patient grimaces and steadies. Camera holds the close-up with a slow push toward the buckle. Duration 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "procedural close-up, naturalistic",
+    "text": "An operator lies supine after a rooftop fall as a medic wraps and cinches a commercial pelvic binder at the level of the greater trochanters, the patient pale and in pain, a blood product bag and TXA syringe nearby. The medic pulls the straps tight and clicks the buckle so the binder compresses snugly. Even field light, documentary realism, procedural close-up with a slow push toward the buckle, treating the unstable pelvis as a hemorrhage problem. Tasteful. Duration 7 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 94,
+  "type": "sc",
+  "march": "splinting",
+  "cat": "CRUSH",
+  "model": "ChatGPT",
+  "technique": "Structured Output",
+  "title": "Crush Release — The Lethal Moment",
+  "text": "Act as a critical-care nephrology and trauma expert advising on a building collapse. A 75 kg worker has been pinned under rubble by both legs for an estimated 5 hours; the legs are pulseless distally and the entry team is about to lift the slab. Before release: HR 110, BP 110/70, alert. You have IV fluids, calcium, sodium bicarbonate, an ECG monitor, and a tourniquet.\n\nReturn a structured plan with sections: PRE-RELEASE PREP, RELEASE-MOMENT ACTIONS, HYPERKALEMIA MANAGEMENT, FLUID PLAN, MONITORING, EVAC. Be numeric on doses and rates.\n\n1) Why is the moment of release the most dangerous, and what kills him then?\n2) What pre-release fluid loading should I start and at what rate?\n3) Should a tourniquet go on before release, and what is the tradeoff?\n4) What ECG changes signal hyperkalemia and what do I give (calcium, bicarbonate)?\n5) What fluid target protects the kidneys from myoglobin?\n6) How do I splint and package crushed limbs after release?\n7) What makes this a high-priority, surgically urgent evac?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "tense rescue scene, dusty light",
+    "text": "A building-collapse scene where a worker is pinned under a concrete slab by both legs, an entry team poised to lift the slab. A medic crouches beside the trapped man running fast IV fluids into his arm before release, a calcium ampoule, sodium bicarbonate, and an ECG monitor staged within reach. The man is alert with tense expression. Gray dusty light, rubble and rebar, documentary realism, sharp focus on the IV line, the staged drugs, and the slab edge. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "tense static, pre-release tension",
+    "text": "Starting frame: a worker pinned under a concrete slab by both legs, an entry team poised to lift, a medic crouching running fast IV fluids before release with calcium, bicarbonate, and an ECG monitor staged, gray dusty light over rubble. Animation: the medic squeezes the IV bag fast, glances up at the team gripping the slab, the ECG monitor traces a steady rhythm, dust settles. The slab does not yet move. Camera holds tense and static with a faint drift toward the IV. Duration 8 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "suspenseful handheld, dusty realism",
+    "text": "In a building collapse, a worker is pinned under a concrete slab by both legs while an entry team prepares to lift it. A medic crouches running fast IV fluids into his arm before release, with calcium, sodium bicarbonate, and an ECG monitor staged within reach. Gray dusty light over rubble and rebar, suspenseful documentary realism, a faint drift toward the IV line as the team grips the slab, capturing the dangerous moment before crush release. Tasteful. Duration 8 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 95,
+  "type": "sc",
+  "march": "splinting",
+  "cat": "FRACTURE",
+  "model": "Gemini",
+  "technique": "Role + Constraints",
+  "title": "Improvised Femur Traction — Single Rescuer",
+  "text": "You are a backcountry orthopedic medic. CONSTRAINTS: improvised materials only (SAM splint, cravats, padding, trekking poles), no traction device, single rescuer, casualty must be carried 8 km. The casualty is a 90 kg operator with a closed mid-shaft femur fracture, deformed thigh, severe pain, intact distal pulse, HR 120, BP 118/78.\n\nWork strictly within those constraints. Do not assume gear I did not list.\n\n1) Why is a closed femur fracture a hemorrhage and pain emergency even when closed?\n2) How do I improvise a traction splint from poles and cravats, step by step?\n3) How much blood can a femur fracture sequester and how does that guide me?\n4) What analgesia supports applying traction (ketamine dose)?\n5) How do I monitor the distal pulse during and after splinting?\n6) How do I package him for an 8 km single-rescuer carry?\n7) What signs would make me stop and not move him?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "backcountry wide shot, natural light",
+    "text": "A single rescuer kneels over an operator with a deformed mid-thigh, building an improvised femur traction splint from trekking poles, a SAM splint, padding, and cravats lashed along the leg, applying gentle axial traction at the ankle. The patient grimaces, distal foot exposed to check the pulse. Rugged backcountry terrain, natural daylight, documentary realism, sharp focus on the lashed poles and the traction hitch at the ankle. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "medium shot, traction pull motion",
+    "text": "Starting frame: a single rescuer kneeling over an operator with a deformed mid-thigh, building an improvised femur traction splint from trekking poles, SAM splint, padding, and cravats, applying gentle traction at the ankle, distal foot exposed, rugged backcountry daylight. Animation: the rescuer slowly pulls axial traction at the ankle and lashes a cravat tighter, the thigh deformity eases, then checks the exposed foot. Camera holds the medium shot with a slow push toward the ankle hitch. Duration 8 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "backcountry medium shot, naturalistic",
+    "text": "A single rescuer kneels over an operator with a deformed mid-thigh, building an improvised femur traction splint from trekking poles, a SAM splint, padding, and cravats, then applies gentle axial traction at the ankle so the thigh deformity eases, the distal foot exposed to check the pulse. Rugged backcountry terrain, natural daylight, documentary realism, a slow push toward the ankle hitch, clinically accurate improvised traction. Tasteful, instructional. Duration 8 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 96,
+  "type": "sc",
+  "march": "splinting",
+  "cat": "OPEN FRACTURE",
+  "model": "Claude",
+  "technique": "Rubric-Graded",
+  "title": "Open Forearm Fracture — Don't Push It Back",
+  "text": "You are a JTS extremity-trauma expert grading a medic's plan. A 80 kg operator has an open both-bone forearm fracture with bone ends visible, moderate bleeding controlled with a pressure dressing, gross contamination, intact radial pulse, severe pain. 6 hours to surgery. Plan to grade: \"Push the bone back in, splint it straight, wrap it, give him some Tylenol, and go.\"\n\nDefine a RUBRIC first (criteria: contamination/irrigation, antibiotic timing, reduction technique, splinting/neurovascular check, analgesia adequacy, documentation) and score each 0-2. Call out the two worst errors.\n\n1) Should the medic push the exposed bone back in, and what is correct?\n2) What irrigation and dressing approach for an open contaminated fracture?\n3) Which antibiotic, dose, and how quickly for an open fracture?\n4) How do I splint and what neurovascular checks bracket the splinting?\n5) Why is acetaminophen alone inadequate analgesia here?\n6) What position of function for the forearm and wrist?\n7) What documentation must travel to the OR?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "clinical close-up, restrained detail",
+    "text": "Close-up of an open both-bone forearm fracture with bone ends visible through the wound, gross contamination, a pressure dressing controlling moderate bleeding nearby. A gloved medic stabilizes the forearm without pushing the bone back, irrigating the wound with fluid as antibiotic vials and a splint sit ready. The radial pulse point at the wrist is exposed. Even field light, documentary realism, sharp restrained focus on the open wound and the stabilizing hands. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "close-up, irrigation and stabilize",
+    "text": "Starting frame: a close-up of an open both-bone forearm fracture with visible bone ends and contamination, a gloved medic stabilizing the forearm without reducing it while irrigating the wound, antibiotic vials and a splint ready, the wrist pulse point exposed, even field light. Animation: the medic irrigates a steady stream over the wound flushing debris, then steadies the forearm and reaches for the splint. Camera holds the close-up with a faint drift toward the bone ends. Duration 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "restrained procedural close-up",
+    "text": "A close-up of an open both-bone forearm fracture with bone ends visible through a contaminated wound. A gloved medic stabilizes the forearm without pushing the bone back, irrigates the wound with a steady stream to flush debris, then reaches for a splint, antibiotic vials staged and the wrist pulse point exposed. Even field light, documentary realism, restrained procedural close-up with a faint drift toward the bone ends, clinically accurate open-fracture care. Tasteful. Duration 7 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 97,
+  "type": "sc",
+  "march": "splinting",
+  "cat": "SPINE",
+  "model": "ChatGPT",
+  "technique": "Decision-Matrix",
+  "title": "Spinal Fall — Tactical Precautions Versus Rigid",
+  "text": "Act as a spine and tactical-evacuation expert. A 90 kg operator fell 4 m onto rocks; he reports midline thoracic back pain, tingling in both feet, can wiggle toes weakly, no other major bleeding, HR 96, BP 130/82, alert. We are in a contested area and rigid full spinal immobilization will slow movement and increase exposure time.\n\nBuild a DECISION MATRIX (markdown table): Option (full rigid immobilization vs minimal-handling spinal precautions vs no precautions) | Benefit | Risk | Tactical Cost | Recommended When. Then commit to one approach for this casualty.\n\n1) What findings raise concern for an unstable spinal injury here?\n2) How do tactical spinal precautions differ from civilian full immobilization?\n3) How do I balance neuroprotection against time-in-the-open risk?\n4) What is the safest realistic movement technique with limited hands?\n5) How do I monitor for neurologic deterioration during the move?\n6) What changes if his motor function worsens en route?\n7) What do I hand off about mechanism and serial neuro exams?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "low tactical scene, dim contested light",
+    "text": "An operator lies on rocky ground after a four-meter fall, reporting midline back pain, a medic supporting the head and neck inline while a second hand rests on the operator's foot checking toe movement. Minimal handling spinal precautions rather than rigid gear, weapons and rucks nearby, a contested low-light setting with crouched teammates watching the perimeter. Dim dusk light, documentary realism, sharp focus on the inline head hold and the foot check. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "low-light, inline-hold motion",
+    "text": "Starting frame: an operator on rocky ground after a fall, a medic holding the head and neck inline while a hand rests on the foot checking toe movement, minimal-handling spinal precautions, weapons and rucks nearby, crouched teammates on the perimeter in dim dusk light. Animation: the medic steadies the inline head hold, the operator weakly wiggles his toes, a teammate scans the perimeter. Camera holds low and steady with a slow push toward the head hold. Duration 8 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "tactical low-light, naturalistic",
+    "text": "An operator lies on rocky ground after a four-meter fall reporting midline back pain. A medic maintains inline head and neck support using minimal-handling spinal precautions rather than rigid gear, while a hand on the foot checks weak toe movement, weapons and rucks nearby and crouched teammates watching the perimeter. Dim dusk contested light, documentary realism, low steady camera with a slow push toward the inline hold, balancing neuroprotection and tactical exposure. Tasteful. Duration 8 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 98,
+  "type": "sc",
+  "march": "splinting",
+  "cat": "DISLOCATION",
+  "model": "Gemini",
+  "technique": "Socratic Tutor",
+  "title": "Shoulder Dislocation — Reduce in the Field?",
+  "text": "You are a Socratic orthopedics tutor. Do not give me the answer outright. A 80 kg operator has an anterior shoulder dislocation from a fall during a fast-rope insertion; arm held in slight abduction, severe pain, intact distal pulse and sensation, 9 hours from definitive care, and the arm is impairing his ability to move under load.\n\nTutor me with one question at a time, reacting to my answers, toward a decision on whether and how to reduce in the field. Begin with your first question.\n\n1) What argues FOR field reduction given the long evac and tactical load?\n2) What neurovascular checks must I do before and after any reduction?\n3) Which reduction technique is safest for a lone provider?\n4) What analgesia/sedation supports reduction (ketamine dosing)?\n5) How do I confirm a successful reduction without imaging?\n6) How do I immobilize post-reduction for movement?\n7) What complication would make me NOT attempt reduction?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "medium clinical shot, even light",
+    "text": "An operator sits on the ground holding his arm in slight abduction with an obvious anterior shoulder dislocation, the shoulder squared off, severe pain on his face. A medic kneels checking the distal pulse and sensation at the hand before any reduction, a ketamine syringe staged on a clean cloth nearby. Field setting with a fast-rope and gear in the background blur. Even daylight, documentary realism, sharp focus on the squared shoulder and the neurovascular check. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "medium shot, pre-reduction check",
+    "text": "Starting frame: an operator sitting holding his arm in slight abduction with an anterior shoulder dislocation, the shoulder squared off, a medic kneeling checking the distal pulse and sensation at the hand, a ketamine syringe staged nearby, fast-rope gear blurred behind, even daylight. Animation: the medic presses the radial pulse, taps the fingertips to test sensation, the operator grimaces and nods. Camera holds the medium shot with a slow drift toward the squared shoulder. Duration 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "medium clinical shot, naturalistic",
+    "text": "An operator sits on the ground holding his arm in slight abduction with an obvious anterior shoulder dislocation, the shoulder squared off and painful. A medic kneels checking the distal pulse and sensation at the hand before considering reduction, a ketamine syringe staged on a clean cloth, fast-rope gear behind. Even daylight, documentary realism, medium shot with a slow drift toward the squared shoulder, emphasizing the neurovascular check first. Tasteful, instructional. Duration 7 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 99,
+  "type": "sc",
+  "march": "splinting",
+  "cat": "COMPARTMENT",
+  "model": "Claude",
+  "technique": "Step-Back Reasoning",
+  "title": "Tense Calf, Present Pulse — Compartment Syndrome",
+  "text": "You are an orthopedic and acute-care surgeon on radio. A 85 kg operator has a closed tibial fracture splinted 8 hours ago; he now reports pain out of proportion, the calf is tense and shiny, pain on passive toe extension is severe, sensation is becoming dull, distal pulse still present. HR 110, BP 124/80. 6 hours to surgery.\n\nSTEP BACK and state the governing principle first (compartment syndrome is a clinical diagnosis driven by pressure and pain, and a present distal pulse does NOT rule it out). Derive your actions from that principle.\n\n1) Why is the present pulse a dangerous false reassurance here?\n2) What are the cardinal signs and which is earliest?\n3) What immediate steps reduce compartment pressure (loosen, position)?\n4) Why is this a surgical emergency (fasciotomy) and how urgent?\n5) How does this change the evac priority?\n6) What analgesia do I give without masking the diagnostic exam entirely?\n7) What do I document about onset time and serial exams?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "clinical close-up, tense light",
+    "text": "Close-up of a lower leg eight hours after a splinted tibial fracture, the calf tense and shiny with stretched skin, the splint loosened and opened to expose it. A gloved medic gently lifts the toes to test passive extension, the operator wincing in severe pain. The distal foot is still pink with a present pulse. Tense even field light, documentary realism, sharp focus on the shiny tense calf and the toe-extension test. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "close-up, passive stretch test",
+    "text": "Starting frame: a close-up of a tense shiny calf eight hours after a splinted tibial fracture, the splint opened, a gloved medic lifting the toes to test passive extension, the distal foot still pink, the operator wincing, tense field light. Animation: the medic slowly extends the toes upward, the operator sharply winces and tenses, the medic lowers the toes and palpates the firm calf. Camera holds the close-up with a faint push toward the shiny skin. Duration 7 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "tense clinical close-up, naturalistic",
+    "text": "A close-up of a lower leg eight hours after a splinted tibial fracture, the calf tense and shiny, the splint opened to expose it. A gloved medic lifts the toes to test passive extension and the operator winces in severe pain, the distal foot still pink with a present pulse. Tense even field light, documentary realism, close-up with a faint push toward the shiny skin, showing that a present pulse does not rule out compartment syndrome. Tasteful, instructional. Duration 7 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 100,
+  "type": "sc",
+  "march": "splinting",
+  "cat": "AMPUTATION",
+  "model": "ChatGPT",
+  "technique": "Tree-of-Thought",
+  "title": "Partial Amputation — Convert or Preserve",
+  "text": "Act as a trauma and limb-salvage expert. A 90 kg operator has a traumatic below-knee partial amputation from a blast, tourniquet high on the thigh stopped the bleeding 50 minutes ago, the limb is mangled but a partial bridge of tissue remains, severe pain, HR 130, BP 100/66, alert. Blood products available, 5 hours to surgery, dirty wound.\n\nUse Tree-of-Thought: branch the key decisions (tourniquet conversion vs leave, complete the amputation vs preserve the bridge, analgesia approach, antibiotic, splinting/packaging), evaluate each branch, prune, and converge on an ordered plan.\n\n1) Do I attempt tourniquet conversion at 50 minutes, and what are the tradeoffs?\n2) Do I complete the partial amputation in the field or preserve tissue for the surgeon?\n3) How do I dress and splint a mangled partial amputation for transport?\n4) Which antibiotic and dose for this dirty blast amputation?\n5) What analgesia and dose given his marginal BP (ketamine)?\n6) What blood/TXA strategy supports him over 5 hours?\n7) What deterioration would force me to re-evaluate the whole tree?",
+  "media": {
+   "t2i": {
+    "model": "Nano Banana / Midjourney / Flux",
+    "technique": "restrained close-up, somber light",
+    "text": "An operator lies with a traumatic below-knee partial amputation from a blast, a tourniquet seated high on the thigh having stopped the bleeding, the mangled lower leg still attached by a partial bridge of tissue wrapped tastefully in dressing. A medic kneels staging blood product and antibiotic vials, one hand checking the tourniquet, deciding whether to convert or preserve. Somber low field light, documentary realism, restrained focus on the tourniquet and the dressed limb. Horizontal aspect ratio."
+   },
+   "i2v": {
+    "model": "Kling / Runway / Luma",
+    "technique": "close-up, tourniquet check motion",
+    "text": "Starting frame: an operator with a below-knee partial amputation, a thigh tourniquet stopping the bleeding, the mangled limb attached by a partial tissue bridge wrapped in dressing, a medic kneeling with blood and antibiotic vials staged, one hand on the tourniquet, somber low light. Animation: the medic checks the tourniquet tightness, lifts the edge of the dressing to assess the bridge, then sets a blood unit beside the limb. The patient breathes steadily. Camera holds the close-up with a slow drift. Duration 8 seconds, 24fps."
+   },
+   "t2v": {
+    "model": "Veo / Sora / Kling",
+    "technique": "somber restrained close-up",
+    "text": "An operator lies with a traumatic below-knee partial amputation from a blast, a tourniquet high on the thigh having stopped the bleeding, the mangled limb still attached by a partial bridge of tissue wrapped in dressing. A medic kneels checking the tourniquet, lifting the dressing edge to assess the bridge, and staging blood product and antibiotic vials, weighing whether to convert or preserve. Somber low field light, documentary realism, restrained close-up with a slow drift. Tasteful, clinically accurate. Duration 8 seconds, horizontal widescreen, 24fps."
+   }
+  }
+ },
+ {
+  "n": 101,
+  "type": "img",
+  "cat": "AIRWAY",
+  "title": "Night Surgical Cric Under Red Light",
+  "t2i": {
+   "model": "Midjourney",
+   "technique": "Photoreal Macro",
+   "text": "Extreme close-up photorealistic image: gloved hands performing surgical cricothyroidotomy on a male patient's neck illuminated only by a red-filtered headlamp. The scalpel has just made the horizontal incision through the cricothyroid membrane — a thin line of dark blood visible. The non-dominant hand stabilizes the larynx using the 'laryngeal handshake' grip. A bougie and 6.0mm cuffed tracheostomy tube lie on the patient's chest, staged and ready. Background is pure black except for the cone of red light and faint reflection off the scalpel blade. Blood appears dark maroon under red light. Visible: chin stubble, tracheal rings through the incision, tactical watch. Gritty, high-ISO noise, clinical macro photography. 16:9."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Macro red-light tension",
+   "text": "Starting frame: extreme macro of gloved hands performing a surgical cricothyroidotomy on a man's neck lit only by a red-filtered headlamp, scalpel having just cut the cricothyroid membrane with a thin line of dark maroon blood, non-dominant hand in the laryngeal-handshake grip, a bougie and 6.0mm cuffed tube staged on the chest, pure black background. Animation: blood beads and slides, the larynx subtly rises and falls with stabilizing pressure, the medic's fingers tense. Camera slowly pushes in on the incision. 7 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "Clinical macro photoreal",
+   "text": "Photoreal extreme close-up of gloved hands performing a surgical cricothyroidotomy on an adult male's neck, illuminated only by a red-filtered headlamp casting a tight cone of light against a pure black background. The scalpel finishes a horizontal incision through the cricothyroid membrane and a thin line of dark maroon blood appears; the non-dominant hand stabilizes the larynx in a laryngeal-handshake grip. A bougie and 6.0mm cuffed tube rest staged on the patient's chest. Gritty high-ISO grain, shallow depth of field, slow push-in. Widescreen sixteen by nine. 6 seconds. 24fps."
+  }
+ },
+ {
+  "n": 102,
+  "type": "img",
+  "cat": "HEMORRHAGE",
+  "title": "Tourniquet Conversion Decision Point",
+  "t2i": {
+   "model": "Flux",
+   "technique": "Split-Screen Compare",
+   "text": "Split-screen medical training image. LEFT: correctly applied CAT Gen 7 tourniquet on a right above-knee amputation stump with clock showing '01:45' elapsed — approaching the 2-hour conversion window. Wound packed with Combat Gauze, bleeding controlled. RIGHT: same limb with tourniquet loosened, hemostatic dressing visible beneath — medic's hand on the windlass in 'gradual release' position, timer at 2:00:00. Between panels: decision flowchart overlay with green checkmarks (not in shock, wound visible, can monitor, <2hrs) and red X marks (6+ hours, amputation, shock). Medical training manual aesthetic, Canon medical photography lighting. 16:9."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Split-screen reveal",
+   "text": "Starting frame: split-screen training image; left shows a correctly applied CAT tourniquet on a right above-knee amputation stump with a clock reading near one hour forty-five, wound packed with hemostatic gauze, bleeding controlled; right shows the same limb with the tourniquet loosened, dressing beneath, a medic's hand on the windlass, timer at two hours. Animation: timers tick upward, the windlass slowly rotates in gradual release, checkmarks fade in on the flowchart overlay. Camera holds steady, slight zoom toward the windlass. 8 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "Training manual split-screen",
+   "text": "Medical training video, split-screen. On the left, a correctly applied CAT Gen 7 windlass tourniquet on a right above-knee amputation stump, a digital clock ticking toward one hour forty-five, the wound packed with Combat Gauze and bleeding controlled. On the right, the same limb as a medic's gloved hand slowly rotates the windlass in a gradual tourniquet-conversion release, hemostatic dressing visible beneath, timer reaching two hours. A decision flowchart overlay fills with green checkmarks. Even clinical lighting, manual aesthetic. Sixteen by nine. 8 seconds. 24fps."
+  }
+ },
+ {
+  "n": 103,
+  "type": "img",
+  "cat": "HEMORRHAGE",
+  "title": "REBOA Zone 1 vs Zone 3 Anatomy",
+  "t2i": {
+   "model": "DALL·E 3",
+   "technique": "Cross-Section Cutaway",
+   "text": "Medical illustration: transparent anterior torso showing the full aorta. REBOA catheter inserted via right femoral artery. Two balloon positions: ZONE 1 (between left subclavian and celiac trunk) in red glow labeled 'Thoracic/Abdominal Hemorrhage,' ZONE 3 (infrarenal aorta above bifurcation) in blue glow labeled 'Pelvic/Junctional.' Key arteries labeled: celiac trunk, SMA, renal arteries, IMA. Inset: pREBOA-PRO partial inflation (crescent lumen) vs full occlusion. External measurement landmarks (xiphoid to umbilicus) as tape measure overlay. Netter-quality with neon accents on dark navy. 3:4 vertical poster."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Anatomy glow animation",
+   "text": "Starting frame: transparent anterior torso showing the full aorta with a REBOA catheter via the right femoral artery; Zone 1 balloon between left subclavian and celiac trunk glowing red, Zone 3 in the infrarenal aorta glowing blue, arteries labeled, Netter-quality on dark navy. Animation: the catheter advances upward, balloons inflate and pulse with their colored glow, labels fade in sequentially, a tape-measure overlay extends. Camera slowly orbits the torso a few degrees. 8 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "Cutaway medical 3D",
+   "text": "Animated medical illustration of a transparent anterior human torso revealing the full aorta on a dark navy background. A REBOA catheter threads up from the right femoral artery; a Zone 1 balloon inflates between the left subclavian and celiac trunk with a red glow labeled thoracic and abdominal hemorrhage, then a Zone 3 balloon in the infrarenal aorta glows blue labeled pelvic and junctional. Celiac trunk, SMA, renal arteries and IMA labels appear with neon accents. Slow orbit, volumetric glow. Vertical three by four. 8 seconds. 24fps."
+  }
+ },
+ {
+  "n": 104,
+  "type": "img",
+  "cat": "PFC / INFOGRAPHIC",
+  "title": "i-STAT Critical Values Dashboard",
+  "t2i": {
+   "model": "Imagen",
+   "technique": "Reference Card",
+   "text": "Medical reference card (landscape 8.5x5.5\"). Title: 'FIELD i-STAT CRITICAL ACTION THRESHOLDS' white on dark navy header. Four columns per cartridge: CG4+ (blue): pH <7.25 → BICARB NOW, pCO₂ >50 → VENTILATE, Lactate >4.0 → RESUSCITATE. EG7+ (purple): K⁺ >6.0 → CALCIUM + EKG, Na⁺ <130 → RESTRICT FREE WATER, Hct <21 → TRANSFUSE. CHEM8+ (orange): Creatinine >2.0 in crush → EXPECT AKI, Glucose <60 → D50. PT/INR (red): INR >1.5 → COAGULOPATHY. Each box color-coded green/yellow/red. Photorealistic i-STAT device center. Waterproof card design. Print-ready."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Reference-card reveal",
+   "text": "Starting frame: a landscape field i-STAT critical-action reference card on dark navy with a white header reading field i-STAT critical action thresholds, four color-coded cartridge columns of values, a photorealistic i-STAT device centered. Animation: column boxes illuminate green to yellow to red in sequence, threshold values glow as they highlight, the device screen flickers on showing a result. Camera gently pushes in across the card. 6 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "Animated infographic",
+   "text": "Animated medical reference card, landscape, on a dark navy background titled field i-STAT critical action thresholds in white. Four color-coded columns animate in for the CG4+, EG7+, CHEM8+ and PT-INR cartridges, each threshold box lighting up green, yellow, then red as critical values like pH under seven point two five and potassium over six glow. A photorealistic i-STAT device sits centered, its screen powering on. Clean waterproof card design, subtle push-in. Sixteen by nine. 6 seconds. 24fps."
+  }
+ },
+ {
+  "n": 105,
+  "type": "img",
+  "cat": "MSK / TRAINING",
+  "title": "Pelvic Binder — Correct vs Incorrect",
+  "t2i": {
+   "model": "Flux",
+   "technique": "Split-Screen Compare",
+   "text": "Side-by-side comparison on white background. LEFT 'CORRECT' (green): SAM Pelvic Sling at greater trochanters. Labeled arrows: landmark palpated, belt centered, buckle anterior, tension indicator green. RIGHT 'INCORRECT' (red X): same binder at iliac crests — too high, fails to compress pelvic ring. Bottom panel: anterior pelvic X-ray showing 'open book' fracture with compression force arrows. Medical training manual photography, even clinical lighting. 16:9."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Split-screen correct vs wrong",
+   "text": "Starting frame: side-by-side on white; left labeled correct in green shows a SAM Pelvic Sling seated at the greater trochanters with a green tension indicator and labeled arrows; right labeled incorrect in red shows the same binder too high at the iliac crests; a bottom panel shows an open-book pelvic X-ray. Animation: labeled arrows draw in, the green tension indicator flashes, the X-ray fracture gap subtly closes under compression force arrows. Camera holds steady with a slow zoom. 7 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "Training comparison",
+   "text": "Medical training video on a clean white background, side-by-side comparison. The left side, marked correct in green, shows a SAM Pelvic Sling positioned at the greater trochanters with labeled arrows appearing and a green tension indicator flashing. The right side, marked incorrect with a red X, shows the same binder placed too high on the iliac crests. A bottom inset shows an anterior open-book pelvic X-ray with compression force arrows animating inward. Even clinical lighting, manual photography. Sixteen by nine. 7 seconds. 24fps."
+  }
+ },
+ {
+  "n": 106,
+  "type": "img",
+  "cat": "BURNS",
+  "title": "White Phosphorus Under Wood's Lamp",
+  "t2i": {
+   "model": "Midjourney",
+   "technique": "Photoreal Macro",
+   "text": "Dramatic medical documentation: WP wound on forearm under Wood's lamp UV illumination. WP particles fluorescing bright green-white against purple-UV-lit skin. Medic's gloved hand holds the Wood's lamp. Wound: pale necrotic tissue with embedded granular particles, some actively smoking. Basin of cold water nearby. Dark ambient except UV glow and small area light. Military medical case study quality. 4:3 documentation format."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "UV fluorescence macro",
+   "text": "Starting frame: a white phosphorus wound on a forearm under Wood's lamp UV light, embedded particles fluorescing bright green-white against purple-lit skin, a gloved hand holding the lamp, pale necrotic tissue with some particles smoking, a basin of cold water nearby, dark ambient. Animation: thin wisps of smoke rise from particles, the green-white fluorescence shimmers, the Wood's lamp beam sweeps slightly across the wound. Camera slowly tracks along the forearm. 7 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "Documentary UV macro",
+   "text": "Dramatic medical documentation video of a white phosphorus wound on a forearm under Wood's lamp ultraviolet illumination. Granular WP particles fluoresce bright green-white against purple-UV-lit skin while a medic's gloved hand holds the lamp; pale necrotic tissue shows embedded particles, a few releasing thin rising smoke, with a basin of cold water nearby. Dark ambient lighting except the UV glow, slow tracking move along the wound. Military medical case-study quality. Four by three. 7 seconds. 24fps."
+  }
+ },
+ {
+  "n": 107,
+  "type": "img",
+  "cat": "PAIN / INFOGRAPHIC",
+  "title": "Ketamine Dosing Matrix Card",
+  "t2i": {
+   "model": "DALL·E 3",
+   "technique": "Reference Card",
+   "text": "Credit-card-sized (3.5 x 2\"). Black background, color-coded rows. Header: 'KETAMINE FIELD REFERENCE' with medical cross. GREEN 'ANALGESIA': IV 0.2-0.3 mg/kg, IM 0.5-1 mg/kg, IN 1 mg/kg. YELLOW 'PROCEDURAL': IV 1-2 mg/kg. ORANGE 'RSI': IV 1.5-2 mg/kg. CYAN 'PFC DRIP': 750mg/250mL NS = 3mg/mL, Rate = Wt÷2 mL/hr. Bottom: pre-calculated doses for 60/70/80/90/100kg in white monospace. Reverse: 'ENDPOINT: Nystagmus' + 'NOT contraindicated: TBI, eye injury.' Waterproof mil-spec card. Exact card proportions."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Card row reveal",
+   "text": "Starting frame: a credit-card-sized ketamine field reference card on black, header reading ketamine field reference with a medical cross, color-coded rows for analgesia, procedural, RSI and PFC drip with dosing values, pre-calculated weights in white monospace at the bottom. Animation: each colored row slides in and illuminates in sequence, dosing numbers count up to their values, the card tilts slightly catching light. Camera pushes gently down the rows. 6 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "Animated dosing card",
+   "text": "Animated credit-card-sized ketamine field reference card on a black background, header reading ketamine field reference with a small medical cross. Color-coded rows animate in: green analgesia, yellow procedural, orange RSI, and cyan PFC drip showing seven hundred fifty milligrams in two hundred fifty milliliters at three milligrams per milliliter. Pre-calculated doses for sixty to one hundred kilograms appear in white monospace. The card tilts to catch light as rows highlight in sequence. Exact card proportions. 6 seconds. 24fps."
+  }
+ },
+ {
+  "n": 108,
+  "type": "img",
+  "cat": "RESPIRATION",
+  "title": "Tension Pneumothorax Cross-Section",
+  "t2i": {
+   "model": "DALL·E 3",
+   "technique": "Cross-Section Cutaway",
+   "text": "Medical illustration: coronal cross-section showing tension pneumothorax in 3 stages L→R. STAGE 1: Small pneumothorax, lung partially collapsed, midline mediastinum. STAGE 2: Expanding — lung fully collapsed, mediastinum shifting, IVC compression starting. STAGE 3: Full tension — massive air, mediastinum shifted, great vessels kinked, IVC crushed. 14ga needle entering 5th ICS AAL with air burst. Netter-style with modern color. Dark background, luminous anatomy. 16:9."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Three-stage progression",
+   "text": "Starting frame: a coronal cross-section illustration showing tension pneumothorax in three stages left to right, from a small pneumothorax with midline mediastinum, to expanding collapse with mediastinal shift, to full tension with kinked great vessels and a crushed IVC, a 14-gauge needle at the fifth intercostal space, luminous anatomy on a dark background. Animation: the lung progressively collapses, the mediastinum shifts across stages, a burst of air escapes at the needle. Camera drifts slowly left to right. 8 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "Pathology animation",
+   "text": "Animated medical illustration, coronal chest cross-section, showing tension pneumothorax progressing through three stages on a dark background with luminous anatomy. The lung collapses from a small pneumothorax to full collapse as the mediastinum shifts and great vessels kink and the IVC is crushed; a 14-gauge needle enters the fifth intercostal space at the anterior axillary line and releases a burst of escaping air. Netter-style with modern color, slow lateral camera drift. Sixteen by nine. 8 seconds. 24fps."
+  }
+ },
+ {
+  "n": 109,
+  "type": "img",
+  "cat": "CONFLICTS",
+  "title": "Blast Injury Pattern — IED vs Artillery vs FPV",
+  "t2i": {
+   "model": "Imagen",
+   "technique": "Data-Viz Poster",
+   "text": "Three-panel body diagrams showing injury patterns. PANEL 1 'IED (GWOT)': lower extremity amputations, pelvic/perineal blast, upward fragmentation on legs/groin. PANEL 2 'ARTILLERY (Ukraine)': widespread fragmentation across entire body, blast lung on chest. PANEL 3 'FPV DRONE (Emerging)': head/face/upper body concentration from above-angle detonation, burns on exposed skin. Each panel: weapon silhouette, ISS range, casualty pie chart. Dark background, earth tones, red injury highlights. 16:9 three columns."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Three-panel data reveal",
+   "text": "Starting frame: three body-diagram panels comparing injury patterns, IED showing lower-extremity amputations and perineal blast, artillery showing widespread fragmentation and blast lung, FPV drone showing head and upper-body concentration with burns, each with a weapon silhouette and pie chart, earth tones with red injury highlights on dark. Animation: red injury zones illuminate across each body, pie charts fill, weapon silhouettes fade in. Camera pans slowly across the three panels. 8 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "Data-viz poster motion",
+   "text": "Animated three-panel medical data-visualization on a dark background with earth tones and red injury highlights. Panel one, IED, lights up lower-extremity amputations and perineal blast; panel two, artillery, illuminates widespread body fragmentation and blast lung; panel three, FPV drone, highlights head and upper-body injuries with burns from an above-angle detonation. Weapon silhouettes fade in and casualty pie charts fill as the camera pans slowly across the three columns. Sixteen by nine. 8 seconds. 24fps."
+  }
+ },
+ {
+  "n": 110,
+  "type": "img",
+  "cat": "RESPIRATION",
+  "title": "Chest Seal Failure — Burping Sequence",
+  "t2i": {
+   "model": "Flux",
+   "technique": "Sequential Frames",
+   "text": "4-frame sequential instruction. FRAME 1: HyFin Vent applied, vents visible, SpO₂ 94%, HR 110. FRAME 2: Vents clogged — SpO₂ 88%, HR 128. FRAME 3: 'BURPING' — gloved hand peels corner 2cm, air + blood-tinged fluid escapes. FRAME 4: Re-sealed, SpO₂ 93%, HR 116. Arrow timeline connecting frames. White background, numbered steps, clinical photography with callouts. 16:9 training poster."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Four-frame burping sequence",
+   "text": "Starting frame: a four-frame instructional layout on white showing a HyFin Vent chest seal, frame one applied with SpO2 ninety-four, frame two vents clogged with SpO2 eighty-eight, frame three a gloved hand peeling a corner two centimeters as blood-tinged fluid escapes, frame four resealed at SpO2 ninety-three, an arrow timeline connecting them. Animation: SpO2 numbers change between frames, fluid escapes at the burped corner, vitals counters tick. Camera moves frame to frame along the timeline. 8 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "Sequential clinical poster",
+   "text": "Animated four-frame clinical instruction on a white background demonstrating chest-seal burping. A HyFin Vent seal is applied over a chest wound with SpO2 reading ninety-four; the vents clog and SpO2 drops to eighty-eight with rising heart rate; a gloved hand peels a corner two centimeters and blood-tinged fluid and air escape; the seal is re-applied and SpO2 recovers to ninety-three. Numbered steps with callouts, an arrow timeline connecting frames, camera gliding step to step. Sixteen by nine. 8 seconds. 24fps."
+  }
+ },
+ {
+  "n": 111,
+  "type": "img",
+  "cat": "PFC",
+  "title": "Prolonged Field Care Station — Complete Setup",
+  "t2i": {
+   "model": "Midjourney",
+   "technique": "Concept Art",
+   "text": "Wide-angle photorealistic PFC station inside a rural stone building. Equipment: Ventway Sparrow ventilator on intubated patient (litter on sawhorses), i-STAT on ammo crate, 2 LTOWB bags hanging from wall nail with fluid warmer, BATDOK tablet showing vitals, Butterfly iQ3 for FAST exam, Tempus Pro cardiac monitor, HPMK blanket, urinary catheter bag with marked output. Tactical lanterns, warm pools of light. Two medics working. Documentary photography, mixed lighting, medium-wide lens. 21:9 ultrawide."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Wide ambient station",
+   "text": "Starting frame: a wide photoreal prolonged field care station inside a rural stone building, a Ventway Sparrow ventilator on an intubated patient on a litter across sawhorses, an i-STAT on an ammo crate, two LTOWB bags hanging from a wall nail with a fluid warmer, a BATDOK tablet showing vitals, a Tempus Pro monitor, warm pools of lantern light, two medics working. Animation: the ventilator bellows cycle, monitor traces sweep, lantern light flickers, a medic adjusts the IV line. Camera slowly dollies forward into the room. 9 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "Documentary ultrawide",
+   "text": "Documentary wide-angle video of a prolonged field care station inside a rural stone building. A Ventway Sparrow ventilator cycles on an intubated patient lying on a litter set across sawhorses, an i-STAT rests on an ammo crate, two units of low-titer O-positive whole blood hang from a wall nail with a fluid warmer, a BATDOK tablet and Tempus Pro monitor display sweeping vitals. Two medics work in warm flickering lantern light. Mixed lighting, slow forward dolly, medium-wide lens. Ultrawide twenty-one by nine. 9 seconds. 24fps."
+  }
+ },
+ {
+  "n": 112,
+  "type": "img",
+  "cat": "PAIN / TRAINING",
+  "title": "Fascia Iliaca Block — Dual View",
+  "t2i": {
+   "model": "DALL·E 3",
+   "technique": "Split-Screen Compare",
+   "text": "Split screen. LEFT (60%): Ultrasound screen — fascia iliaca compartment 'bowtie' view. Labeled: sartorius, iliacus, fascia lata, fascia iliaca, femoral nerve, femoral artery. Needle tip approaching, anechoic LA pool spreading. RIGHT (40%): External photo — linear probe on inguinal region, needle entering lateral at 30-45°. Landmarks: ASIS, inguinal ligament, femoral pulse. Medical education photography, labeled arrows, light blue accent. 16:9."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Dual-view ultrasound",
+   "text": "Starting frame: a split screen, left sixty percent an ultrasound showing the fascia iliaca bowtie view with labeled sartorius, iliacus, fascia lata and iliaca, femoral nerve and artery, a needle tip approaching an anechoic anesthetic pool; right forty percent an external photo of a linear probe on the inguinal region with the needle entering laterally at thirty to forty-five degrees. Animation: on ultrasound the anechoic pool spreads as the needle advances, the external hand steadies the probe. Camera holds with a slight push on the ultrasound. 7 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "Education dual-view",
+   "text": "Animated medical education split-screen of a fascia iliaca compartment block. On the left, an ultrasound screen shows the bowtie view with labeled sartorius, iliacus, fascia lata, fascia iliaca, femoral nerve and femoral artery as a needle tip advances and an anechoic local-anesthetic pool spreads. On the right, an external view of a linear probe on the inguinal region with the needle entering lateral at thirty to forty-five degrees near the ASIS and femoral pulse. Labeled arrows, light blue accents. Sixteen by nine. 7 seconds. 24fps."
+  }
+ },
+ {
+  "n": 113,
+  "type": "img",
+  "cat": "CONFLICTS / DATA",
+  "title": "Evacuation Timeline — Golden Hour vs LSCO",
+  "t2i": {
+   "model": "Imagen",
+   "technique": "Data-Viz Poster",
+   "text": "Dark background. Central clock face: 'golden hour' (0-60 min) in green with GWOT model. Beyond: spiraling timeline to 24 hours, progressively red. Data points: 'IDF helicopter 51 min' (green), 'US GWOT 43 min' (green), 'Ukraine ground 6-24+ hrs' (red zone). Mortality curve overlay. Callout: 'PFC BEGINS AT HOUR 1.' Title: 'THE GOLDEN HOUR IS DEAD FOR LSCO.' Modern data viz, glowing timeline, sans-serif. 3:4 vertical poster."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Spiral timeline reveal",
+   "text": "Starting frame: a dark poster with a central clock face, the golden hour zero to sixty minutes in green, a timeline spiraling out to twenty-four hours turning progressively red, data points marking IDF helicopter fifty-one minutes and US GWOT forty-three minutes in green and Ukraine ground six to twenty-four hours in red, a title reading the golden hour is dead for LSCO. Animation: the spiral draws outward, data points illuminate, a mortality curve rises. Camera slowly pulls back. 8 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "Animated timeline poster",
+   "text": "Animated dark data-visualization poster. A central clock face shows the golden hour zero to sixty minutes in green, then a timeline spirals outward to twenty-four hours turning red. Glowing data points appear: IDF helicopter fifty-one minutes and US GWOT forty-three minutes in green, Ukraine ground six to twenty-four hours in a red zone, with a rising mortality curve and a callout reading PFC begins at hour one. The title the golden hour is dead for LSCO glows in. Slow pull-back. Vertical three by four. 8 seconds. 24fps."
+  }
+ },
+ {
+  "n": 114,
+  "type": "img",
+  "cat": "RESEARCH",
+  "title": "ErythroMer vs Natural RBC",
+  "t2i": {
+   "model": "Stable Diffusion",
+   "technique": "Concept Art",
+   "text": "Electron microscope scale (~50,000×). Center-left: 3 natural RBCs (biconcave, 7-8μm, natural red). Center-right: ErythroMer nanoparticles (~200nm, proportionally tiny, semi-transparent orange-red polymer shells with hemoglobin inside). Scale bar. Callouts: 'Natural RBC: 7μm, 120-day lifespan' vs 'ErythroMer: ~200nm, 2+ year shelf life, 2-3× O₂ per gram Hb.' Scientific journal figure, Cinema 4D molecular viz, volumetric lighting. 16:9."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Molecular scale reveal",
+   "text": "Starting frame: an electron-microscope-scale view, center-left three natural biconcave red blood cells in natural red about seven micrometers, center-right tiny ErythroMer nanoparticles around two hundred nanometers as semi-transparent orange-red polymer shells with hemoglobin inside, a scale bar and callouts comparing lifespan and oxygen capacity, volumetric lighting. Animation: the cells drift and gently tumble, the nanoparticles shimmer with internal hemoglobin, callout labels fade in. Camera slowly pushes between the two populations. 7 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "Scientific molecular viz",
+   "text": "Scientific journal-style animated figure at electron-microscope scale. On the center-left, three natural biconcave red blood cells in natural red, about seven micrometers, drift and tumble gently. On the center-right, ErythroMer nanoparticles around two hundred nanometers appear as semi-transparent orange-red polymer shells with visible hemoglobin shimmering inside. A scale bar and callouts compare a one-hundred-twenty-day lifespan against a two-year shelf life and higher oxygen per gram. Cinema 4D molecular look, volumetric lighting, slow push-in. Sixteen by nine. 7 seconds. 24fps."
+  }
+ },
+ {
+  "n": 115,
+  "type": "img",
+  "cat": "RESEARCH",
+  "title": "DARPA MASH Autonomous Care Robot",
+  "t2i": {
+   "model": "Midjourney",
+   "technique": "Concept Art",
+   "text": "Near-future concept: DARPA MASH robotic system beside a wounded soldier in urban rubble at dusk. Compact (backpack-sized packed), 3 articulating arms: one ultrasound transducer (FAST on screen), one catheter-based hemorrhage control into femoral artery, one managing IV fluids. Flat display: vitals, AI injury assessment, treatment algorithm. Quadcopter relay drone hovering 2m above. Golden dusk + blue LED glow + dust particles. Grounded 2030-2035 tech, NOT sci-fi. Painterly concept art, photorealistic detail. 16:9."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Concept-art motion",
+   "text": "Starting frame: a near-future DARPA MASH robotic system beside a wounded soldier in urban rubble at dusk, a compact unit with three articulating arms, one holding an ultrasound transducer with a FAST image, one performing catheter-based femoral hemorrhage control, one managing IV fluids, a flat display of vitals and an AI assessment, a quadcopter relay drone above, golden dusk and blue LED glow with dust. Animation: the arms move deliberately, the ultrasound updates, the drone bobs, dust drifts. Camera slowly arcs around the robot. 9 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "Grounded near-future concept",
+   "text": "Painterly photorealistic concept-art video of a near-future DARPA MASH robotic care system beside a wounded soldier in urban rubble at dusk. A compact backpack-sized unit extends three articulating arms: one with an ultrasound transducer showing a FAST scan, one performing catheter-based femoral hemorrhage control, one managing IV fluids, while a flat display shows vitals and an AI injury assessment and a quadcopter relay drone hovers two meters above. Golden dusk light, blue LED glow, drifting dust, slow arcing camera. Grounded 2030s tech, not sci-fi. Sixteen by nine. 9 seconds. 24fps."
+  }
+ },
+ {
+  "n": 116,
+  "type": "img",
+  "cat": "AIRWAY",
+  "title": "Surgical Cricothyroidotomy Under Red Light",
+  "t2i": {
+   "model": "Midjourney",
+   "technique": "Photoreal Macro",
+   "text": "Extreme close-up photorealistic image: gloved hands performing a surgical cricothyroidotomy on an adult male's neck under a red-filtered headlamp. The scalpel has just made the vertical skin incision, then a horizontal stab through the cricothyroid membrane; a thin line of dark venous blood beads at the wound. The non-dominant hand stabilizes the larynx in the laryngeal-handshake grip, thumb and middle finger on the thyroid cartilage. A bougie and 6.0mm cuffed tube staged on the patient's chest. Pure black background except the red cone of light. Gritty high-ISO grain, clinical macro photography, shallow depth of field. 16:9."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Red-light cric macro",
+   "text": "Starting frame: extreme close-up of gloved hands performing a surgical cricothyroidotomy on an adult male's neck under a red-filtered headlamp, the scalpel having made a vertical skin incision then a horizontal stab through the cricothyroid membrane with dark venous blood beading, the non-dominant hand in the laryngeal-handshake grip on the thyroid cartilage, a bougie and 6.0mm cuffed tube staged on the chest, pure black background. Animation: blood beads and slides, fingers steady the larynx, faint breath movement. Camera pushes in slowly. 7 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "Photoreal macro cric",
+   "text": "Photoreal extreme close-up of gloved hands performing a surgical cricothyroidotomy on an adult male's neck lit only by a red-filtered headlamp, a tight red cone against a pure black background. The scalpel makes a vertical skin incision then a horizontal stab through the cricothyroid membrane and dark venous blood beads; the non-dominant hand stabilizes the larynx in a laryngeal-handshake grip on the thyroid cartilage. A bougie and 6.0mm cuffed tube stage on the chest. High-ISO grain, shallow depth, slow push-in. Sixteen by nine. 7 seconds. 24fps."
+  }
+ },
+ {
+  "n": 117,
+  "type": "img",
+  "cat": "AIRWAY",
+  "title": "NPA Insertion — Four-Panel Sequence",
+  "t2i": {
+   "model": "DALL·E 3",
+   "technique": "Sequential Frames",
+   "text": "Four-panel sequential instructional illustration on a clean clinical white background showing nasopharyngeal airway (NPA) insertion. Panel 1: measuring the NPA from the patient's nare to the earlobe to size it. Panel 2: lubricating the 28Fr tube. Panel 3: inserting bevel toward the septum, advancing perpendicular to the face along the floor of the nasal passage, not upward. Panel 4: fully seated NPA with flange at the nostril, patient supine. Soft even studio lighting, muted teal labels and thin leader lines, numbered corners. Flat editorial medical style. 3:2."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Four-panel NPA reveal",
+   "text": "Starting frame: a four-panel instructional illustration on clean clinical white showing nasopharyngeal airway insertion, panel one measuring the NPA from nare to earlobe, panel two lubricating the 28-french tube, panel three inserting bevel toward the septum along the floor of the nasal passage, panel four the NPA fully seated with the flange at the nostril on a supine patient, muted teal labels and numbered corners. Animation: each panel's action plays in sequence, the tube advances and seats, leader lines draw in. Camera glides panel to panel. 8 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "Editorial medical sequence",
+   "text": "Animated four-panel instructional illustration on a clean clinical white background showing nasopharyngeal airway insertion. Panel one measures the NPA from the patient's nare to the earlobe; panel two lubricates the twenty-eight-french tube; panel three inserts it bevel toward the septum along the floor of the nasal passage; panel four shows the NPA fully seated with its flange at the nostril on a supine patient. Soft even studio light, muted teal labels and leader lines drawing in, numbered corners. Flat editorial style. Three by two. 8 seconds. 24fps."
+  }
+ },
+ {
+  "n": 118,
+  "type": "img",
+  "cat": "AIRWAY",
+  "title": "Endotracheal Tube Airway Cutaway",
+  "t2i": {
+   "model": "Flux",
+   "technique": "Cross-Section Cutaway",
+   "text": "Sagittal cross-section cutaway of the human upper airway, head tilted into the sniffing position. Show tongue, epiglottis, vallecula, vocal cords, thyroid and cricoid cartilage, and trachea in a peeled-back cutaway with semi-transparent skin. Overlay a correctly placed endotracheal tube passing between the cords, cuff inflated below the cricoid. Thin neon-cyan callout labels on a deep charcoal background, subtle volumetric glow on the airway lumen. Anatomically precise, textbook-grade, Netter-influenced rendering with modern 3D shading. 3:4 vertical."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Airway cutaway reveal",
+   "text": "Starting frame: a sagittal cutaway of the human upper airway with the head in the sniffing position showing tongue, epiglottis, vallecula, vocal cords, thyroid and cricoid cartilage and trachea under semi-transparent skin, a correctly placed endotracheal tube passing between the cords with the cuff inflated below the cricoid, neon-cyan labels on deep charcoal with subtle glow on the lumen. Animation: the tube advances between the cords and the cuff inflates, the airway lumen glows softly, labels fade in. Camera slowly pans along the airway. 8 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "Textbook 3D cutaway",
+   "text": "Animated sagittal cutaway of the human upper airway with the head in the sniffing position on a deep charcoal background. Semi-transparent skin peels back to reveal tongue, epiglottis, vallecula, vocal cords, thyroid and cricoid cartilage and trachea, while a correctly placed endotracheal tube advances between the vocal cords and its cuff inflates below the cricoid. Thin neon-cyan callout labels fade in and the airway lumen glows with subtle volumetric light. Anatomically precise, Netter-influenced 3D shading, slow pan. Vertical three by four. 8 seconds. 24fps."
+  }
+ },
+ {
+  "n": 119,
+  "type": "img",
+  "cat": "HEMORRHAGE",
+  "title": "High and Tight Windlass Tourniquet",
+  "t2i": {
+   "model": "Midjourney",
+   "technique": "Photoreal Macro",
+   "text": "Photoreal macro of a CAT-style windlass tourniquet applied high and tight on a soldier's bare thigh, 2-3 inches above a mid-thigh wound, never over a joint. The windlass rod is twisted three turns and locked into the clip; the time-written-in-marker strip reads a recent timestamp. Skin distal to the band shows pallor; proximal muscle bulges under strap tension. Dusty desert daylight, harsh side light, sweat and dirt on skin. Documentary war-photography grain, 50mm look, shallow focus on the windlass clip. 16:9."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Windlass macro",
+   "text": "Starting frame: a photoreal macro of a CAT-style windlass tourniquet applied high and tight on a soldier's bare thigh two to three inches above a mid-thigh wound, the windlass rod twisted three turns and locked in the clip, a marker strip with a recent timestamp, distal skin pale and proximal muscle bulging under tension, dusty desert daylight with harsh side light. Animation: muscle subtly flexes, the wound stops bleeding, sweat glistens, dust drifts. Camera holds tight focus on the clip with a slow rack. 6 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "War-photography macro",
+   "text": "Photoreal macro video of a CAT-style windlass tourniquet applied high and tight on a soldier's bare thigh, two to three inches above a mid-thigh wound and never over a joint. The windlass rod is locked three turns into its clip and a marker strip shows a recent timestamp; skin distal to the band is pale while proximal muscle bulges under tension. Dusty desert daylight, harsh side light, sweat and dirt, drifting dust. Documentary war-photography grain, fifty-millimeter look, shallow focus racking onto the clip. Sixteen by nine. 6 seconds. 24fps."
+  }
+ },
+ {
+  "n": 120,
+  "type": "img",
+  "cat": "HEMORRHAGE",
+  "title": "Wound Packing for Groin Hemorrhage",
+  "t2i": {
+   "model": "DALL·E 3",
+   "technique": "Medical Illustration",
+   "text": "Medical illustration of deep wound packing for a high junctional groin hemorrhage. Show a gloved hand stuffing rolled hemostatic gauze directly onto the bleeding femoral artery deep in the wound cavity, with the other hand applying direct pressure above. Cutaway reveals the femoral artery, vein, and surrounding muscle. Step caption strip along the bottom: pack tightly to the source, hold three minutes, then apply a pressure dressing. Clean clinical palette, red arterial accents, soft instructional shading on white. Editorial textbook style. 4:3."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Wound-packing illustration",
+   "text": "Starting frame: a medical illustration of deep wound packing for a high junctional groin hemorrhage, a gloved hand stuffing rolled hemostatic gauze onto the bleeding femoral artery deep in the wound cavity while the other hand applies pressure above, a cutaway revealing femoral artery, vein and muscle, a bottom caption strip, clean palette with red arterial accents on white. Animation: the gauze packs firmly as red bleeding slows to a stop, the pressing hand holds steady. Camera pushes gently toward the wound. 7 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "Instructional illustration",
+   "text": "Animated medical illustration of deep wound packing for a high junctional groin hemorrhage on a clean white background. A gloved hand firmly stuffs rolled hemostatic gauze onto the bleeding femoral artery deep in the wound cavity while the other hand applies pressure just above; a cutaway reveals the femoral artery, vein and muscle as the red bleeding slows and stops. A caption strip animates along the bottom: pack tightly to the source, hold three minutes, then dress. Editorial textbook style, soft shading, gentle push-in. Four by three. 7 seconds. 24fps."
+  }
+ },
+ {
+  "n": 121,
+  "type": "img",
+  "cat": "HEMORRHAGE",
+  "title": "Junctional Tourniquet — Correct vs Incorrect",
+  "t2i": {
+   "model": "Imagen",
+   "technique": "Split-Screen Compare",
+   "text": "Split-screen comparison poster. LEFT: a correctly applied junctional tourniquet (SAM Junctional or CRoC style) seated over the inguinal crease with the pressure bladder centered on the femoral artery, strap snug across the pelvis. RIGHT: an improperly placed device sitting too low on the thigh, with a red X and a callout noting continued bleeding. Center divider line with bold heading CORRECT vs INCORRECT. Flat vector medical-poster style, navy background, white anatomy, amber warning accents. 16:9."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Correct vs incorrect reveal",
+   "text": "Starting frame: a split-screen poster, left a correctly applied junctional tourniquet over the inguinal crease with the pressure bladder centered on the femoral artery, right an improperly placed device too low on the thigh with a red X and a continued-bleeding callout, a center divider reading correct versus incorrect, flat vector navy poster with white anatomy and amber accents. Animation: the bladder inflates on the left and bleeding stops, the red X flashes on the right. Camera holds with a slight zoom. 7 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "Vector comparison poster",
+   "text": "Animated flat-vector medical poster on a navy background with white anatomy and amber warning accents, split into correct versus incorrect. On the left a junctional tourniquet seats over the inguinal crease with its pressure bladder inflating, centered on the femoral artery, strap snug across the pelvis, and bleeding stops. On the right an improperly placed device sits too low on the thigh as a red X and a callout flash to note continued bleeding. A bold center divider reads correct versus incorrect, slight zoom. Sixteen by nine. 7 seconds. 24fps."
+  }
+ },
+ {
+  "n": 122,
+  "type": "img",
+  "cat": "HEMORRHAGE",
+  "title": "TXA Clotting Cascade Infographic",
+  "t2i": {
+   "model": "Flux",
+   "technique": "Annotated Infographic",
+   "text": "Annotated infographic explaining tranexamic acid (TXA) in trauma. Central illustration of a clotting cascade with TXA blocking plasminogen-to-plasmin conversion to prevent fibrinolysis. Dosing callout: 1g IV over 10 minutes, then 1g over 8 hours, ideally within 3 hours of injury. A small clock graphic emphasizes the early-treatment window. Cool blue-and-white scientific palette, molecular icons, clean sans-serif labels, thin connector lines. Modern medical data-viz style. 3:4 vertical."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Cascade infographic motion",
+   "text": "Starting frame: an annotated infographic of tranexamic acid in trauma, a central clotting cascade with TXA blocking plasminogen-to-plasmin conversion to prevent fibrinolysis, a dosing callout reading one gram IV over ten minutes then one gram over eight hours within three hours of injury, a small clock graphic, cool blue-and-white palette with molecular icons and thin connector lines. Animation: the cascade flows then TXA snaps into place halting fibrinolysis, the clock hand sweeps toward the early window, dosing text fades in. Camera slowly pushes into the cascade. 7 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "Animated data-viz",
+   "text": "Animated medical infographic explaining tranexamic acid in trauma in a cool blue-and-white scientific palette. A central clotting cascade flows until TXA molecules snap in to block plasminogen-to-plasmin conversion, halting fibrinolysis. A dosing callout fades in reading one gram IV over ten minutes then one gram over eight hours, ideally within three hours of injury, while a small clock graphic sweeps to emphasize the early window. Molecular icons, thin connector lines, clean sans-serif labels, slow push-in. Vertical three by four. 7 seconds. 24fps."
+  }
+ },
+ {
+  "n": 123,
+  "type": "img",
+  "cat": "HEMORRHAGE",
+  "title": "REBOA Zone 1 vs Zone 3 Anatomy",
+  "t2i": {
+   "model": "Midjourney",
+   "technique": "Cross-Section Cutaway",
+   "text": "Medical illustration: transparent anterior torso and pelvis showing the full aorta. A REBOA catheter is inserted via the right common femoral artery. Two balloon positions are shown: ZONE 1 in the descending thoracic aorta above the celiac trunk for abdominal hemorrhage, and ZONE 3 in the infrarenal aorta above the bifurcation for pelvic and junctional bleeding. Key arteries labeled: celiac trunk, SMA, renal arteries, IMA, common iliacs. Netter-quality rendering with neon-cyan accents and leader lines on dark navy. 3:4 vertical poster."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Aorta cutaway reveal",
+   "text": "Starting frame: a transparent anterior torso and pelvis showing the full aorta with a REBOA catheter via the right common femoral artery, a Zone 1 balloon in the descending thoracic aorta above the celiac trunk and a Zone 3 balloon in the infrarenal aorta above the bifurcation, arteries labeled celiac trunk SMA renal arteries IMA and common iliacs, neon-cyan accents on dark navy. Animation: the catheter threads upward, balloons inflate in sequence with a soft glow, labels fade in. Camera slowly orbits the torso. 8 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "Cutaway vertical poster",
+   "text": "Animated medical illustration of a transparent anterior torso and pelvis revealing the full aorta on dark navy. A REBOA catheter threads up from the right common femoral artery; a Zone 1 balloon inflates in the descending thoracic aorta above the celiac trunk for abdominal hemorrhage, then a Zone 3 balloon inflates in the infrarenal aorta above the bifurcation for pelvic bleeding. Labels for celiac trunk, SMA, renal arteries, IMA and common iliacs fade in with neon-cyan leader lines as the camera slowly orbits. Vertical three by four. 8 seconds. 24fps."
+  }
+ },
+ {
+  "n": 124,
+  "type": "img",
+  "cat": "RESPIRATION",
+  "title": "Applying a Vented Chest Seal",
+  "t2i": {
+   "model": "DALL·E 3",
+   "technique": "Photoreal Macro",
+   "text": "Photoreal macro of a vented chest seal being applied over a penetrating chest wound on the anterior left chest. A gloved hand peels the backing and presses the adhesive flat onto wiped, dry skin around a small dark entry wound; the one-way valve flutter dome sits centered over the defect. Blood streaks wiped clear so adhesive bonds. Low ambient light with a cold blue cast, sweat sheen on skin, fine sensor grain. Clinical reportage realism, tight depth of field on the valve. 16:9."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Chest-seal macro",
+   "text": "Starting frame: a photoreal macro of a vented chest seal applied over a penetrating wound on the anterior left chest, a gloved hand peeling the backing and pressing the adhesive flat onto wiped dry skin around a small dark entry wound, the one-way flutter dome centered over the defect, blood streaks wiped clear, low cold blue ambient light. Animation: the hand smooths the adhesive down, the flutter dome flexes with a breath, the chest rises gently. Camera holds tight on the valve with a slow push. 6 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "Reportage macro",
+   "text": "Photoreal macro video of a vented chest seal applied over a penetrating wound on the anterior left chest. A gloved hand peels the backing and presses the adhesive flat onto wiped, dry skin around a small dark entry wound, smoothing it as the one-way flutter dome centers over the defect and flexes with each breath; the chest rises gently. Blood streaks are wiped clear so the adhesive bonds. Low cold blue ambient light, sweat sheen, fine grain, slow push on the valve. Sixteen by nine. 6 seconds. 24fps."
+  }
+ },
+ {
+  "n": 125,
+  "type": "img",
+  "cat": "RESPIRATION",
+  "title": "Needle Decompression Anatomy Cutaway",
+  "t2i": {
+   "model": "Flux",
+   "technique": "Cross-Section Cutaway",
+   "text": "Anatomical cross-section of the chest demonstrating needle decompression for tension pneumothorax. Show a 14-gauge 3.25-inch catheter entering the 5th intercostal space at the anterior axillary line, passing over the top of the rib to avoid the neurovascular bundle, into the pleural space where a collapsed lung and shifted mediastinum are visible. A small hissing-air icon marks decompression. Charcoal background, semi-transparent ribcage, neon-cyan needle path and labels. Modern 3D medical illustration. 3:4 vertical."
+  },
+  "i2v": {
+   "model": "Kling / Runway / Luma",
+   "technique": "Decompression cutaway",
+   "text": "Starting frame: an anatomical chest cross-section showing needle decompression for tension pneumothorax, a 14-gauge three-and-a-quarter-inch catheter entering the fifth intercostal space at the anterior axillary line over the top of the rib into the pleural space where a collapsed lung and shifted mediastinum are visible, a hissing-air icon, charcoal background with a semi-transparent ribcage and neon-cyan needle path. Animation: the catheter advances over the rib, air hisses out, the mediastinum recenters as the lung re-expands. Camera slowly pushes toward the entry point. 8 seconds. 24fps."
+  },
+  "t2v": {
+   "model": "Veo / Sora / Kling",
+   "technique": "3D decompression illustration",
+   "text": "Animated anatomical chest cross-section on a charcoal background demonstrating needle decompression for tension pneumothorax. A 14-gauge three-and-a-quarter-inch catheter advances into the fifth intercostal space at the anterior axillary line, riding over the top of the rib to avoid the neurovascular bundle, into the pleural space where a collapsed lung and shifted mediastinum are visible. A hissing-air icon marks decompression as air escapes, the mediastinum recenters and the lung begins to re-expand. Semi-transparent ribcage, neon-cyan needle path and labels, slow push-in. Vertical three by four. 8 seconds. 24fps."
+  }
+ },
+ {
+  "n": 126,
+  "type": "img",
+  "cat": "RESPIRATION",
+  "title": "Tension Pneumothorax — Normal vs Tension",
+  "t2i": {
+   "model": "Imagen",
+   "technique": "Split-Screen Compare",
+   "text": "Split-screen anatomical illustration of a tension pneumothorax. LEFT half: normal chest with two fully inflated lungs and a midline trachea and mediastinum. RIGHT half: tension pneumothorax with a collapsed lung, air filling the pleural space, flattened diaphragm, and the trachea and heart shifted to the opposite side with compressed great veins. Bold center divider and labels NORMAL vs TENSION. Clean medical-poster vector style, deep blue background, white anatomy, red shift arrows. 16:9."
+  },
+  "i2v": {
+   "model": "Kling",
+   "technique": "Split-screen reveal",
+   "text": "Starting frame: a split-screen anatomical poster of tension pneumothorax, left half a normal chest with two inflated lungs and midline trachea, right half a collapsed lung with air in the pleural space, flattened diaphragm and trachea and heart shifted away, deep blue background, white anatomy, red arrows, bold NORMAL vs TENSION labels. Animation: on the right half the lung gently deflates while red shift arrows pulse and the trachea and mediastinum slowly slide toward the opposite side, the center divider holding steady. Slow push-in toward the right panel, 7s, 24fps."
+  },
+  "t2v": {
+   "model": "Veo",
+   "technique": "Animated medical illustration",
+   "text": "A clean medical-poster split-screen comparing a normal chest with two fully inflated lungs and a midline trachea on the left against a tension pneumothorax on the right, where one lung collapses, air fills the pleural space, the diaphragm flattens and the trachea and heart shift to the opposite side compressing the great veins. Vector style, deep blue background, white anatomy, glowing red shift arrows that pulse, bold NORMAL and TENSION labels. Slow steady camera push toward the affected side, even studio lighting, widescreen sixteen by nine, 6s, 24fps."
+  }
+ },
+ {
+  "n": 127,
+  "type": "img",
+  "cat": "RESPIRATION",
+  "title": "Open Pneumothorax Reference Card",
+  "t2i": {
+   "model": "Stable Diffusion",
+   "technique": "Reference Card",
+   "text": "Pocket reference card layout for managing an open pneumothorax. Vertical card proportions with a header band reading SUCKING CHEST WOUND. Compact illustrated steps: 1) expose and assess all wounds front and back, 2) apply vented chest seal on dry skin, 3) monitor for tension, 4) burp or lift the seal if respiratory distress worsens. Small anatomy thumbnail of a sealed chest in the corner. Matte card stock texture, rounded corners, two-color print look in navy and safety-orange. Card aspect ratio 2:3."
+  },
+  "i2v": {
+   "model": "Runway",
+   "technique": "Card step reveal",
+   "text": "Starting frame: a vertical pocket reference card titled SUCKING CHEST WOUND with four compact illustrated steps for open pneumothorax, expose and assess wounds front and back, apply a vented chest seal on dry skin, monitor for tension, burp or lift the seal if distress worsens, plus a small sealed-chest thumbnail, matte card stock in navy and safety-orange, rounded corners. Animation: each numbered step softly highlights and checks off in sequence while the chest-seal thumbnail subtly presses onto the skin. Slow vertical tilt down the card, 8s, 24fps."
+  },
+  "t2v": {
+   "model": "Kling",
+   "technique": "Animated reference card",
+   "text": "A vertical pocket reference card for managing an open pneumothorax, header band reading SUCKING CHEST WOUND, four compact illustrated steps appearing one at a time, expose and assess wounds front and back, apply a vented chest seal on dry skin, monitor for tension, burp or lift the seal if distress worsens, small sealed-chest thumbnail in the corner, a gentle highlight sweeping each step. Matte card-stock texture, rounded corners, two-color navy and safety-orange print look. Slow downward camera tilt, tall two by three aspect, 7s, 24fps."
+  }
+ },
+ {
+  "n": 128,
+  "type": "img",
+  "cat": "CIRCULATION",
+  "title": "Proximal Tibia IO Access",
+  "t2i": {
+   "model": "Midjourney",
+   "technique": "Photoreal Macro",
+   "text": "Photoreal macro of intraosseous (IO) access being established at the proximal tibia. A gloved hand holds a battery-powered IO driver perpendicular to the flat medial tibial plateau, one finger-width below and medial to the tibial tuberosity, needle just seated through cortex. A flush syringe and pressure bag of saline staged beside the leg. Dim field lighting, cool shadows, betadine-stained skin, fine grain. Shallow focus on the needle hub, clinical documentary realism. 16:9."
+  },
+  "i2v": {
+   "model": "Runway",
+   "technique": "Macro insertion",
+   "text": "Starting frame: a photoreal macro of intraosseous access at the proximal tibia, a gloved hand holding a battery-powered IO driver perpendicular to the flat medial tibial plateau one finger-width below and medial to the tibial tuberosity, needle just seated through cortex, a flush syringe and saline pressure bag staged nearby, betadine-stained skin, dim cool field lighting, shallow focus on the needle hub. Animation: the driver hums and advances the needle a few millimeters as it seats, the gloved fingers steady, then the hand reaches for the flush syringe. Slow shallow-focus pull back, 6s, 24fps."
+  },
+  "t2v": {
+   "model": "Veo",
+   "technique": "Clinical documentary macro",
+   "text": "A photoreal macro of a gloved hand establishing intraosseous access with a battery-powered driver held perpendicular to the flat medial tibial plateau, one finger-width below and medial to the tibial tuberosity, the needle seating through the cortex with a brief whir before the hand picks up a saline flush syringe staged beside the leg. Betadine-stained skin, dim cool field lighting, soft shadows, fine grain, shallow focus on the needle hub, clinical documentary realism. Slow subtle camera drift, widescreen sixteen by nine, 6s, 24fps."
+  }
+ },
+ {
+  "n": 129,
+  "type": "img",
+  "cat": "CIRCULATION",
+  "title": "Field Whole Blood Transfusion",
+  "t2i": {
+   "model": "DALL·E 3",
+   "technique": "Medical Illustration",
+   "text": "Medical illustration of low-titer O whole blood transfusion in the field. A casualty on a litter receives a unit of whole blood via an IO line in the humeral head, the bag elevated and run through a fluid warmer and pressure infuser. Inset diagram contrasts whole blood (red cells, plasma, platelets, clotting factors together) against separated components. Caption: walking blood bank, transfuse warmed product. Clean instructional palette, warm red blood accents, soft shading on white. Editorial textbook style. 4:3."
+  },
+  "i2v": {
+   "model": "Kling",
+   "technique": "Illustration animate",
+   "text": "Starting frame: a clean instructional illustration of low-titer O whole blood transfusion in the field, a casualty on a litter receiving a unit via a humeral-head IO line, the bag elevated and run through a fluid warmer and pressure infuser, an inset diagram contrasting whole blood with separated components, caption walking blood bank transfuse warmed product, warm red accents on white. Animation: the warm red blood flows down the line and the level in the bag slowly drops while the inset components gently separate and recombine. Gentle push-in on the IO line, 7s, 24fps."
+  },
+  "t2v": {
+   "model": "Veo",
+   "technique": "Animated textbook illustration",
+   "text": "A clean editorial textbook illustration of low-titer O whole blood transfusion in the field, a casualty on a litter receiving a unit of warmed whole blood through a humeral-head intraosseous line, the bag elevated and running through a fluid warmer and pressure infuser, warm red blood flowing down the tubing as the bag level falls. An inset diagram contrasts whole blood with separated components. Soft instructional shading on white, warm red accents, caption walking blood bank. Slow camera push toward the IO site, four by three aspect, 6s, 24fps."
+  }
+ },
+ {
+  "n": 130,
+  "type": "img",
+  "cat": "CIRCULATION",
+  "title": "Lethal Triad of Trauma",
+  "t2i": {
+   "model": "Flux",
+   "technique": "Annotated Infographic",
+   "text": "Annotated infographic on the lethal triad of trauma. Three interlocking circles labeled HYPOTHERMIA, ACIDOSIS, and COAGULOPATHY, each feeding the next with arrows to show the vicious cycle worsening hemorrhage. Surrounding callouts list field countermeasures: keep the patient warm, give warmed blood products, minimize crystalloids, treat the source of bleeding. Dark slate background, glowing red-amber circle outlines, crisp white sans-serif labels, connector arrows. Scientific data-viz poster style. 3:4 vertical."
+  },
+  "i2v": {
+   "model": "Kling",
+   "technique": "Cycle animation",
+   "text": "Starting frame: an annotated infographic of the lethal triad of trauma, three interlocking glowing circles labeled HYPOTHERMIA, ACIDOSIS and COAGULOPATHY connected by arrows into a vicious cycle, surrounding callouts listing keep the patient warm, give warmed blood products, minimize crystalloids and treat the source of bleeding, dark slate background, red-amber outlines, crisp white labels. Animation: the connecting arrows pulse and travel around the loop in sequence while each circle glows brighter in turn and the callouts fade in. Slow rotating orbit around the circles, 8s, 24fps."
+  },
+  "t2v": {
+   "model": "Veo",
+   "technique": "Data-viz motion graphic",
+   "text": "A scientific data-viz motion graphic of the lethal triad of trauma, three interlocking circles labeled hypothermia, acidosis and coagulopathy, each feeding the next with arrows that pulse and travel around a vicious cycle worsening hemorrhage. Surrounding callouts list field countermeasures, keep the patient warm, give warmed blood products, minimize crystalloids, treat the source of bleeding. Dark slate background, glowing red-amber circle outlines, crisp white sans-serif labels. Slow orbiting camera move, tall three by four vertical, 7s, 24fps."
+  }
+ },
+ {
+  "n": 131,
+  "type": "img",
+  "cat": "CIRCULATION",
+  "title": "Recognizing Hemorrhagic Shock Classes",
+  "t2i": {
+   "model": "Imagen",
+   "technique": "Data-Viz Poster",
+   "text": "Data-visualization poster of hemorrhagic shock classes I to IV. A horizontal stepped chart maps each class against blood loss percentage, heart rate, blood pressure, respiratory rate, and mental status, with a silhouette of a casualty shifting from calm to obtunded across the columns. Color gradient from green to deep red as severity climbs. Clean grid, bold numeric callouts, minimalist medical-poster aesthetic on off-white. Header: RECOGNIZING SHOCK. 16:9."
+  },
+  "i2v": {
+   "model": "Runway",
+   "technique": "Chart reveal",
+   "text": "Starting frame: a data-visualization poster titled RECOGNIZING SHOCK showing hemorrhagic shock classes one to four as a horizontal stepped chart mapping blood loss percentage, heart rate, blood pressure, respiratory rate and mental status, a casualty silhouette shifting from calm to obtunded across the columns, a green-to-deep-red severity gradient on off-white. Animation: the columns fill in left to right, the numeric callouts count up, and the silhouette posture slumps progressively from alert to obtunded as the color deepens. Slow pan across the chart, 8s, 24fps."
+  },
+  "t2v": {
+   "model": "Kling",
+   "technique": "Animated poster",
+   "text": "A minimalist medical-poster motion graphic titled recognizing shock, a horizontal stepped chart of hemorrhagic shock classes one through four mapping blood loss percentage, heart rate, blood pressure, respiratory rate and mental status, with a casualty silhouette progressively shifting from calm to obtunded across the columns as a color gradient climbs from green to deep red. Numeric callouts tick upward as each column reveals. Clean grid on off-white, bold labels. Slow left-to-right camera pan, widescreen sixteen by nine, 7s, 24fps."
+  }
+ },
+ {
+  "n": 132,
+  "type": "img",
+  "cat": "BURNS",
+  "title": "Rule of Nines Burn Estimation",
+  "t2i": {
+   "model": "Midjourney",
+   "technique": "Annotated Infographic",
+   "text": "Annotated infographic of the Rule of Nines for estimating burn total body surface area on an adult. Front and back body silhouettes with regions shaded and labeled: head 9 percent, each arm 9 percent, anterior trunk 18 percent, posterior trunk 18 percent, each leg 18 percent, genitalia 1 percent. Side panel shows the modified Brooke formula for fluid resuscitation. Flat vector style, teal body fill with amber burn-zone overlays, clean labels on white. 3:4 vertical poster."
+  },
+  "i2v": {
+   "model": "Kling",
+   "technique": "Region fill animation",
+   "text": "Starting frame: an annotated Rule of Nines infographic on an adult, front and back body silhouettes with regions shaded and labeled head nine percent, each arm nine percent, anterior trunk eighteen percent, posterior trunk eighteen percent, each leg eighteen percent, genitalia one percent, a side panel showing the modified Brooke fluid formula, flat vector teal bodies with amber burn-zone overlays on white. Animation: each labeled region fills with its amber overlay in sequence while its percentage label pops in and the formula panel underlines. Gentle push-in across the silhouettes, 7s, 24fps."
+  },
+  "t2v": {
+   "model": "Veo",
+   "technique": "Animated infographic",
+   "text": "A flat-vector animated infographic of the Rule of Nines for estimating burn total body surface area on an adult, front and back body silhouettes whose regions fill one by one with amber burn-zone overlays as labels appear, head nine percent, each arm nine percent, anterior trunk eighteen percent, posterior trunk eighteen percent, each leg eighteen percent, genitalia one percent, a side panel revealing the modified Brooke fluid resuscitation formula. Teal body fill, clean labels on white. Slow camera push across the silhouettes, tall three by four vertical, 7s, 24fps."
+  }
+ },
+ {
+  "n": 133,
+  "type": "img",
+  "cat": "BURNS",
+  "title": "Burn Depth Comparison Cross-Sections",
+  "t2i": {
+   "model": "DALL·E 3",
+   "technique": "Split-Screen Compare",
+   "text": "Split-screen medical illustration comparing burn depth. Three vertical skin cross-sections side by side: superficial (epidermis only, red and dry), partial-thickness (into dermis, blistered and weeping), and full-thickness (through dermis to subcutaneous fat, leathery and insensate). Each panel labels epidermis, dermis, hair follicles, and nerve endings, with a severity bar beneath. Clean clinical palette, layered skin shading, thin labels. Editorial textbook comparison style. 16:9."
+  },
+  "i2v": {
+   "model": "Runway",
+   "technique": "Cross-section reveal",
+   "text": "Starting frame: a split-screen medical illustration comparing burn depth across three vertical skin cross-sections, superficial epidermis-only red and dry, partial-thickness into the dermis blistered and weeping, and full-thickness through the dermis to subcutaneous fat leathery and insensate, each panel labeling epidermis, dermis, hair follicles and nerve endings with a severity bar beneath, clean clinical palette on white. Animation: damage progresses downward through each cross-section in turn, blisters forming and the tissue darkening, while the severity bars fill. Slow pan left to right, 8s, 24fps."
+  },
+  "t2v": {
+   "model": "Veo",
+   "technique": "Animated cross-section",
+   "text": "An editorial textbook motion illustration comparing burn depth, three vertical skin cross-sections side by side, superficial epidermis-only red and dry, partial-thickness into the dermis blistered and weeping, and full-thickness through the dermis to subcutaneous fat leathery and insensate, each panel labeling epidermis, dermis, hair follicles and nerve endings as injury deepens and severity bars fill. Clean clinical palette, layered skin shading, thin labels. Slow camera pan across the three panels, widescreen sixteen by nine, 7s, 24fps."
+  }
+ },
+ {
+  "n": 134,
+  "type": "img",
+  "cat": "BURNS",
+  "title": "Field Burn Dressing and Warming",
+  "t2i": {
+   "model": "Stable Diffusion",
+   "technique": "Photoreal Macro",
+   "text": "Photoreal macro of field burn management: gloved hands laying a dry sterile burn dressing over a partial-thickness forearm burn while a foil-lined hypothermia-prevention blanket is tucked around the casualty. Blistered, glistening skin visible at the wound edge, no ointment applied. Cool overcast field light, subtle smoke haze in the background, realistic skin texture and sweat. Documentary trauma-photography grain, shallow depth of field on the dressing. 16:9."
+  },
+  "i2v": {
+   "model": "Runway",
+   "technique": "Macro dressing",
+   "text": "Starting frame: a photoreal macro of field burn management, gloved hands laying a dry sterile burn dressing over a partial-thickness forearm burn while a foil-lined hypothermia-prevention blanket is tucked around the casualty, blistered glistening skin at the wound edge with no ointment, cool overcast field light, faint smoke haze, shallow focus on the dressing. Animation: the gloved hands smooth the dressing over the burn and tuck the reflective blanket edge, faint smoke drifting behind, skin glistening. Slow shallow-focus pull back, 6s, 24fps."
+  },
+  "t2v": {
+   "model": "Veo",
+   "technique": "Documentary trauma macro",
+   "text": "A photoreal documentary macro of field burn care, gloved hands gently laying a dry sterile dressing over a partial-thickness forearm burn and tucking a foil-lined hypothermia-prevention blanket around the casualty, no ointment applied, blistered glistening skin at the wound edge. Cool overcast field light, subtle smoke haze drifting in the background, realistic skin texture and sweat, fine photographic grain, shallow depth of field on the dressing. Slow handheld camera drift, widescreen sixteen by nine, 6s, 24fps."
+  }
+ },
+ {
+  "n": 135,
+  "type": "img",
+  "cat": "EYES",
+  "title": "Penetrating Ocular Injury Cutaway",
+  "t2i": {
+   "model": "Flux",
+   "technique": "Cross-Section Cutaway",
+   "text": "Cross-section cutaway of the human eye and orbit illustrating a penetrating ocular injury with a retained foreign body. Show cornea, anterior chamber, iris, lens, vitreous, retina, and optic nerve, with a small metallic fragment lodged in the vitreous. Overlay a rigid eye shield (not a pressure patch) protecting the globe, with a no-pressure warning icon. Charcoal background, neon-cyan labels and leader lines, glassy translucent ocular media. Modern 3D medical illustration. 3:4 vertical."
+  },
+  "i2v": {
+   "model": "Kling",
+   "technique": "Cutaway animate",
+   "text": "Starting frame: a cross-section cutaway of the eye and orbit showing a penetrating ocular injury with a retained metallic fragment in the vitreous, labeled cornea, anterior chamber, iris, lens, vitreous, retina and optic nerve, a rigid eye shield overlaid with a no-pressure warning icon, charcoal background, neon-cyan labels and leader lines, glassy translucent ocular media. Animation: the metallic fragment glints, the leader lines draw out to each label in sequence, then the rigid shield lowers into place over the globe as the warning icon pulses. Slow push-in on the fragment, 8s, 24fps."
+  },
+  "t2v": {
+   "model": "Veo",
+   "technique": "3D medical animation",
+   "text": "A modern three-D medical animation of a cross-section cutaway of the human eye and orbit illustrating a penetrating ocular injury with a small metallic fragment lodged in the vitreous, labels drawing out along neon-cyan leader lines to the cornea, anterior chamber, iris, lens, vitreous, retina and optic nerve. A rigid eye shield lowers into place over the globe with a pulsing no-pressure warning icon. Charcoal background, glassy translucent ocular media. Slow camera push toward the fragment, tall three by four vertical, 7s, 24fps."
+  }
+ },
+ {
+  "n": 136,
+  "type": "img",
+  "cat": "EYES",
+  "title": "Combat Eye Injury Reference Card",
+  "t2i": {
+   "model": "DALL·E 3",
+   "technique": "Reference Card",
+   "text": "Pocket reference card for combat eye trauma. Vertical card proportions, header band EYE INJURY. Concise illustrated guidance: shield, do not patch, do not apply pressure, do not remove impaled objects, give antibiotics, evacuate. Small icon of a rigid Fox eye shield taped over the orbit. A do-not-touch warning strip along the bottom in safety-orange. Matte card texture, rounded corners, two-color print look in navy and orange. Card aspect ratio 2:3."
+  },
+  "i2v": {
+   "model": "Runway",
+   "technique": "Card step reveal",
+   "text": "Starting frame: a vertical pocket reference card for combat eye trauma titled EYE INJURY, concise illustrated guidance shield, do not patch, do not apply pressure, do not remove impaled objects, give antibiotics and evacuate, a small icon of a rigid Fox eye shield taped over the orbit, a safety-orange do-not-touch warning strip along the bottom, matte navy-and-orange print look, rounded corners. Animation: each guidance line highlights in sequence, the Fox shield icon taps into place over the orbit, and the orange warning strip flashes once. Slow vertical tilt down the card, 7s, 24fps."
+  },
+  "t2v": {
+   "model": "Kling",
+   "technique": "Animated reference card",
+   "text": "A vertical pocket reference card for combat eye trauma, header band reading EYE INJURY, concise illustrated guidance appearing line by line, shield, do not patch, do not apply pressure, do not remove impaled objects, give antibiotics, evacuate, with a small icon of a rigid Fox eye shield taping over the orbit and a safety-orange do-not-touch warning strip flashing along the bottom. Matte card texture, rounded corners, two-color navy and orange print look. Slow downward camera tilt, soft even lighting, tall two by three aspect, 7s, 24fps."
+  }
+ },
+ {
+  "n": 137,
+  "type": "img",
+  "cat": "MSK",
+  "title": "Pelvic Binder Application Sequence",
+  "t2i": {
+   "model": "Midjourney",
+   "technique": "Sequential Frames",
+   "text": "Four-panel sequential illustration of pelvic binder application for a suspected open-book pelvic fracture. Panel 1: locating the greater trochanters as the correct binder level (not the iliac crests). Panel 2: sliding the binder under the patient at trochanter height. Panel 3: cinching the buckle to compress and close the pelvic ring. Panel 4: padded internal rotation of the legs with knees and ankles tied. Clean white background, numbered corners, muted teal labels, flat editorial medical style. 3:2."
+  },
+  "i2v": {
+   "model": "Runway",
+   "technique": "Sequential panel reveal",
+   "text": "Starting frame: a four-panel sequential illustration of pelvic binder application for a suspected open-book pelvic fracture, panel one locating the greater trochanters as the correct binder level, panel two sliding the binder under the patient at trochanter height, panel three cinching the buckle to compress the pelvic ring, panel four padded internal rotation of the legs with knees and ankles tied, clean white background, numbered corners, muted teal labels. Animation: the panels activate one to four in order, the binder sliding under, cinching tight, and the legs rotating inward and tying. Slow pan across the four panels, 9s, 24fps."
+  },
+  "t2v": {
+   "model": "Veo",
+   "technique": "Animated sequence",
+   "text": "A flat editorial medical motion graphic showing four steps of pelvic binder application for a suspected open-book pelvic fracture, first locating the greater trochanters as the correct binder level rather than the iliac crests, then sliding the binder under the patient at trochanter height, then cinching the buckle to compress and close the pelvic ring, finally internally rotating the padded legs with knees and ankles tied. Clean white background, muted teal labels, smooth transitions between steps. Slow camera pan across the sequence, three by two aspect, 8s, 24fps."
+  }
+ },
+ {
+  "n": 138,
+  "type": "img",
+  "cat": "MSK",
+  "title": "Femur Traction Splint Illustration",
+  "t2i": {
+   "model": "Imagen",
+   "technique": "Medical Illustration",
+   "text": "Medical illustration of a traction splint applied to a closed mid-shaft femur fracture. Show the splint anchored at the ischial tuberosity, the ankle hitch in place, and mechanical traction pulling the limb to length to realign the displaced bone ends and reduce pain and bleeding into the thigh. Cutaway of the femur shows the fracture before and after alignment. Clean clinical palette, soft instructional shading, red traction-force arrows, thin labels on white. Editorial textbook style. 4:3."
+  },
+  "i2v": {
+   "model": "Kling",
+   "technique": "Traction animate",
+   "text": "Starting frame: a medical illustration of a traction splint on a closed mid-shaft femur fracture, anchored at the ischial tuberosity with an ankle hitch in place and mechanical traction pulling the limb to length, a cutaway of the femur showing the fracture before and after alignment, clean clinical palette, red traction-force arrows, thin labels on white. Animation: the traction mechanism tightens and the limb lengthens as the cutaway fracture ends slide into alignment, the red force arrows pulsing along the pull. Gentle push-in on the femur cutaway, 7s, 24fps."
+  },
+  "t2v": {
+   "model": "Veo",
+   "technique": "Animated textbook illustration",
+   "text": "A clean editorial textbook animation of a traction splint applied to a closed mid-shaft femur fracture, anchored at the ischial tuberosity with an ankle hitch, mechanical traction slowly pulling the limb to length while a femur cutaway shows the displaced bone ends sliding back into alignment, reducing pain and thigh bleeding. Soft instructional shading, red traction-force arrows pulsing along the pull, thin labels on white. Slow camera push toward the cutaway, four by three aspect, 7s, 24fps."
+  }
+ },
+ {
+  "n": 139,
+  "type": "img",
+  "cat": "MSK",
+  "title": "Field Splinting Principles Card",
+  "t2i": {
+   "model": "Stable Diffusion",
+   "technique": "Reference Card",
+   "text": "Pocket reference card for field splinting principles. Vertical card with header SPLINT. Compact icon list: check circulation, motor, and sensation before and after; immobilize the joint above and below the fracture; pad bony prominences; splint in position found for angulated joints; recheck distal pulses. Small thumbnail of a SAM-style malleable splint molded around a forearm. Matte card stock, rounded corners, navy-and-orange two-color print look. Card aspect ratio 2:3."
+  },
+  "i2v": {
+   "model": "Runway",
+   "technique": "Card icon reveal",
+   "text": "Starting frame: a vertical pocket reference card for field splinting principles titled SPLINT, a compact icon list check circulation motor and sensation before and after, immobilize the joint above and below the fracture, pad bony prominences, splint angulated joints in position found, recheck distal pulses, a small thumbnail of a SAM-style malleable splint molded around a forearm, matte navy-and-orange print look, rounded corners. Animation: each icon and line highlights in sequence while the SAM splint thumbnail molds around the forearm. Slow vertical tilt down the card, 8s, 24fps."
+  },
+  "t2v": {
+   "model": "Kling",
+   "technique": "Animated reference card",
+   "text": "A vertical pocket reference card for field splinting principles, header reading SPLINT, a compact icon list revealing line by line, check circulation motor and sensation before and after, immobilize the joint above and below the fracture, pad bony prominences, splint angulated joints in the position found, recheck distal pulses, with a small thumbnail of a SAM-style malleable splint molding around a forearm. Matte card stock, rounded corners, navy and orange two-color print look. Slow downward camera tilt, soft even lighting, tall two by three aspect, 7s, 24fps."
+  }
+ },
+ {
+  "n": 140,
+  "type": "img",
+  "cat": "PFC",
+  "title": "Prolonged Field Care Station",
+  "t2i": {
+   "model": "Midjourney",
+   "technique": "Concept Art",
+   "text": "Cinematic concept art of a prolonged field care station inside a dim hardened shelter. A casualty lies on a litter raised on ammo crates; a medic monitors a portable vitals monitor, a hanging unit of whole blood on a warmer, a Foley catheter bag, and a documentation clipboard with a flow sheet. Headlamps and a single chemlight provide warm pooled light against deep shadow. Realistic gear clutter, dust motes in the beam. Moody, grounded military-medical realism, 35mm look. 21:9 cinematic."
+  },
+  "i2v": {
+   "model": "Luma",
+   "technique": "Cinematic dolly",
+   "text": "Starting frame: cinematic concept art of a prolonged field care station inside a dim hardened shelter, a casualty on a litter raised on ammo crates, a medic monitoring a portable vitals monitor, a hanging unit of whole blood on a warmer, a Foley bag and a documentation clipboard, warm pooled headlamp and chemlight light against deep shadow, dust motes in the beam, gritty 35mm look. Animation: the medic adjusts the vitals monitor and the trace pulses, the blood drips slowly down the warmer line, dust motes drifting through the headlamp beam. Slow cinematic dolly-in, 9s, 24fps."
+  },
+  "t2v": {
+   "model": "Veo",
+   "technique": "Cinematic concept art",
+   "text": "Cinematic grounded military-medical concept art inside a dim hardened shelter where a casualty lies on a litter raised on ammo crates, a medic monitoring a portable vitals monitor whose trace pulses, a hanging unit of whole blood dripping through a warmer, a Foley catheter bag and a documentation flow sheet on a clipboard. Warm pooled headlamp and single-chemlight light against deep shadow, dust motes drifting in the beam, realistic gear clutter, 35mm look. Slow cinematic dolly toward the medic, ultrawide twenty-one by nine, 8s, 24fps."
+  }
+ },
+ {
+  "n": 141,
+  "type": "img",
+  "cat": "PFC",
+  "title": "PFC Nursing Checklist Infographic",
+  "t2i": {
+   "model": "DALL·E 3",
+   "technique": "Annotated Infographic",
+   "text": "Annotated infographic of the prolonged field care nursing checklist using the ventilate-infuse-monitor-protect framework. A central casualty silhouette ringed by labeled stations: airway and ventilation settings, fluid and blood balance with intake-output, vital-sign monitoring trend lines, analgesia and sedation, urinary output via Foley, pressure-injury turning schedule, and hypothermia prevention. Clean clinical palette, teal and white, icon-driven callouts with leader lines. Modern medical data-viz style. 3:4 vertical."
+  },
+  "i2v": {
+   "model": "Kling",
+   "technique": "Station reveal",
+   "text": "Starting frame: an annotated infographic of the prolonged field care nursing checklist using the ventilate-infuse-monitor-protect framework, a central casualty silhouette ringed by labeled stations airway and ventilation, fluid and blood balance with intake-output, vital-sign trend lines, analgesia and sedation, Foley urinary output, pressure-injury turning schedule and hypothermia prevention, teal and white clinical palette, icon callouts with leader lines. Animation: the leader lines draw out to each station in clockwise sequence while the trend lines animate and the icons light up. Slow rotating orbit around the silhouette, 8s, 24fps."
+  },
+  "t2v": {
+   "model": "Veo",
+   "technique": "Data-viz motion graphic",
+   "text": "A modern clinical data-viz motion graphic of the prolonged field care nursing checklist using the ventilate-infuse-monitor-protect framework, a central casualty silhouette ringed by labeled stations that light up in clockwise sequence, airway and ventilation settings, fluid and blood balance with intake-output, vital-sign trend lines animating, analgesia and sedation, urinary output via Foley, pressure-injury turning schedule and hypothermia prevention. Teal and white palette, icon-driven callouts with leader lines drawing out. Slow orbiting camera, tall three by four vertical, 7s, 24fps."
+  }
+ },
+ {
+  "n": 142,
+  "type": "img",
+  "cat": "PFC",
+  "title": "24-Hour PFC Vitals Flow Sheet",
+  "t2i": {
+   "model": "Flux",
+   "technique": "Data-Viz Poster",
+   "text": "Data-visualization poster of a 24-hour prolonged field care vitals flow sheet. Stacked time-series line charts for heart rate, systolic and diastolic blood pressure, SpO2, temperature, and urine output across an hourly grid, with annotation markers for interventions like blood transfusion and analgesia. Dark dashboard aesthetic, glowing teal and amber trend lines, clean gridlines and axis labels. Header: PFC TREND MONITORING. Crisp infographic style. 16:9."
+  },
+  "i2v": {
+   "model": "Runway",
+   "technique": "Trend animate",
+   "text": "Starting frame: a data-visualization poster titled PFC TREND MONITORING showing a 24-hour prolonged field care vitals flow sheet, stacked time-series line charts for heart rate, systolic and diastolic blood pressure, SpO2, temperature and urine output across an hourly grid with intervention markers for blood transfusion and analgesia, dark dashboard aesthetic, glowing teal and amber trend lines. Animation: the trend lines draw left to right across the hourly grid and the intervention markers pop in at their times as values update. Slow pan across the dashboard, 8s, 24fps."
+  },
+  "t2v": {
+   "model": "Kling",
+   "technique": "Animated dashboard",
+   "text": "A crisp dark-dashboard motion graphic of a 24-hour prolonged field care vitals flow sheet titled PFC trend monitoring, stacked time-series line charts for heart rate, systolic and diastolic blood pressure, oxygen saturation, temperature and urine output drawing across an hourly grid, with annotation markers popping in for interventions like blood transfusion and analgesia. Glowing teal and amber trend lines, clean gridlines and axis labels. Slow left-to-right camera pan across the dashboard, widescreen sixteen by nine, 7s, 24fps."
+  }
+ },
+ {
+  "n": 143,
+  "type": "img",
+  "cat": "DIAGNOSTIC",
+  "title": "FAST Exam — Probe vs Image",
+  "t2i": {
+   "model": "Imagen",
+   "technique": "Split-Screen Compare",
+   "text": "Split-screen comparison of a FAST ultrasound exam. LEFT: a medic holding a curvilinear probe at the right upper quadrant Morison's pouch view on a supine casualty, probe marker oriented correctly. RIGHT: the corresponding grayscale ultrasound image showing an anechoic black stripe of free fluid between the liver and kidney indicating hemorrhage. Center divider, labels PROBE PLACEMENT vs IMAGE. Clean clinical poster style, navy frame, realistic ultrasound texture. 16:9."
+  },
+  "i2v": {
+   "model": "Runway",
+   "technique": "Probe-to-image animate",
+   "text": "Starting frame: a split-screen FAST exam comparison, left a medic holding a curvilinear probe at the right upper quadrant Morison's pouch view on a supine casualty with the marker oriented correctly, right the corresponding grayscale ultrasound showing an anechoic black stripe of free fluid between liver and kidney, center divider labeled PROBE PLACEMENT vs IMAGE, navy frame, realistic ultrasound texture. Animation: the medic gently fans the probe while the grayscale image flickers and resolves, the black free-fluid stripe widening as it is found. Slow push-in toward the image panel, 7s, 24fps."
+  },
+  "t2v": {
+   "model": "Veo",
+   "technique": "Split-screen sonography",
+   "text": "A clean clinical split-screen of a FAST ultrasound exam, on the left a medic steadying a curvilinear probe at the right upper quadrant Morison's pouch view on a supine casualty with the probe marker correctly oriented, on the right the live grayscale ultrasound flickering and resolving to show an anechoic black stripe of free fluid widening between the liver and kidney indicating hemorrhage. Center divider with labels probe placement and image, navy frame, realistic ultrasound texture. Slow camera push toward the image, widescreen sixteen by nine, 7s, 24fps."
+  }
+ },
+ {
+  "n": 144,
+  "type": "img",
+  "cat": "DIAGNOSTIC",
+  "title": "eFAST Ultrasound Windows Map",
+  "t2i": {
+   "model": "Stable Diffusion",
+   "technique": "Annotated Infographic",
+   "text": "Annotated infographic of the eFAST ultrasound exam windows. A supine body silhouette with labeled probe positions: right upper quadrant, left upper quadrant, suprapubic, subxiphoid cardiac, and bilateral anterior chest for lung sliding and pneumothorax. Each window paired with a small thumbnail of the expected normal sonographic finding. Clean medical-poster palette, teal silhouette, white probe icons, leader lines and labels on dark background. 3:4 vertical."
+  },
+  "i2v": {
+   "model": "Kling",
+   "technique": "Window reveal",
+   "text": "Starting frame: an annotated infographic of the eFAST ultrasound windows, a supine body silhouette with labeled probe positions right upper quadrant, left upper quadrant, suprapubic, subxiphoid cardiac and bilateral anterior chest for lung sliding, each window paired with a small thumbnail of the expected normal finding, teal silhouette and white probe icons with leader lines on a dark background. Animation: the probe icons appear at each window in sequence and their thumbnails flip up showing the normal sonographic image as leader lines draw out. Slow push-in over the silhouette, 8s, 24fps."
+  },
+  "t2v": {
+   "model": "Veo",
+   "technique": "Animated infographic",
+   "text": "A clean medical-poster motion graphic of the eFAST ultrasound exam windows, a supine teal body silhouette on a dark background with white probe icons appearing one at a time at the right upper quadrant, left upper quadrant, suprapubic, subxiphoid cardiac and bilateral anterior chest positions, each pairing with a small thumbnail that reveals the expected normal sonographic finding as leader lines draw out. Slow camera push over the silhouette, tall three by four vertical, 7s, 24fps."
+  }
+ },
+ {
+  "n": 145,
+  "type": "img",
+  "cat": "DIAGNOSTIC",
+  "title": "Point-of-Care Ultrasound in the Field",
+  "t2i": {
+   "model": "DALL·E 3",
+   "technique": "Photoreal Macro",
+   "text": "Photoreal macro of a handheld point-of-care ultrasound probe pressed against a casualty's lower chest in a field setting, gloved hand steadying the transducer with conduction gel glistening at the contact point. A rugged tablet screen out of focus in the background shows a grayscale lung image. Dim tactical lighting with a cold cast, sweat and dust on skin, fine sensor grain. Shallow depth of field on the probe head, clinical documentary realism. 16:9."
+  },
+  "i2v": {
+   "model": "Runway",
+   "technique": "Macro probe",
+   "text": "Starting frame: a photoreal macro of a handheld point-of-care ultrasound probe pressed against a casualty's lower chest in the field, a gloved hand steadying the transducer with conduction gel glistening at the contact point, a rugged tablet out of focus behind showing a grayscale lung image, dim cold tactical lighting, sweat and dust on skin, shallow focus on the probe head. Animation: the gloved hand fans the probe slightly, the gel glistening and shifting, while the out-of-focus tablet image flickers in the background. Slow shallow-focus pull back, 6s, 24fps."
+  },
+  "t2v": {
+   "model": "Veo",
+   "technique": "Clinical documentary macro",
+   "text": "A photoreal documentary macro of a handheld point-of-care ultrasound probe pressed against a casualty's lower chest in a field setting, a gloved hand fanning the transducer with conduction gel glistening and shifting at the contact point, a rugged tablet out of focus in the background flickering with a grayscale lung image. Dim tactical lighting with a cold cast, sweat and dust on skin, fine sensor grain, shallow depth of field on the probe head. Slow camera drift, widescreen sixteen by nine, 6s, 24fps."
+  }
+ },
+ {
+  "n": 146,
+  "type": "img",
+  "cat": "CBRN",
+  "title": "Nerve-Agent Poisoning Reference Card",
+  "t2i": {
+   "model": "Midjourney",
+   "technique": "Reference Card",
+   "text": "Pocket reference card for nerve-agent (organophosphate) poisoning. Vertical card, header NERVE AGENT. Left column lists the SLUDGE and DUMBELS cholinergic toxidrome signs. Right column shows antidote dosing: atropine to dry secretions, pralidoxime (2-PAM) to reactivate cholinesterase, and a benzodiazepine for seizures, with the triple-autoinjector icon. A decontamination warning strip along the bottom. Matte card texture, rounded corners, navy-and-hazard-yellow two-color print look. Card aspect ratio 2:3."
+  },
+  "i2v": {
+   "model": "Runway",
+   "technique": "Card column reveal",
+   "text": "Starting frame: a vertical pocket reference card for nerve-agent organophosphate poisoning titled NERVE AGENT, left column listing SLUDGE and DUMBELS cholinergic toxidrome signs, right column showing antidote dosing atropine to dry secretions, pralidoxime to reactivate cholinesterase and a benzodiazepine for seizures with a triple-autoinjector icon, a decontamination warning strip along the bottom, matte navy-and-hazard-yellow print look, rounded corners. Animation: the left column signs highlight in sequence then the right column antidotes reveal and the triple-autoinjector icon clicks, the hazard strip flashing once. Slow vertical tilt down the card, 8s, 24fps."
+  },
+  "t2v": {
+   "model": "Kling",
+   "technique": "Animated reference card",
+   "text": "A vertical pocket reference card for nerve-agent organophosphate poisoning, header reading NERVE AGENT, a left column listing the SLUDGE and DUMBELS cholinergic toxidrome signs revealing line by line, a right column showing antidote dosing, atropine to dry secretions, pralidoxime to reactivate cholinesterase and a benzodiazepine for seizures, with a triple-autoinjector icon clicking into place and a hazard-yellow decontamination warning strip flashing at the bottom. Matte navy and hazard-yellow two-color print look, rounded corners. Slow downward camera tilt, tall two by three aspect, 7s, 24fps."
+  }
+ },
+ {
+  "n": 147,
+  "type": "img",
+  "cat": "CBRN",
+  "title": "CBRN Decontamination Line Concept",
+  "t2i": {
+   "model": "Flux",
+   "technique": "Concept Art",
+   "text": "Cinematic concept art of medics in MOPP-level protective suits and gas masks treating a casualty at a CBRN decontamination line. Casualty on a litter being moved across the hot-line into a clean zone, decon shower mist backlit by harsh floodlights, hazard placards and rolled plastic sheeting. Eerie green-tinged chemical-light glow against night darkness, breath fogging mask lenses. Tense, grounded military-medical realism, atmospheric haze, 35mm look. 21:9 cinematic."
+  },
+  "i2v": {
+   "model": "Luma",
+   "technique": "Cinematic dolly",
+   "text": "Starting frame: cinematic concept art of medics in MOPP protective suits and gas masks treating a casualty at a CBRN decontamination line, the casualty on a litter being moved across the hot-line into a clean zone, decon shower mist backlit by harsh floodlights, hazard placards and rolled plastic sheeting, eerie green-tinged chemical-light glow against night darkness, breath fogging the mask lenses. Animation: the medics carry the litter across the hot-line as decon mist drifts through the floodlights and breath fogs the masks, plastic sheeting rippling. Slow cinematic dolly-in, 9s, 24fps."
+  },
+  "t2v": {
+   "model": "Veo",
+   "technique": "Cinematic concept art",
+   "text": "Tense grounded military-medical concept art of medics in MOPP-level protective suits and gas masks moving a casualty on a litter across the hot-line of a CBRN decontamination line into a clean zone, decon shower mist drifting and backlit by harsh floodlights, hazard placards and rolled plastic sheeting rippling. Eerie green-tinged chemical-light glow against night darkness, breath fogging the mask lenses, atmospheric haze, 35mm look. Slow cinematic dolly toward the litter, ultrawide twenty-one by nine, 8s, 24fps."
+  }
+ },
+ {
+  "n": 148,
+  "type": "img",
+  "cat": "HYPOTHERMIA",
+  "title": "Trauma Hypothermia Prevention Infographic",
+  "t2i": {
+   "model": "Imagen",
+   "technique": "Annotated Infographic",
+   "text": "Annotated infographic on trauma hypothermia prevention. A casualty wrapped in a layered hypothermia management kit: chemical heat blankets against the torso, a reflective shell, and an insulating outer wrap, head covered, ground insulation beneath. Side panel charts the danger of the lethal triad and shows core-temperature thresholds where coagulopathy worsens. Cool blue palette with warm orange heat-source accents, clean labels and leader lines on white. Modern medical data-viz style. 3:4 vertical."
+  },
+  "i2v": {
+   "model": "Kling",
+   "technique": "Layer wrap animate",
+   "text": "Starting frame: an annotated infographic on trauma hypothermia prevention, a casualty wrapped in a layered hypothermia management kit with chemical heat blankets against the torso, a reflective shell and an insulating outer wrap, head covered and ground insulation beneath, a side panel charting the lethal triad and core-temperature thresholds where coagulopathy worsens, cool blue palette with warm orange heat accents, labels on white. Animation: the layers wrap onto the casualty in sequence, the orange heat-source accents warming, while the side-panel temperature thresholds highlight. Gentle push-in on the wrap, 7s, 24fps."
+  },
+  "t2v": {
+   "model": "Veo",
+   "technique": "Animated infographic",
+   "text": "A modern medical data-viz animation on trauma hypothermia prevention, a casualty being wrapped layer by layer in a hypothermia management kit, chemical heat blankets against the torso glowing warm orange, then a reflective shell, an insulating outer wrap, head covered and ground insulation beneath. A side panel highlights the lethal triad and core-temperature thresholds where coagulopathy worsens. Cool blue palette with warm orange heat accents, clean labels and leader lines on white. Slow camera push toward the casualty, tall three by four vertical, 7s, 24fps."
+  }
+ },
+ {
+  "n": 149,
+  "type": "img",
+  "cat": "PAIN",
+  "title": "TCCC Analgesia Ladder Poster",
+  "t2i": {
+   "model": "DALL·E 3",
+   "technique": "Data-Viz Poster",
+   "text": "Data-visualization poster of the TCCC analgesia ladder for combat casualties. A tiered chart from mild to severe pain: oral acetaminophen and meloxicam combat-wound-medication pack for the walking wounded; oral transmucosal fentanyl lozenge for moderate pain; IV or IO ketamine for severe pain or shock. Each tier lists route, indication, and a monitoring caution about respiration and airway. Clean medical-poster grid, color gradient from green to red, bold labels on off-white. 16:9."
+  },
+  "i2v": {
+   "model": "Runway",
+   "technique": "Ladder reveal",
+   "text": "Starting frame: a data-visualization poster of the TCCC analgesia ladder, a tiered chart from mild to severe pain, oral acetaminophen and meloxicam combat-wound-medication pack for the walking wounded, oral transmucosal fentanyl lozenge for moderate pain, IV or IO ketamine for severe pain or shock, each tier listing route, indication and a respiration and airway monitoring caution, a green-to-red gradient on off-white. Animation: the tiers climb in from bottom to top, each step lighting up with its route and caution text as the color deepens toward red. Slow upward camera tilt along the ladder, 8s, 24fps."
+  },
+  "t2v": {
+   "model": "Kling",
+   "technique": "Animated poster",
+   "text": "A clean medical-poster motion graphic of the TCCC analgesia ladder for combat casualties, a tiered chart climbing from mild to severe pain, oral acetaminophen and meloxicam combat-wound-medication pack for the walking wounded, oral transmucosal fentanyl lozenge for moderate pain, and IV or IO ketamine for severe pain or shock, each tier revealing its route, indication and a monitoring caution about respiration and airway as the color gradient deepens from green to red. Slow upward camera tilt along the tiers, widescreen sixteen by nine, 7s, 24fps."
+  }
+ },
+ {
+  "n": 150,
+  "type": "img",
+  "cat": "RESEARCH",
+  "title": "Next-Generation Combat Casualty Care",
+  "t2i": {
+   "model": "Flux",
+   "technique": "Concept Art",
+   "text": "Futuristic concept art of next-generation combat casualty care. A medic uses an augmented-reality visor projecting holographic vitals and a vascular access guide over a casualty, while a small autonomous medical drone delivers a cooled whole-blood unit. A wearable closed-loop resuscitation cuff auto-titrates fluids. Sleek near-future field aesthetic, cool teal holographic UI glow against dusk light, realistic gear and grounded proportions. Cinematic sci-fi medical realism, volumetric light, 35mm look. 21:9 cinematic."
+  },
+  "i2v": {
+   "model": "Luma",
+   "technique": "Cinematic sci-fi dolly",
+   "text": "Starting frame: futuristic concept art of next-generation combat casualty care, a medic wearing an augmented-reality visor projecting holographic vitals and a vascular access guide over a casualty, a small autonomous medical drone delivering a cooled whole-blood unit, a wearable closed-loop resuscitation cuff auto-titrating fluids, cool teal holographic UI glow against dusk light, sleek near-future field aesthetic, volumetric light, 35mm look. Animation: the holographic vitals flicker and update, the drone descends and releases the blood unit, the resuscitation cuff pulses as it titrates, teal UI glowing. Slow cinematic dolly-in, 9s, 24fps."
+  },
+  "t2v": {
+   "model": "Veo",
+   "technique": "Cinematic sci-fi realism",
+   "text": "Cinematic sci-fi medical concept footage of next-generation combat casualty care, a medic in an augmented-reality visor projecting flickering holographic vitals and a vascular access guide over a casualty while a small autonomous medical drone descends to deliver a cooled whole-blood unit and a wearable closed-loop resuscitation cuff pulses as it auto-titrates fluids. Sleek near-future field aesthetic, cool teal holographic UI glow against dusk light, realistic grounded gear, volumetric light, 35mm look. Slow cinematic dolly toward the medic, ultrawide twenty-one by nine, 8s, 24fps."
+  }
+ }
 ];

@@ -193,6 +193,31 @@ body::before{content:'';position:fixed;inset:0;background:
 .tw-legend .lg{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.66rem;color:var(--tx2)}
 .tw-legend .lg b{width:16px;height:16px;border-radius:4px;display:inline-block;flex-shrink:0}
 
+/* ===== IMAGERY-SET CARD TYPE + tab ===== */
+.tab.active-img{color:var(--t2i);border-color:var(--t2i)}
+.card.type-img .card-head::before{background:var(--t2i)}
+.card.type-img .card-num{background:var(--glow-t2i);color:var(--t2i)}
+.card.type-sc:hover{box-shadow:0 2px 28px var(--glow-sc)}
+.card.type-img:hover{box-shadow:0 2px 28px var(--glow-t2i)}
+.tag-set{color:var(--t2i);border-color:var(--t2i);background:color-mix(in srgb,var(--t2i) 8%,transparent)}
+
+/* ===== "Visualise this scenario" divider ===== */
+.viz-divider{display:flex;align-items:center;gap:10px;margin:18px 0 12px;
+  font-family:var(--mono);font-size:.64rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--t2i)}
+.viz-divider::before,.viz-divider::after{content:'';height:1px;flex:1;
+  background:linear-gradient(90deg,transparent,var(--border),transparent)}
+
+/* ===== Aligned-media block (T2I / I2V / T2V toggle) ===== */
+.media-block{margin-top:2px}
+.media-seg{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.media-seg button{flex:1 1 0;min-width:104px;font-family:var(--mono);font-size:.66rem;letter-spacing:.4px;
+  padding:8px 10px;border-radius:7px;border:1px solid var(--border);background:var(--s2);color:var(--tx2);
+  cursor:pointer;transition:all .18s;white-space:nowrap}
+.media-seg button:hover{color:var(--txb);border-color:var(--mc,var(--acc))}
+.media-seg button.on{color:var(--mc,var(--acc));border-color:var(--mc,var(--acc));
+  background:color-mix(in srgb,var(--mc,var(--acc)) 12%,transparent);font-weight:700}
+.media-seg button:focus-visible{outline:2px solid var(--mc,var(--acc));outline-offset:2px}
+
 /* Responsive */
 @media(max-width:768px){
   .hdr-top{padding:10px 14px;gap:10px}
@@ -202,4 +227,5 @@ body::before{content:'';position:fixed;inset:0;background:
   .main{padding:14px 14px 60px}
   .card-body{padding:0 12px 14px 14px}
   .card-meta-tags .tag-cat{display:none}
+  .media-seg button{flex-basis:100%}
 }
