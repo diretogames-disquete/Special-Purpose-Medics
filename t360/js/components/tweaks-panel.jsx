@@ -47,113 +47,80 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 const __TWEAKS_STYLE = `
-  .twk-panel{position:fixed;right:16px;bottom:16px;z-index:2147483646;width:280px;
-    max-height:calc(100vh - 32px);display:flex;flex-direction:column;
-    transform:scale(var(--dc-inv-zoom,1));transform-origin:bottom right;
-    background:rgba(250,249,247,.78);color:#29261b;
-    -webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);
-    border:.5px solid rgba(255,255,255,.6);border-radius:14px;
-    box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 12px 40px rgba(0,0,0,.18);
-    font:11.5px/1.4 ui-sans-serif,system-ui,-apple-system,sans-serif;overflow:hidden}
-  .twk-hd{display:flex;align-items:center;justify-content:space-between;
-    padding:10px 8px 10px 14px;cursor:move;user-select:none}
-  .twk-hd b{font-size:12px;font-weight:600;letter-spacing:.01em}
-  .twk-x{appearance:none;border:0;background:transparent;color:rgba(41,38,27,.55);
-    width:22px;height:22px;border-radius:6px;cursor:default;font-size:13px;line-height:1}
-  .twk-x:hover{background:rgba(0,0,0,.06);color:#29261b}
-  .twk-body{padding:2px 14px 14px;display:flex;flex-direction:column;gap:10px;
-    overflow-y:auto;overflow-x:hidden;min-height:0;
-    scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.15) transparent}
-  .twk-body::-webkit-scrollbar{width:8px}
-  .twk-body::-webkit-scrollbar-track{background:transparent;margin:2px}
-  .twk-body::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:4px;
-    border:2px solid transparent;background-clip:content-box}
-  .twk-body::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,.25);
-    border:2px solid transparent;background-clip:content-box}
-  .twk-row{display:flex;flex-direction:column;gap:5px}
+  .twk-scrim{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:2147483646;animation:twkfade .25s ease}
+  .twk-panel{position:fixed;top:0;right:0;height:100%;width:330px;max-width:86vw;z-index:2147483647;
+    display:flex;flex-direction:column;
+    --tk-acc:var(--tk-accent,#6fd99a);--tk-surf:rgba(16,21,28,.94);--tk-surf2:rgba(30,38,52,.7);
+    --tk-line:rgba(255,255,255,.12);--tk-tx:#e8eef4;--tk-tx2:#9aa7b6;
+    background:var(--tk-surf);color:var(--tk-tx);
+    -webkit-backdrop-filter:blur(22px) saturate(1.3);backdrop-filter:blur(22px) saturate(1.3);
+    border-left:1px solid var(--tk-line);box-shadow:-20px 0 60px -30px rgba(0,0,0,.85);
+    font:13px/1.45 ui-sans-serif,system-ui,-apple-system,sans-serif;animation:twkslide .28s cubic-bezier(.4,0,.2,1)}
+  @keyframes twkslide{from{transform:translateX(105%)}to{transform:none}}
+  @keyframes twkfade{from{opacity:0}to{opacity:1}}
+  .twk-hd{display:flex;align-items:center;justify-content:space-between;padding:18px 18px 4px}
+  .twk-hd b{font-size:1.15rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--tk-tx)}
+  .twk-x{appearance:none;border:1px solid var(--tk-line);background:transparent;color:var(--tk-tx2);
+    width:30px;height:30px;border-radius:7px;cursor:pointer;font-size:14px;line-height:1}
+  .twk-x:hover{border-color:var(--tk-acc);color:var(--tk-acc)}
+  .twk-body{padding:6px 18px 28px;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;min-height:0}
+  .twk-body::-webkit-scrollbar{width:7px}
+  .twk-body::-webkit-scrollbar-thumb{background:var(--tk-line);border-radius:4px}
+  .twk-sect{font-family:ui-monospace,monospace;font-size:10px;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--tk-acc);padding:16px 0 4px;border-top:1px solid var(--tk-line);margin-top:12px}
+  .twk-sect:first-child{padding-top:2px;border-top:0;margin-top:0}
+  .twk-row{display:flex;flex-direction:column;gap:6px;margin:9px 0}
   .twk-row-h{flex-direction:row;align-items:center;justify-content:space-between;gap:10px}
-  .twk-lbl{display:flex;justify-content:space-between;align-items:baseline;
-    color:rgba(41,38,27,.72)}
+  .twk-lbl{display:flex;justify-content:space-between;align-items:baseline;color:var(--tk-tx)}
   .twk-lbl>span:first-child{font-weight:500}
-  .twk-val{color:rgba(41,38,27,.5);font-variant-numeric:tabular-nums}
-
-  .twk-sect{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
-    color:rgba(41,38,27,.45);padding:10px 0 0}
-  .twk-sect:first-child{padding-top:0}
-
-  .twk-field{appearance:none;box-sizing:border-box;width:100%;min-width:0;height:26px;padding:0 8px;
-    border:.5px solid rgba(0,0,0,.1);border-radius:7px;
-    background:rgba(255,255,255,.6);color:inherit;font:inherit;outline:none}
-  .twk-field:focus{border-color:rgba(0,0,0,.25);background:rgba(255,255,255,.85)}
-  select.twk-field{padding-right:22px;
-    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='rgba(0,0,0,.5)' d='M0 0h10L5 6z'/></svg>");
-    background-repeat:no-repeat;background-position:right 8px center}
-
-  .twk-slider{appearance:none;-webkit-appearance:none;width:100%;height:4px;margin:6px 0;
-    border-radius:999px;background:rgba(0,0,0,.12);outline:none}
-  .twk-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
-    width:14px;height:14px;border-radius:50%;background:#fff;
-    border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
-  .twk-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;
-    background:#fff;border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
-
-  .twk-seg{position:relative;display:flex;padding:2px;border-radius:8px;
-    background:rgba(0,0,0,.06);user-select:none}
-  .twk-seg-thumb{position:absolute;top:2px;bottom:2px;border-radius:6px;
-    background:rgba(255,255,255,.9);box-shadow:0 1px 2px rgba(0,0,0,.12);
+  .twk-val{color:var(--tk-tx2);font-variant-numeric:tabular-nums;font-family:ui-monospace,monospace;font-size:11px}
+  .twk-field{appearance:none;box-sizing:border-box;width:100%;min-width:0;height:32px;padding:0 10px;
+    border:1px solid var(--tk-line);border-radius:8px;background:var(--tk-surf2);color:var(--tk-tx);font:inherit;outline:none}
+  .twk-field:focus{border-color:var(--tk-acc)}
+  select.twk-field{padding-right:24px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path fill='%239aa7b6' d='M0 0h10L5 6z'/></svg>");
+    background-repeat:no-repeat;background-position:right 9px center}
+  .twk-slider{appearance:none;-webkit-appearance:none;width:100%;height:4px;margin:8px 0;border-radius:999px;background:var(--tk-line);outline:none}
+  .twk-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:15px;height:15px;border-radius:50%;background:var(--tk-acc);border:0;cursor:pointer}
+  .twk-slider::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:var(--tk-acc);border:0;cursor:pointer}
+  .twk-seg{position:relative;display:flex;padding:3px;border-radius:8px;background:var(--tk-surf2);border:1px solid var(--tk-line);user-select:none}
+  .twk-seg-thumb{position:absolute;top:3px;bottom:3px;border-radius:6px;background:var(--tk-acc);box-shadow:0 1px 4px rgba(0,0,0,.3);
     transition:left .15s cubic-bezier(.3,.7,.4,1),width .15s}
   .twk-seg.dragging .twk-seg-thumb{transition:none}
-  .twk-seg button{appearance:none;position:relative;z-index:1;flex:1;border:0;
-    background:transparent;color:inherit;font:inherit;font-weight:500;min-height:22px;
-    border-radius:6px;cursor:default;padding:4px 6px;line-height:1.2;
-    overflow-wrap:anywhere}
-
-  .twk-toggle{position:relative;width:32px;height:18px;border:0;border-radius:999px;
-    background:rgba(0,0,0,.15);transition:background .15s;cursor:default;padding:0}
-  .twk-toggle[data-on="1"]{background:#34c759}
-  .twk-toggle i{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;
-    background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
-  .twk-toggle[data-on="1"] i{transform:translateX(14px)}
-
-  .twk-num{display:flex;align-items:center;box-sizing:border-box;min-width:0;height:26px;padding:0 0 0 8px;
-    border:.5px solid rgba(0,0,0,.1);border-radius:7px;background:rgba(255,255,255,.6)}
-  .twk-num-lbl{font-weight:500;color:rgba(41,38,27,.6);cursor:ew-resize;
-    user-select:none;padding-right:8px}
-  .twk-num input{flex:1;min-width:0;height:100%;border:0;background:transparent;
-    font:inherit;font-variant-numeric:tabular-nums;text-align:right;padding:0 8px 0 0;
-    outline:none;color:inherit;-moz-appearance:textfield}
-  .twk-num input::-webkit-inner-spin-button,.twk-num input::-webkit-outer-spin-button{
-    -webkit-appearance:none;margin:0}
-  .twk-num-unit{padding-right:8px;color:rgba(41,38,27,.45)}
-
-  .twk-btn{appearance:none;height:26px;padding:0 12px;border:0;border-radius:7px;
-    background:rgba(0,0,0,.78);color:#fff;font:inherit;font-weight:500;cursor:default}
-  .twk-btn:hover{background:rgba(0,0,0,.88)}
-  .twk-btn.secondary{background:rgba(0,0,0,.06);color:inherit}
-  .twk-btn.secondary:hover{background:rgba(0,0,0,.1)}
-
-  .twk-swatch{appearance:none;-webkit-appearance:none;width:56px;height:22px;
-    border:.5px solid rgba(0,0,0,.1);border-radius:6px;padding:0;cursor:default;
-    background:transparent;flex-shrink:0}
+  .twk-seg button{appearance:none;position:relative;z-index:1;flex:1;border:0;background:transparent;color:var(--tk-tx2);
+    font:inherit;font-weight:600;min-height:24px;border-radius:6px;cursor:pointer;padding:4px 6px;line-height:1.2;overflow-wrap:anywhere;font-size:11.5px}
+  .twk-seg button[aria-checked="true"],.twk-seg button[aria-selected="true"]{color:#0b0f14}
+  .twk-toggle{position:relative;width:42px;height:23px;border:1px solid var(--tk-line);border-radius:999px;
+    background:var(--tk-surf2);transition:background .15s,border-color .15s;cursor:pointer;padding:0}
+  .twk-toggle[data-on="1"]{background:color-mix(in srgb,var(--tk-acc) 30%,transparent);border-color:var(--tk-acc)}
+  .twk-toggle i{position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:var(--tk-tx2);transition:transform .15s,background .15s}
+  .twk-toggle[data-on="1"] i{transform:translateX(19px);background:var(--tk-acc)}
+  .twk-num{display:flex;align-items:center;box-sizing:border-box;min-width:0;height:32px;padding:0 0 0 10px;
+    border:1px solid var(--tk-line);border-radius:8px;background:var(--tk-surf2)}
+  .twk-num-lbl{font-weight:500;color:var(--tk-tx2);cursor:ew-resize;user-select:none;padding-right:8px}
+  .twk-num input{flex:1;min-width:0;height:100%;border:0;background:transparent;font:inherit;font-variant-numeric:tabular-nums;
+    text-align:right;padding:0 8px 0 0;outline:none;color:var(--tk-tx);-moz-appearance:textfield}
+  .twk-num input::-webkit-inner-spin-button,.twk-num input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+  .twk-num-unit{padding-right:10px;color:var(--tk-tx2)}
+  .twk-btn{appearance:none;height:32px;padding:0 14px;border:1px solid var(--tk-acc);border-radius:8px;
+    background:color-mix(in srgb,var(--tk-acc) 16%,transparent);color:var(--tk-acc);font:inherit;font-weight:700;cursor:pointer}
+  .twk-btn:hover{background:var(--tk-acc);color:#0b0f14}
+  .twk-btn.secondary{border-color:var(--tk-line);background:var(--tk-surf2);color:var(--tk-tx)}
+  .twk-btn.secondary:hover{border-color:var(--tk-acc);color:var(--tk-acc);background:var(--tk-surf2)}
+  .twk-swatch{appearance:none;-webkit-appearance:none;width:56px;height:24px;border:1px solid var(--tk-line);border-radius:6px;padding:0;cursor:pointer;background:transparent;flex-shrink:0}
   .twk-swatch::-webkit-color-swatch-wrapper{padding:0}
-  .twk-swatch::-webkit-color-swatch{border:0;border-radius:5.5px}
-  .twk-swatch::-moz-color-swatch{border:0;border-radius:5.5px}
-
+  .twk-swatch::-webkit-color-swatch{border:0;border-radius:5px}
+  .twk-swatch::-moz-color-swatch{border:0;border-radius:5px}
   .twk-chips{display:flex;gap:6px}
-  .twk-chip{position:relative;appearance:none;flex:1;min-width:0;height:46px;
-    padding:0;border:0;border-radius:6px;overflow:hidden;cursor:default;
-    box-shadow:0 0 0 .5px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.06);
-    transition:transform .12s cubic-bezier(.3,.7,.4,1),box-shadow .12s}
-  .twk-chip:hover{transform:translateY(-1px);
-    box-shadow:0 0 0 .5px rgba(0,0,0,.18),0 4px 10px rgba(0,0,0,.12)}
-  .twk-chip[data-on="1"]{box-shadow:0 0 0 1.5px rgba(0,0,0,.85),
-    0 2px 6px rgba(0,0,0,.15)}
-  .twk-chip>span{position:absolute;top:0;bottom:0;right:0;width:34%;
-    display:flex;flex-direction:column;box-shadow:-1px 0 0 rgba(0,0,0,.1)}
-  .twk-chip>span>i{flex:1;box-shadow:0 -1px 0 rgba(0,0,0,.1)}
+  .twk-chip{position:relative;appearance:none;flex:1;min-width:0;height:44px;padding:0;border:0;border-radius:7px;overflow:hidden;cursor:pointer;
+    box-shadow:0 0 0 1px var(--tk-line);transition:transform .12s,box-shadow .12s}
+  .twk-chip:hover{transform:translateY(-1px)}
+  .twk-chip[data-on="1"]{box-shadow:0 0 0 2px var(--tk-acc)}
+  .twk-chip>span{position:absolute;top:0;bottom:0;right:0;width:34%;display:flex;flex-direction:column;box-shadow:-1px 0 0 rgba(0,0,0,.25)}
+  .twk-chip>span>i{flex:1;box-shadow:0 -1px 0 rgba(0,0,0,.25)}
   .twk-chip>span>i:first-child{box-shadow:none}
-  .twk-chip svg{position:absolute;top:6px;left:6px;width:13px;height:13px;
-    filter:drop-shadow(0 1px 1px rgba(0,0,0,.3))}
+  .twk-chip svg{position:absolute;top:6px;left:6px;width:13px;height:13px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
+  @media (prefers-reduced-motion: reduce){.twk-panel,.twk-scrim{animation:none}}
 `;
 
 // ── useTweaks ───────────────────────────────────────────────────────────────
@@ -183,74 +150,11 @@ function useTweaks(defaults) {
 // The close button posts __edit_mode_dismissed so the host's toolbar toggle
 // flips off in lockstep; the host echoes __deactivate_edit_mode back which
 // is what actually hides the panel.
-function TweaksPanel({ title = 'Tweaks', noDeckControls = false, children }) {
+function TweaksPanel({ title = 'Tweaks', children }) {
   const [open, setOpen] = React.useState(false);
-  const dragRef = React.useRef(null);
-  // Auto-inject a rail toggle when a <deck-stage> is on the page. The
-  // toggle drives the deck's per-viewer _railVisible via window message;
-  // state is mirrored from the same localStorage key the deck reads so
-  // the control reflects reality across reloads. The mechanism is the
-  // message — authors who want custom placement can post it directly
-  // and pass noDeckControls to suppress this one.
-  const hasDeckStage = React.useMemo(
-    () => typeof document !== 'undefined' && !!document.querySelector('deck-stage'),
-    [],
-  );
-  // deck-stage enables its rail in connectedCallback, but this panel can
-  // mount before that element has upgraded. The initial read catches the
-  // common case; the listener covers mounting first. (Older deck-stage.js
-  // copies still wait for the host's __omelette_rail_enabled postMessage —
-  // same listener handles those.)
-  const [railEnabled, setRailEnabled] = React.useState(
-    () => hasDeckStage && !!document.querySelector('deck-stage')?._railEnabled,
-  );
-  React.useEffect(() => {
-    if (!hasDeckStage || railEnabled) return undefined;
-    const onMsg = (e) => {
-      if (e.data && e.data.type === '__omelette_rail_enabled') setRailEnabled(true);
-    };
-    window.addEventListener('message', onMsg);
-    return () => window.removeEventListener('message', onMsg);
-  }, [hasDeckStage, railEnabled]);
-  const [railVisible, setRailVisible] = React.useState(() => {
-    try { return localStorage.getItem('deck-stage.railVisible') !== '0'; } catch (e) { return true; }
-  });
-  const toggleRail = (on) => {
-    setRailVisible(on);
-    window.postMessage({ type: '__deck_rail_visible', on }, '*');
-  };
-  const offsetRef = React.useRef({ x: 16, y: 16 });
-  const PAD = 16;
-
-  const clampToViewport = React.useCallback(() => {
-    const panel = dragRef.current;
-    if (!panel) return;
-    const w = panel.offsetWidth, h = panel.offsetHeight;
-    const maxRight = Math.max(PAD, window.innerWidth - w - PAD);
-    const maxBottom = Math.max(PAD, window.innerHeight - h - PAD);
-    offsetRef.current = {
-      x: Math.min(maxRight, Math.max(PAD, offsetRef.current.x)),
-      y: Math.min(maxBottom, Math.max(PAD, offsetRef.current.y)),
-    };
-    panel.style.right = offsetRef.current.x + 'px';
-    panel.style.bottom = offsetRef.current.y + 'px';
-  }, []);
-
-  React.useEffect(() => {
-    if (!open) return;
-    clampToViewport();
-    if (typeof ResizeObserver === 'undefined') {
-      window.addEventListener('resize', clampToViewport);
-      return () => window.removeEventListener('resize', clampToViewport);
-    }
-    const ro = new ResizeObserver(clampToViewport);
-    ro.observe(document.documentElement);
-    return () => ro.disconnect();
-  }, [open, clampToViewport]);
-
   React.useEffect(() => {
     const onMsg = (e) => {
-      const t = e?.data?.type;
+      const t = e && e.data && e.data.type;
       if (t === '__activate_edit_mode') setOpen(true);
       else if (t === '__deactivate_edit_mode') setOpen(false);
     };
@@ -258,60 +162,34 @@ function TweaksPanel({ title = 'Tweaks', noDeckControls = false, children }) {
     window.parent.postMessage({ type: '__edit_mode_available' }, '*');
     return () => window.removeEventListener('message', onMsg);
   }, []);
-
-  const dismiss = () => {
+  const dismiss = React.useCallback(() => {
     setOpen(false);
     window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*');
-  };
-
-  const onDragStart = (e) => {
-    const panel = dragRef.current;
-    if (!panel) return;
-    const r = panel.getBoundingClientRect();
-    const sx = e.clientX, sy = e.clientY;
-    const startRight = window.innerWidth - r.right;
-    const startBottom = window.innerHeight - r.bottom;
-    const move = (ev) => {
-      offsetRef.current = {
-        x: startRight - (ev.clientX - sx),
-        y: startBottom - (ev.clientY - sy),
-      };
-      clampToViewport();
-    };
-    const up = () => {
-      window.removeEventListener('mousemove', move);
-      window.removeEventListener('mouseup', up);
-    };
-    window.addEventListener('mousemove', move);
-    window.addEventListener('mouseup', up);
-  };
+  }, []);
+  React.useEffect(() => {
+    if (!open) return undefined;
+    const onKey = (e) => { if (e.key === 'Escape') dismiss(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open, dismiss]);
 
   if (!open) return null;
   return (
     <>
       <style>{__TWEAKS_STYLE}</style>
-      <div ref={dragRef} className="twk-panel" data-noncommentable=""
-           style={{ right: offsetRef.current.x, bottom: offsetRef.current.y }}>
-        <div className="twk-hd" onMouseDown={onDragStart}>
+      <div className="twk-scrim" data-noncommentable="" onClick={dismiss} />
+      <aside className="twk-panel" data-noncommentable="" role="dialog" aria-label={title}>
+        <div className="twk-hd">
           <b>{title}</b>
-          <button className="twk-x" aria-label="Close tweaks"
-                  onMouseDown={(e) => e.stopPropagation()}
-                  onClick={dismiss}>✕</button>
+          <button className="twk-x" aria-label="Close tweaks" onClick={dismiss}>✕</button>
         </div>
         <div className="twk-body">
           {children}
-          {hasDeckStage && railEnabled && !noDeckControls && (
-            <TweakSection label="Deck">
-              <TweakToggle label="Thumbnail rail" value={railVisible} onChange={toggleRail} />
-            </TweakSection>
-          )}
         </div>
-      </div>
+      </aside>
     </>
   );
 }
-
-// ── Layout helpers ──────────────────────────────────────────────────────────
 
 function TweakSection({ label, children }) {
   return (

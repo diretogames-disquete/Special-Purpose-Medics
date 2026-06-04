@@ -156,6 +156,16 @@
   var tb = $('themeBtn'); if (tb) tb.textContent = th === 'light' ? '☼ Light' : '☾ Dark';
   applyGlass();
   setCocom(store.get('cocom', 'af'));
+  // hub-style top-right sound toggle (animated EQ bars when on)
+  var sndBtn = $('soundToggle');
+  if (sndBtn) sndBtn.addEventListener('click', function () {
+    soundOn = !soundOn; actxInit();
+    if (actx && actx.state === 'suspended') actx.resume();
+    sndBtn.classList.toggle('on', soundOn);
+    sndBtn.setAttribute('aria-pressed', String(soundOn));
+    sndBtn.title = 'Sound: ' + (soundOn ? 'on' : 'off');
+    if (soundOn) tick();
+  });
   // '/' focuses search
   document.addEventListener('keydown', function (e) { if (e.key === '/' && document.activeElement !== searchEl) { e.preventDefault(); searchEl.focus(); } });
 })();

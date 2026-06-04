@@ -190,6 +190,22 @@ a{color:var(--gold)}
 .footer a{color:var(--gold)}
 @media(max-width:760px){ .spm-search{order:5;max-width:none;flex-basis:100%} .spm-tools{margin-left:0} }
 
+/* ===== Hub-style top-right sound toggle (EQ bars when on, flat line off) ===== */
+.sound-toggle{display:inline-flex;align-items:center;justify-content:center;width:44px;height:33px;padding:0;cursor:pointer;
+  border-radius:9px;color:var(--muted);background:var(--panel2);border:1px solid var(--line);transition:border-color .15s,color .15s}
+.sound-toggle:hover{border-color:var(--gold);color:var(--ink)}
+.snd-ico{width:27px;height:15px}
+.snd-line{stroke:var(--muted);stroke-width:1.7;stroke-linecap:round;opacity:1;transition:opacity .2s}
+.snd-bars{opacity:0;transition:opacity .2s}
+.snd-bars .b{fill:var(--gold);transform-box:fill-box;transform-origin:center;transform:scaleY(.4)}
+.sound-toggle.on .snd-line{opacity:0}
+.sound-toggle.on .snd-bars{opacity:1}
+.sound-toggle.on .b{animation:eq .9s ease-in-out infinite}
+.sound-toggle.on .b1{animation-delay:0s}.sound-toggle.on .b2{animation-delay:.18s}
+.sound-toggle.on .b3{animation-delay:.36s}.sound-toggle.on .b4{animation-delay:.12s}.sound-toggle.on .b5{animation-delay:.28s}
+@keyframes eq{0%,100%{transform:scaleY(.32)}50%{transform:scaleY(1)}}
+@media (prefers-reduced-motion: reduce){ .sound-toggle.on .b{animation:none;transform:scaleY(.8)} }
+
 </style>
 <style>
 /* =====================================================================
@@ -263,9 +279,20 @@ body.glass .scenario,body.glass .env .card,body.glass .panel-controls,body.glass
     <button class="btn" type="button" onclick="revealAllDiff()">Reveal Dx</button>
     <button class="btn" type="button" onclick="toggleAllAns()">Answers</button>
     <button class="btn" type="button" id="themeBtn" onclick="toggleTheme(this)">☾ Dark</button>
-    <button class="btn" type="button" id="soundBtn" onclick="toggleSound(this)">○ Sound</button>
     <button class="btn gold" type="button" onclick="exportPDF()" title="Opens the print dialog — choose Save as PDF">↓ PDF</button>
     <button class="btn" type="button" id="tweaksBtn" aria-haspopup="dialog" title="Tweaks">⚙</button>
+    <button id="soundToggle" class="sound-toggle" type="button" aria-pressed="false" title="Sound: off" aria-label="Toggle sound">
+      <svg viewBox="0 0 30 16" class="snd-ico" aria-hidden="true">
+        <line class="snd-line" x1="3" y1="8" x2="27" y2="8"/>
+        <g class="snd-bars">
+          <rect class="b b1" x="3" y="6" width="2.6" height="4" rx="1.3"/>
+          <rect class="b b2" x="8" y="3" width="2.6" height="10" rx="1.3"/>
+          <rect class="b b3" x="13" y="1.5" width="2.6" height="13" rx="1.3"/>
+          <rect class="b b4" x="18" y="3" width="2.6" height="10" rx="1.3"/>
+          <rect class="b b5" x="23" y="6" width="2.6" height="4" rx="1.3"/>
+        </g>
+      </svg>
+    </button>
   </div>
 </header>
 
@@ -5718,6 +5745,16 @@ body.glass .scenario,body.glass .env .card,body.glass .panel-controls,body.glass
   var tb = $('themeBtn'); if (tb) tb.textContent = th === 'light' ? '☼ Light' : '☾ Dark';
   applyGlass();
   setCocom(store.get('cocom', 'af'));
+  // hub-style top-right sound toggle (animated EQ bars when on)
+  var sndBtn = $('soundToggle');
+  if (sndBtn) sndBtn.addEventListener('click', function () {
+    soundOn = !soundOn; actxInit();
+    if (actx && actx.state === 'suspended') actx.resume();
+    sndBtn.classList.toggle('on', soundOn);
+    sndBtn.setAttribute('aria-pressed', String(soundOn));
+    sndBtn.title = 'Sound: ' + (soundOn ? 'on' : 'off');
+    if (soundOn) tick();
+  });
   // '/' focuses search
   document.addEventListener('keydown', function (e) { if (e.key === '/' && document.activeElement !== searchEl) { e.preventDefault(); searchEl.focus(); } });
 })();

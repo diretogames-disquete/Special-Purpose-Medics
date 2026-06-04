@@ -157,14 +157,15 @@ tbody tr.selected{background:var(--blue3);border-left:3px solid var(--blue);}
 /* ── Glass: translucent surface tokens so the tier-tinted field shows
    through the chrome. The field colour tracks the active tier. ── */
 body.glass {
-  --bg2: rgba(17, 22, 32, 0.62);
-  --bg3: rgba(23, 29, 42, 0.58);
-  --bg4: rgba(30, 37, 56, 0.62);
+  --glass-alpha: 0.62;
+  --bg2: color-mix(in srgb, #111620 calc(var(--glass-alpha) * 100%), transparent);
+  --bg3: color-mix(in srgb, #171D2A calc(var(--glass-alpha) * 100%), transparent);
+  --bg4: color-mix(in srgb, #1E2538 calc(var(--glass-alpha) * 100%), transparent);
 }
 body.glass.light {
-  --bg2: rgba(255, 255, 255, 0.62);
-  --bg3: rgba(248, 250, 252, 0.58);
-  --bg4: rgba(226, 232, 240, 0.66);
+  --bg2: color-mix(in srgb, #FFFFFF calc(var(--glass-alpha) * 100%), transparent);
+  --bg3: color-mix(in srgb, #F8FAFC calc(var(--glass-alpha) * 100%), transparent);
+  --bg4: color-mix(in srgb, #E2E8F0 calc(var(--glass-alpha) * 100%), transparent);
 }
 body.glass .header,
 body.glass .sidebar,
@@ -235,6 +236,34 @@ tbody tr[role="button"]:focus-visible { outline: 2px solid var(--blue); outline-
 }
 .pkpd-modline .pkpd-key { color: var(--text3); font-style: italic; }
 
+/* ===== Unified slide-in Tweaks panel (matches the other dashboards) ===== */
+.tweaks-scrim{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:400;opacity:0;pointer-events:none;transition:opacity .25s}
+.tweaks-scrim.open{opacity:1;pointer-events:auto}
+.tweaks{position:fixed;top:0;right:0;height:100%;width:320px;max-width:86vw;z-index:401;background:var(--bg2);
+  border-left:1px solid var(--border);box-shadow:-20px 0 60px -30px rgba(0,0,0,.8);transform:translateX(105%);
+  transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;padding:20px;-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2)}
+.tweaks.open{transform:translateX(0)}
+.tweaks h3{font-size:1.15rem;color:var(--text);margin:0 0 2px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.tweaks .tw-sub{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;margin-bottom:16px}
+.tw-close{position:absolute;top:16px;right:16px;background:none;border:1px solid var(--border);color:var(--text2);width:30px;height:30px;border-radius:6px;cursor:pointer;font-size:1rem}
+.tw-close:hover{border-color:var(--green);color:var(--green)}
+.tw-group{margin-bottom:18px;border:1px solid var(--border);border-radius:9px;padding:14px;background:var(--bg3)}
+.tw-label{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:10px;display:block}
+.tw-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:9px 0;font-size:.84rem;color:var(--text)}
+.tw-seg{display:flex;border:1px solid var(--border);border-radius:7px;overflow:hidden}
+.tw-seg button{flex:1;font-family:var(--mono);font-size:.64rem;padding:7px 9px;background:var(--bg2);color:var(--text2);border:none;cursor:pointer;text-transform:uppercase;letter-spacing:.04em}
+.tw-seg button.on{background:var(--green);color:var(--bg);font-weight:700}
+.tw-switch{position:relative;width:42px;height:23px;flex-shrink:0;cursor:pointer}
+.tw-switch input{opacity:0;width:0;height:0;position:absolute}
+.tw-switch .track{position:absolute;inset:0;background:var(--bg4);border:1px solid var(--border);border-radius:20px;transition:.2s}
+.tw-switch .thumb{position:absolute;top:3px;left:3px;width:15px;height:15px;border-radius:50%;background:var(--text2);transition:.2s}
+.tw-switch input:checked+.track{background:var(--green3);border-color:var(--green)}
+.tw-switch input:checked~.thumb{transform:translateX(19px);background:var(--green)}
+.tw-range{width:100%;accent-color:var(--green);margin-top:6px}
+.tweaks-btn{cursor:pointer;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:4px 10px;color:var(--text2);font-size:11px;font-family:var(--font);transition:all .15s}
+.tweaks-btn:hover{border-color:var(--green);color:var(--text)}
+.tweaks-btn:focus-visible,.tw-close:focus-visible,.tw-seg button:focus-visible,.tw-switch:focus-within{outline:2px solid var(--green);outline-offset:2px}
+
 </style>
 </head>
 <body>
@@ -250,6 +279,7 @@ tbody tr[role="button"]:focus-visible { outline: 2px solid var(--blue); outline-
     <button class="tier-btn" data-tier="2" onclick="setTier(2)">2 · Operational</button>
     <button class="tier-btn" data-tier="3" onclick="setTier(3)">3 · PFC Provider</button>
     <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">🌙 Night</button>
+    <button class="tweaks-btn" id="tweaksBtn" type="button" aria-haspopup="dialog" title="Tweaks">⚙ Tweaks</button>
     <div class="disclaimer">⚠ STUDY AID — Verify against published TCCC/JTS CPGs</div>
   </div>
 </div>
@@ -1144,6 +1174,66 @@ document.body.classList.add('glass');
 if (window.PFC_BG) { window.PFC_BG.setGlass(true); window.PFC_BG.setAccent(TIER_ACCENT[currentTier]); }
 
 recalc();
+
+/* ===== Unified slide-in Tweaks panel (theme / glass / opacity / tint) ===== */
+(function () {
+  var doc = document, body = doc.body;
+  var glassOn = true, glassAlpha = 0.62, tintOn = true;
+  try {
+    glassOn = localStorage.getItem('spm.pharm.glass') !== '0';
+    var ga = parseFloat(localStorage.getItem('spm.pharm.glassAlpha')); if (!isNaN(ga)) glassAlpha = ga;
+    tintOn = localStorage.getItem('spm.pharm.tint') !== '0';
+  } catch (e) {}
+  function el(t, c, x) { var e = doc.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; }
+  function applyGlass() {
+    body.classList.toggle('glass', glassOn);
+    body.style.setProperty('--glass-alpha', String(glassAlpha));
+    if (window.PFC_BG) window.PFC_BG.setGlass(glassOn);
+    try { localStorage.setItem('spm.pharm.glass', glassOn ? '1' : '0'); localStorage.setItem('spm.pharm.glassAlpha', String(glassAlpha)); } catch (e) {}
+  }
+  function applyTint() {
+    if (window.PFC_BG) window.PFC_BG.setAccent(tintOn ? TIER_ACCENT[currentTier] : null);
+    try { localStorage.setItem('spm.pharm.tint', tintOn ? '1' : '0'); } catch (e) {}
+  }
+  function mkSwitch(on, cb) {
+    var lab = el('label', 'tw-switch'); lab.tabIndex = 0; lab.setAttribute('role', 'switch'); lab.setAttribute('aria-checked', String(on));
+    var inp = el('input'); inp.type = 'checkbox'; inp.checked = on; var tr = el('span', 'track'), th = el('span', 'thumb');
+    lab.appendChild(inp); lab.appendChild(tr); lab.appendChild(th);
+    function fire() { lab.setAttribute('aria-checked', String(inp.checked)); cb(inp.checked); }
+    inp.addEventListener('change', fire);
+    lab.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); inp.checked = !inp.checked; fire(); } });
+    return lab;
+  }
+  var scrim = el('div', 'tweaks-scrim');
+  var panel = el('aside', 'tweaks'); panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-label', 'Tweaks'); panel.setAttribute('aria-hidden', 'true');
+  var close = el('button', 'tw-close', '×'); close.type = 'button'; close.setAttribute('aria-label', 'Close'); panel.appendChild(close);
+  panel.appendChild(el('h3', null, 'Tweaks')); panel.appendChild(el('div', 'tw-sub', 'Theme · field'));
+  // Theme group
+  var gT = el('div', 'tw-group'); gT.appendChild(el('span', 'tw-label', 'Theme'));
+  var seg = el('div', 'tw-seg');
+  var bDark = el('button', '', 'Night'); bDark.type = 'button';
+  var bLight = el('button', '', 'Day'); bLight.type = 'button';
+  function paintTheme() { var lt = body.classList.contains('light'); bDark.classList.toggle('on', !lt); bLight.classList.toggle('on', lt); }
+  bDark.addEventListener('click', function () { if (body.classList.contains('light')) toggleTheme(); paintTheme(); });
+  bLight.addEventListener('click', function () { if (!body.classList.contains('light')) toggleTheme(); paintTheme(); });
+  seg.appendChild(bDark); seg.appendChild(bLight); gT.appendChild(seg); panel.appendChild(gT);
+  // Field group
+  var gF = el('div', 'tw-group'); gF.appendChild(el('span', 'tw-label', 'Ambient field'));
+  var r1 = el('div', 'tw-row'); r1.appendChild(doc.createTextNode('Glass panels')); r1.appendChild(mkSwitch(glassOn, function (v) { glassOn = v; applyGlass(); })); gF.appendChild(r1);
+  var r2 = el('div', 'tw-row'); r2.style.display = 'block'; r2.appendChild(doc.createTextNode('Panel opacity'));
+  var rng = el('input', 'tw-range'); rng.type = 'range'; rng.min = '0.3'; rng.max = '0.92'; rng.step = '0.01'; rng.value = String(glassAlpha); rng.setAttribute('aria-label', 'Panel opacity');
+  rng.addEventListener('input', function () { glassAlpha = parseFloat(rng.value); applyGlass(); }); r2.appendChild(rng); gF.appendChild(r2);
+  var r3 = el('div', 'tw-row'); r3.appendChild(doc.createTextNode('Tint field to tier')); r3.appendChild(mkSwitch(tintOn, function (v) { tintOn = v; applyTint(); })); gF.appendChild(r3);
+  panel.appendChild(gF);
+  body.appendChild(scrim); body.appendChild(panel);
+  function open() { scrim.classList.add('open'); panel.classList.add('open'); panel.setAttribute('aria-hidden', 'false'); paintTheme(); close.focus(); }
+  function shut() { scrim.classList.remove('open'); panel.classList.remove('open'); panel.setAttribute('aria-hidden', 'true'); }
+  close.addEventListener('click', shut); scrim.addEventListener('click', shut);
+  doc.addEventListener('keydown', function (e) { if (e.key === 'Escape' && panel.classList.contains('open')) shut(); });
+  var tb = doc.getElementById('tweaksBtn'); if (tb) tb.addEventListener('click', open);
+  // apply persisted on load (glass already added by app; honor stored prefs)
+  applyGlass(); applyTint();
+})();
 
 </script>
 </body>

@@ -177,3 +177,19 @@ a{color:var(--gold)}
 .panel-controls .fpills{margin-top:0}
 .footer a{color:var(--gold)}
 @media(max-width:760px){ .spm-search{order:5;max-width:none;flex-basis:100%} .spm-tools{margin-left:0} }
+
+/* ===== Hub-style top-right sound toggle (EQ bars when on, flat line off) ===== */
+.sound-toggle{display:inline-flex;align-items:center;justify-content:center;width:44px;height:33px;padding:0;cursor:pointer;
+  border-radius:9px;color:var(--muted);background:var(--panel2);border:1px solid var(--line);transition:border-color .15s,color .15s}
+.sound-toggle:hover{border-color:var(--gold);color:var(--ink)}
+.snd-ico{width:27px;height:15px}
+.snd-line{stroke:var(--muted);stroke-width:1.7;stroke-linecap:round;opacity:1;transition:opacity .2s}
+.snd-bars{opacity:0;transition:opacity .2s}
+.snd-bars .b{fill:var(--gold);transform-box:fill-box;transform-origin:center;transform:scaleY(.4)}
+.sound-toggle.on .snd-line{opacity:0}
+.sound-toggle.on .snd-bars{opacity:1}
+.sound-toggle.on .b{animation:eq .9s ease-in-out infinite}
+.sound-toggle.on .b1{animation-delay:0s}.sound-toggle.on .b2{animation-delay:.18s}
+.sound-toggle.on .b3{animation-delay:.36s}.sound-toggle.on .b4{animation-delay:.12s}.sound-toggle.on .b5{animation-delay:.28s}
+@keyframes eq{0%,100%{transform:scaleY(.32)}50%{transform:scaleY(1)}}
+@media (prefers-reduced-motion: reduce){ .sound-toggle.on .b{animation:none;transform:scaleY(.8)} }

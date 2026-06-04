@@ -3019,3 +3019,6 @@ select.ts-inline option {
   background: rgba(31, 138, 91, 0.10);
   color: var(--live);
 }
+
+/* Unified Tweaks panel accent */
+:root{--tk-accent:#6fd99a}
