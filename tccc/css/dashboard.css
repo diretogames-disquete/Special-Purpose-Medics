@@ -1604,3 +1604,6 @@ input:focus { outline: none; }
 /* small utility */
 .row { display: flex; align-items: center; gap: 8px; }
 .spacer { flex: 1; }
+
+/* Unified Tweaks panel accent */
+:root{--tk-accent:#f4b04a}

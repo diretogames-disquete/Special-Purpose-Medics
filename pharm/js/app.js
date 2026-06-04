@@ -483,3 +483,63 @@ document.body.classList.add('glass');
 if (window.PFC_BG) { window.PFC_BG.setGlass(true); window.PFC_BG.setAccent(TIER_ACCENT[currentTier]); }
 
 recalc();
+
+/* ===== Unified slide-in Tweaks panel (theme / glass / opacity / tint) ===== */
+(function () {
+  var doc = document, body = doc.body;
+  var glassOn = true, glassAlpha = 0.62, tintOn = true;
+  try {
+    glassOn = localStorage.getItem('spm.pharm.glass') !== '0';
+    var ga = parseFloat(localStorage.getItem('spm.pharm.glassAlpha')); if (!isNaN(ga)) glassAlpha = ga;
+    tintOn = localStorage.getItem('spm.pharm.tint') !== '0';
+  } catch (e) {}
+  function el(t, c, x) { var e = doc.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; }
+  function applyGlass() {
+    body.classList.toggle('glass', glassOn);
+    body.style.setProperty('--glass-alpha', String(glassAlpha));
+    if (window.PFC_BG) window.PFC_BG.setGlass(glassOn);
+    try { localStorage.setItem('spm.pharm.glass', glassOn ? '1' : '0'); localStorage.setItem('spm.pharm.glassAlpha', String(glassAlpha)); } catch (e) {}
+  }
+  function applyTint() {
+    if (window.PFC_BG) window.PFC_BG.setAccent(tintOn ? TIER_ACCENT[currentTier] : null);
+    try { localStorage.setItem('spm.pharm.tint', tintOn ? '1' : '0'); } catch (e) {}
+  }
+  function mkSwitch(on, cb) {
+    var lab = el('label', 'tw-switch'); lab.tabIndex = 0; lab.setAttribute('role', 'switch'); lab.setAttribute('aria-checked', String(on));
+    var inp = el('input'); inp.type = 'checkbox'; inp.checked = on; var tr = el('span', 'track'), th = el('span', 'thumb');
+    lab.appendChild(inp); lab.appendChild(tr); lab.appendChild(th);
+    function fire() { lab.setAttribute('aria-checked', String(inp.checked)); cb(inp.checked); }
+    inp.addEventListener('change', fire);
+    lab.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); inp.checked = !inp.checked; fire(); } });
+    return lab;
+  }
+  var scrim = el('div', 'tweaks-scrim');
+  var panel = el('aside', 'tweaks'); panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-label', 'Tweaks'); panel.setAttribute('aria-hidden', 'true');
+  var close = el('button', 'tw-close', '×'); close.type = 'button'; close.setAttribute('aria-label', 'Close'); panel.appendChild(close);
+  panel.appendChild(el('h3', null, 'Tweaks')); panel.appendChild(el('div', 'tw-sub', 'Theme · field'));
+  // Theme group
+  var gT = el('div', 'tw-group'); gT.appendChild(el('span', 'tw-label', 'Theme'));
+  var seg = el('div', 'tw-seg');
+  var bDark = el('button', '', 'Night'); bDark.type = 'button';
+  var bLight = el('button', '', 'Day'); bLight.type = 'button';
+  function paintTheme() { var lt = body.classList.contains('light'); bDark.classList.toggle('on', !lt); bLight.classList.toggle('on', lt); }
+  bDark.addEventListener('click', function () { if (body.classList.contains('light')) toggleTheme(); paintTheme(); });
+  bLight.addEventListener('click', function () { if (!body.classList.contains('light')) toggleTheme(); paintTheme(); });
+  seg.appendChild(bDark); seg.appendChild(bLight); gT.appendChild(seg); panel.appendChild(gT);
+  // Field group
+  var gF = el('div', 'tw-group'); gF.appendChild(el('span', 'tw-label', 'Ambient field'));
+  var r1 = el('div', 'tw-row'); r1.appendChild(doc.createTextNode('Glass panels')); r1.appendChild(mkSwitch(glassOn, function (v) { glassOn = v; applyGlass(); })); gF.appendChild(r1);
+  var r2 = el('div', 'tw-row'); r2.style.display = 'block'; r2.appendChild(doc.createTextNode('Panel opacity'));
+  var rng = el('input', 'tw-range'); rng.type = 'range'; rng.min = '0.3'; rng.max = '0.92'; rng.step = '0.01'; rng.value = String(glassAlpha); rng.setAttribute('aria-label', 'Panel opacity');
+  rng.addEventListener('input', function () { glassAlpha = parseFloat(rng.value); applyGlass(); }); r2.appendChild(rng); gF.appendChild(r2);
+  var r3 = el('div', 'tw-row'); r3.appendChild(doc.createTextNode('Tint field to tier')); r3.appendChild(mkSwitch(tintOn, function (v) { tintOn = v; applyTint(); })); gF.appendChild(r3);
+  panel.appendChild(gF);
+  body.appendChild(scrim); body.appendChild(panel);
+  function open() { scrim.classList.add('open'); panel.classList.add('open'); panel.setAttribute('aria-hidden', 'false'); paintTheme(); close.focus(); }
+  function shut() { scrim.classList.remove('open'); panel.classList.remove('open'); panel.setAttribute('aria-hidden', 'true'); }
+  close.addEventListener('click', shut); scrim.addEventListener('click', shut);
+  doc.addEventListener('keydown', function (e) { if (e.key === 'Escape' && panel.classList.contains('open')) shut(); });
+  var tb = doc.getElementById('tweaksBtn'); if (tb) tb.addEventListener('click', open);
+  // apply persisted on load (glass already added by app; honor stored prefs)
+  applyGlass(); applyTint();
+})();

@@ -2172,3 +2172,6 @@ body::before {
   .tabs button { display: none; }
   .col .scrollable { overflow: visible !important; max-height: none !important; }
 }
+
+/* Unified Tweaks panel accent */
+:root{--tk-accent:#5ecae0}

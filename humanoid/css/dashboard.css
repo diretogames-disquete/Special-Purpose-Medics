@@ -530,3 +530,6 @@
       .ecg { display: none; }
     }
   
+
+/* Unified Tweaks panel accent */
+:root{--tk-accent:#b16fd9}
