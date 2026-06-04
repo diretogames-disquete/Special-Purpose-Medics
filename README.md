@@ -1,6 +1,6 @@
 # Special-Purpose-Medics · Training Dashboards
 
-This repository hosts **six** interactive medical-training dashboards, each
+This repository hosts **seven** interactive medical-training dashboards, each
 unpacked from a single-file artifact into a clean, structured website with
 separated CSS, self-hosted fonts, modular scripts, a **high-end WebGL ambient
 background** (condition-tinted, with a glass/transparency mode), and an offline
@@ -16,6 +16,7 @@ the site root links them all.
 | **Humanoid** · Casualty Reach (3D field brief) | `/humanoid/` | `…github.io/special-purpose-medics/humanoid/` |
 | **Pharmacology** · Tiered drug reference (PK/PD graphs) | `/pharm/` | `…github.io/special-purpose-medics/pharm/` |
 | **Prompt Library** · SOF Medic AI prompts (200, MARCH PAWS sort) | `/prompts/` | `…github.io/special-purpose-medics/prompts/` |
+| **Field Formulary** · Robust drug reference + quiz (165 drugs) | `/formulary/` | `…github.io/special-purpose-medics/formulary/` |
 
 The **TCCC 360°** dashboard (in [`t360/`](t360/)) is a DD-1380 tactical casualty
 card: injury map with front/back body diagrams, mechanism + acute findings, a
@@ -58,6 +59,17 @@ PAWS sort** that regroups the scenarios into the trauma algorithm (Massive
 hemorrhage → Airway → Respiration → Circulation → Hypothermia/Head → Pain →
 Antibiotics → Wounds → Splinting). Offline standalone:
 `prompts/SOFMedic_Prompts_Standalone.html`.
+
+The **Field Formulary** (in [`formulary/`](formulary/)) is the robust, encyclopedic
+drug reference — distinct from the hands-on tiered Pharmacology tool. It merges the
+case-based *Tactical Pharmacology* and the structured *Small Unit Care* interactives
+and expands them to **165 medications across 28 categories**, each with mechanism,
+dosing, indications, contraindications, side effects, **international/alternate names**
+(e.g. paracetamol, salbutamol, adrenaline, pethidine), and — where available — a
+**case-based field scenario** (OPQRST/SAMPLE, vitals, GO/NO-GO duty status, cognitive
+impact, field considerations). It includes a built-in **quiz** (180+ questions covering
+every drug, filterable by category) and optional **UI click sounds**. Offline standalone:
+`formulary/SOF_Formulary_Standalone.html`.
 
 ---
 
