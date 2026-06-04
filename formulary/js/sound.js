@@ -1,5 +1,5 @@
 /* =====================================================================
- * SOF Field Formulary — UI click sounds + vitals audio (Web Audio, offline)
+ * Special Purpose Medic Drug Box — UI click sounds + vitals audio (Web Audio, offline)
  * Soft tactile ticks when tapping tiles/links, quiz feedback tones, and an
  * interactive heartbeat (lub-dub) + blood-pressure pulse driven by a
  * scenario's vital signs. Lazily builds an AudioContext on first gesture.

@@ -1,5 +1,5 @@
 /* =====================================================================
- * SOF Field Formulary — WebGL ambient field + glass chrome + a11y
+ * Special Purpose Medic Drug Box — WebGL ambient field + glass chrome + a11y
  * Loaded after styles.css.
  * ===================================================================== */
 #webgl-bg{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0;pointer-events:none;background:var(--bg)}
