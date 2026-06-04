@@ -1,0 +1,69 @@
+/* =====================================================================
+ * SOF Medic Prompts — WebGL ambient field + glass chrome + a11y
+ * Loaded after styles.css.
+ * ===================================================================== */
+
+#webgl-bg{
+  position:fixed;inset:0;width:100%;height:100%;
+  display:block;z-index:0;pointer-events:none;background:var(--bg);
+}
+/* Content rides above the field. */
+.hdr,.main,.toast{position:relative}
+.main{z-index:1}
+
+/* ── Glass: re-point the surface tokens to translucent so the field shows
+   through the chrome. --glass-alpha drives panel opacity. ── */
+body.glass{ --glass-alpha:.60; }
+body.glass{
+  --s1:color-mix(in srgb,#0c1117 calc(var(--glass-alpha)*100%),transparent);
+  --s2:color-mix(in srgb,#131b25 calc(var(--glass-alpha)*100%),transparent);
+  --s3:color-mix(in srgb,#1a2535 calc(var(--glass-alpha)*100%),transparent);
+  --s4:color-mix(in srgb,#222f40 calc(var(--glass-alpha)*100%),transparent);
+}
+:root[data-theme="light"] body.glass,
+[data-theme="light"] body.glass{
+  --s1:color-mix(in srgb,#ffffff calc(var(--glass-alpha)*100%),transparent);
+  --s2:color-mix(in srgb,#f3f6fb calc(var(--glass-alpha)*100%),transparent);
+  --s3:color-mix(in srgb,#e7edf5 calc(var(--glass-alpha)*100%),transparent);
+  --s4:color-mix(in srgb,#dae3ef calc(var(--glass-alpha)*100%),transparent);
+}
+body.glass .hdr,
+body.glass .tabs,
+body.glass .card,
+body.glass .prompt-text,
+body.glass .tweaks,
+body.glass .phase-head{
+  -webkit-backdrop-filter:blur(13px) saturate(1.18);
+  backdrop-filter:blur(13px) saturate(1.18);
+}
+body.glass .card{background:var(--s1)}
+
+/* ── Back-to-hub tab (matches the other dashboards) ── */
+.hub-link{
+  position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:99999;
+  display:flex;align-items:center;gap:6px;padding:9px 11px 9px 9px;
+  font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:#cdd6d9;text-decoration:none;background:rgba(12,16,17,.68);
+  border:1px solid rgba(255,255,255,.12);border-left:0;border-radius:0 9px 9px 0;
+  -webkit-backdrop-filter:blur(10px) saturate(1.2);backdrop-filter:blur(10px) saturate(1.2);
+  box-shadow:0 8px 26px -12px rgba(0,0,0,.75);transition:background .15s,color .15s,padding .15s;
+}
+.hub-link:hover{background:rgba(22,28,30,.92);color:#fff;padding-left:14px}
+.hub-link .hl-x{font-size:13px;line-height:1}
+[data-theme="light"] .hub-link{background:rgba(255,255,255,.78);color:#243446;border-color:rgba(0,0,0,.1)}
+[data-theme="light"] .hub-link:hover{background:#fff;color:#0d1b2a}
+
+/* ── Accessibility: visible focus ── */
+.tab:focus-visible,.tool-btn:focus-visible,.copy-btn:focus-visible,
+.hub-link:focus-visible,.search input:focus-visible,
+.card-head:focus-visible,.tw-seg button:focus-visible,
+.switch:focus-within,.tw-close:focus-visible{
+  outline:2px solid var(--acc);outline-offset:2px;border-radius:6px;
+}
+.card-head:focus-visible{outline-offset:-2px}
+
+@media (prefers-reduced-motion: reduce){
+  #webgl-bg{will-change:auto}
+  .card{animation:none}
+  .card-chev,.tweaks,.toast,.tool-btn,.copy-btn{transition:none}
+}

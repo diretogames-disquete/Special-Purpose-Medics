@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SOF Medic — Prompt Library · 200 Prompts</title>
+<meta name="description" content="200 engineered AI prompts for the Special Operations combat medic: 100 MARCH PAWS-tagged training scenarios with modern extraction techniques, plus 50 text-to-image and 50 image-to-video prompts.">
+<meta name="color-scheme" content="dark light">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600;700&family=DM+Serif+Text&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/webgl.css">
+</head>
+<body>
+<canvas id="webgl-bg" aria-hidden="true"></canvas>
+<a class="hub-link" href="../" title="Back to dashboard hub" aria-label="Back to dashboard hub"><span class="hl-x">‹</span><span>Hub</span></a>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="logo"><b>SOF MEDIC</b> <span class="sub">// PROMPT LIBRARY · 200</span></div>
+    <div class="search">
+      <input type="text" id="searchInput" placeholder="Search 200 prompts… (Ctrl+K)" aria-label="Search prompts">
+      <button id="clearSearch" class="clear-x" title="Clear search" aria-label="Clear search">&times;</button>
+    </div>
+    <div class="counter" id="counter">200 / 200 PROMPTS</div>
+    <div class="hdr-tools">
+      <button class="tool-btn" id="themeQuick" type="button" title="Toggle theme">☾ Night</button>
+      <button class="tool-btn" id="tweaksBtn" type="button" title="Open tweaks" aria-haspopup="dialog">⚙ Tweaks</button>
+    </div>
+  </div>
+  <div class="tabs" id="tabBar" role="tablist" aria-label="Prompt categories"></div>
+</div>
+
+<div class="main" id="main">
+  <div class="no-results" id="noResults">No prompts match your search.</div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">COPIED TO CLIPBOARD</div>
+
+<noscript><div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#06090d;color:#7e93ab;font:14px/1.5 system-ui,sans-serif;text-align:center;z-index:9999;padding:24px;">This prompt library requires JavaScript to display.</div></noscript>
+
+<script src="js/webgl-background.js"></script>
+<script src="js/data/prompts.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
