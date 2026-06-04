@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SOF Field Formulary — Drug Reference & Quiz</title>
+<meta name="description" content="A robust Special Operations Forces field formulary: 165 medications across 28 categories with mechanism, dosing, indications, contraindications, international/alternate names, case-based field scenarios (OPQRST/SAMPLE, vitals, GO/NO-GO duty status), and a 180+ question quiz.">
+<meta name="color-scheme" content="dark light">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Source+Sans+3:wght@300;400;600;700&family=Bitter:wght@500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/webgl.css">
+</head>
+<body>
+<canvas id="webgl-bg" aria-hidden="true"></canvas>
+<a class="hub-link" href="../" title="Back to dashboard hub" aria-label="Back to dashboard hub"><span class="hl-x">‹</span><span>Hub</span></a>
+
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><span class="dot"></span>SOF FORMULARY<span>165 DRUGS · 28 CATEGORIES</span></div>
+    <div class="search">
+      <input type="text" id="searchInput" placeholder="Search drugs, names, uses… ( / )" aria-label="Search the formulary">
+      <button id="clearSearch" class="clr" title="Clear" aria-label="Clear search">&times;</button>
+    </div>
+    <div class="seg" role="tablist" aria-label="View">
+      <button id="segRef" class="on" type="button" role="tab" aria-selected="true">Reference</button>
+      <button id="segQuiz" type="button" role="tab" aria-selected="false">Quiz</button>
+    </div>
+    <div class="tools">
+      <button class="tbtn" id="soundBtn" type="button" aria-pressed="false" title="Toggle click sounds">♪ Muted</button>
+      <button class="tbtn" id="themeQuick" type="button" title="Toggle theme">☾</button>
+      <button class="tbtn" id="tweaksBtn" type="button" title="Open tweaks" aria-haspopup="dialog">⚙</button>
+      <span class="disclaimer">⚠ STUDY AID — verify against current TCCC/JTS CPGs &amp; package inserts</span>
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <div class="side-stat">FORMULARY · <span id="counter"><b>165</b> / 165 meds</span></div>
+    <div class="chips" role="group" aria-label="Filters">
+      <button class="chip" data-f="tccc" type="button">TCCC</button>
+      <button class="chip duty-go" data-f="go" type="button">GO</button>
+      <button class="chip duty-nogo" data-f="nogo" type="button">NO-GO</button>
+    </div>
+    <div id="sidebar"></div>
+  </aside>
+
+  <main class="main" id="main">
+    <div class="welcome" id="welcome">
+      <h1>SOF Field Formulary</h1>
+      <p>A robust, worldwide drug reference for the Special Operations medic — built by merging the
+        case-based Tactical Pharmacology and the Small Unit Care reference, then expanded.</p>
+      <p style="color:var(--tx3);font-size:.85rem">Pick a category at left, search any name (including international/brand names), or switch to Quiz.</p>
+      <div class="wstat">
+        <div><b id="wDrugs">165</b> medications</div>
+        <div><b id="wCats">28</b> categories</div>
+        <div><b id="wScen">74</b> field scenarios</div>
+        <div><b id="wQuiz">182</b> quiz questions</div>
+      </div>
+    </div>
+    <div class="no-results" id="noResults">No medications match your search or filters.</div>
+    <div class="rlist" id="rlist"></div>
+    <div class="detail" id="detail"></div>
+    <div class="quiz" id="quiz"></div>
+  </main>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">COPIED</div>
+
+<noscript><div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#0a0c0f;color:#6b7585;font:14px/1.5 system-ui,sans-serif;text-align:center;z-index:9999;padding:24px;">This formulary requires JavaScript to display.</div></noscript>
+
+<script src="js/webgl-background.js"></script>
+<script src="js/sound.js"></script>
+<script src="js/data/drugs.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
