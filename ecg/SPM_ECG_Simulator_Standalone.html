@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SPM ECG Simulator — Learn &amp; Game</title>
+<meta name="description" content="An interactive ECG rhythm simulator for the Special Purpose Medic: a scrolling single-lead monitor with a Learn mode (browse rhythms with recognition criteria and clinical notes) and a Game mode (identify the rhythm against the clock, with scoring).">
+<meta name="color-scheme" content="dark light">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Instrument+Sans:wght@400;500;600;700&family=DM+Serif+Text&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+ * SPM ECG Simulator — core styles (dark monitor default + light paper)
+ * Glass + WebGL chrome + unified Tweaks panel live in webgl.css.
+ * ===================================================================== */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root,:root[data-theme="dark"]{
+  --bg:#050a08;--bg2:#0a110e;--bg3:#0e1714;--bg4:#15201b;
+  --border:#1c2a23;--border2:#28392f;
+  --tx:#c8d6cd;--tx2:#6f8579;--tx3:#465a4f;--white:#e9f3ee;
+  --acc:#00e676;--acc-dim:#00e67622;--acc-mid:#00e67655;--acc-glow:#00e67611;
+  --amber:#ffb300;--red:#ff5252;--cyan:#00d4ff;--violet:#b388ff;
+  --grid:#0c2018;--grid2:#123226;--trace:#27ff99;
+  --mono:'JetBrains Mono','IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+  --serif:'DM Serif Text',Georgia,serif;--sans:'Instrument Sans',system-ui,-apple-system,sans-serif;
+  --sidebar-w:264px;
+}
+:root[data-theme="light"]{
+  --bg:#eef2ef;--bg2:#ffffff;--bg3:#f5f8f6;--bg4:#e6ece8;
+  --border:#cfdbd3;--border2:#aebfb4;
+  --tx:#1e2a24;--tx2:#56685e;--tx3:#8497;--white:#0c140f;
+  --acc:#0a8f4d;--acc-dim:#0a8f4d1a;--acc-mid:#0a8f4d44;--acc-glow:#0a8f4d0d;
+  --amber:#b97700;--red:#d11f1f;--cyan:#0883a3;--violet:#7c3aed;
+  --grid:#f7d9d9;--grid2:#f0bcbc;--trace:#c0142a;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--tx);line-height:1.55;font-size:14px;min-height:100vh;
+  -webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+
+::-webkit-scrollbar{width:7px;height:7px}::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}::-webkit-scrollbar-thumb:hover{background:var(--acc-mid)}
+
+.app{position:relative;z-index:1;display:grid;grid-template-columns:var(--sidebar-w) 1fr;grid-template-rows:auto 1fr;min-height:100vh}
+
+/* ===== TOPBAR ===== */
+.topbar{grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:10px 18px;flex-wrap:wrap;
+  background:color-mix(in srgb,var(--bg2) 92%,transparent);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.brand{font-family:var(--mono);font-weight:700;font-size:.95rem;letter-spacing:.12em;color:var(--white);white-space:nowrap;display:flex;align-items:center;gap:8px}
+.brand .dot{width:8px;height:8px;border-radius:50%;background:var(--acc);box-shadow:0 0 10px var(--acc);animation:bp 1.1s infinite}
+@keyframes bp{0%,100%{opacity:1;transform:scale(1)}45%{opacity:.4;transform:scale(.7)}}
+.brand span{font-size:.6rem;color:var(--tx2);letter-spacing:.18em;font-weight:500}
+.seg{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.seg button{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;background:var(--bg3);color:var(--tx2);border:none;cursor:pointer;transition:.15s}
+.seg button:hover{color:var(--white)}
+.seg button.on{background:var(--acc-dim);color:var(--acc);font-weight:700}
+.tools{display:flex;align-items:center;gap:7px;margin-left:auto}
+.tbtn{font-family:var(--mono);font-size:.66rem;letter-spacing:.04em;text-transform:uppercase;padding:7px 11px;border-radius:6px;border:1px solid var(--border);
+  background:var(--bg3);color:var(--tx2);cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.tbtn:hover{border-color:var(--acc);color:var(--acc)}
+.disclaimer{font-size:.6rem;color:var(--amber);background:color-mix(in srgb,var(--amber) 12%,transparent);padding:4px 9px;border-radius:5px;font-family:var(--mono);letter-spacing:.03em}
+
+/* hub-style top-right sound toggle */
+.sound-toggle{display:inline-flex;align-items:center;justify-content:center;width:44px;height:33px;padding:0;cursor:pointer;border-radius:9px;
+  color:var(--tx2);background:var(--bg3);border:1px solid var(--border);transition:border-color .15s,color .15s}
+.sound-toggle:hover{border-color:var(--acc);color:var(--white)}
+.snd-ico{width:27px;height:15px}
+.snd-line{stroke:var(--tx2);stroke-width:1.7;stroke-linecap:round;opacity:1;transition:opacity .2s}
+.snd-bars{opacity:0;transition:opacity .2s}
+.snd-bars .b{fill:var(--acc);transform-box:fill-box;transform-origin:center;transform:scaleY(.4)}
+.sound-toggle.on .snd-line{opacity:0}.sound-toggle.on .snd-bars{opacity:1}
+.sound-toggle.on .b{animation:eq .9s ease-in-out infinite}
+.sound-toggle.on .b1{animation-delay:0s}.sound-toggle.on .b2{animation-delay:.18s}.sound-toggle.on .b3{animation-delay:.36s}.sound-toggle.on .b4{animation-delay:.12s}.sound-toggle.on .b5{animation-delay:.28s}
+@keyframes eq{0%,100%{transform:scaleY(.32)}50%{transform:scaleY(1)}}
+
+/* ===== SIDEBAR (Learn) ===== */
+.sidebar{background:color-mix(in srgb,var(--bg2) 96%,transparent);border-right:1px solid var(--border);overflow-y:auto;max-height:calc(100vh - 53px);position:sticky;top:53px}
+.side-head{padding:11px 16px;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;color:var(--tx2);text-transform:uppercase;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg2);z-index:2}
+.cat{border-bottom:1px solid var(--border)}
+.cat-h{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);padding:11px 16px 5px}
+.rhy{display:flex;align-items:center;gap:9px;padding:7px 16px;cursor:pointer;transition:.12s;border-left:2px solid transparent}
+.rhy:hover{background:var(--bg3)}
+.rhy.act{background:var(--acc-glow);border-left-color:var(--acc)}
+.rhy .rn{flex:1;font-size:.84rem;color:var(--tx);line-height:1.25}
+.rhy.act .rn{color:var(--white);font-weight:600}
+
+/* ===== MAIN ===== */
+.main{overflow-y:auto;max-height:calc(100vh - 53px);padding:18px clamp(14px,2.4vw,30px) 60px}
+
+/* monitor */
+.monitor{position:relative;border:1px solid var(--border2);border-radius:12px;overflow:hidden;background:#020805;box-shadow:inset 0 0 60px rgba(0,0,0,.6)}
+:root[data-theme="light"] .monitor{background:#fff}
+.monitor canvas{display:block;width:100%;height:auto}
+.mon-hud{position:absolute;top:0;left:0;right:0;display:flex;align-items:flex-start;justify-content:space-between;padding:10px 14px;pointer-events:none}
+.mon-lead{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;color:var(--acc);text-transform:uppercase;text-shadow:0 0 8px var(--acc-mid)}
+.mon-hr{font-family:var(--mono);text-align:right;line-height:1}
+.mon-hr b{font-size:2.2rem;color:var(--acc);text-shadow:0 0 12px var(--acc-mid);font-weight:700}
+.mon-hr small{display:block;font-size:.58rem;letter-spacing:.18em;color:var(--tx2);text-transform:uppercase;margin-top:2px}
+.mon-name{position:absolute;left:14px;bottom:10px;font-family:var(--serif);font-size:1.05rem;color:var(--white);text-shadow:0 1px 6px rgba(0,0,0,.8)}
+.mon-pace{position:absolute;right:14px;bottom:10px;font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;color:var(--tx2);text-transform:uppercase}
+
+/* ===== LEARN info ===== */
+.info{display:none;margin-top:18px}
+.info.v{display:block;animation:fade .3s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.info h2{font-family:var(--serif);font-size:1.6rem;color:var(--white);line-height:1.15}
+.info .sub{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;color:var(--acc);text-transform:uppercase;margin-top:3px}
+.crit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:16px 0}
+.crit{background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:11px 13px}
+.crit .cl{font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tx2);margin-bottom:4px}
+.crit .cv{font-size:.86rem;color:var(--tx);line-height:1.45}
+.crit.rate .cv,.crit.qrs .cv{color:var(--white);font-weight:600}
+.blk{margin-top:14px}
+.blk .bh{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:5px}
+.blk p{font-size:.92rem;color:var(--tx);line-height:1.6}
+.blk.mgmt{border-left:3px solid var(--amber);background:color-mix(in srgb,var(--amber) 6%,transparent);padding:10px 13px;border-radius:0 8px 8px 0}
+.blk.mgmt .bh{color:var(--amber)}
+
+/* ===== GAME ===== */
+.game{display:none;max-width:1000px;margin:0 auto}
+.game.v{display:block}
+.game-setup{text-align:center;padding:5vh 0}
+.game-setup h1{font-family:var(--serif);font-size:2.2rem;color:var(--white);margin-bottom:8px}
+.game-setup p{color:var(--tx2);max-width:60ch;margin:0 auto 18px}
+.gs-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.gs-row select{font-family:var(--mono);font-size:.78rem;padding:9px 12px;background:var(--bg3);color:var(--tx);border:1px solid var(--border);border-radius:7px;cursor:pointer}
+.btn{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;padding:11px 22px;border-radius:8px;border:1px solid var(--acc);
+  background:var(--acc-dim);color:var(--acc);cursor:pointer;transition:.15s;font-weight:700}
+.btn:hover{background:var(--acc);color:#03130b}
+.btn.sec{border-color:var(--border2);background:var(--bg3);color:var(--tx)}
+.btn.sec:hover{border-color:var(--acc);color:var(--acc);background:var(--bg4)}
+
+.hud{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;font-family:var(--mono);font-size:.72rem;color:var(--tx2);letter-spacing:.04em;flex-wrap:wrap}
+.hud .stat b{color:var(--acc);font-size:1rem}
+.hud .stat.streak b{color:var(--amber)}
+.gbar{height:5px;border-radius:3px;background:var(--bg4);overflow:hidden;margin:10px 0 16px}
+.gbar i{display:block;height:100%;background:var(--acc);width:100%;transition:width .25s linear}
+.gbar.warn i{background:var(--red)}
+.q-prompt{font-family:var(--mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--tx2);margin:16px 0 10px;text-align:center}
+.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(max-width:620px){.choices{grid-template-columns:1fr}}
+.choice{display:flex;align-items:center;gap:11px;padding:13px 15px;border:1px solid var(--border);border-radius:9px;background:var(--bg3);cursor:pointer;
+  transition:.15s;text-align:left;color:var(--tx);font-size:.92rem;font-family:inherit;line-height:1.3}
+.choice:hover:not(:disabled){border-color:var(--acc);background:var(--bg4)}
+.choice .ck{font-family:var(--mono);font-weight:700;color:var(--tx2)}
+.choice.correct{border-color:var(--acc);background:var(--acc-dim);color:var(--white)}
+.choice.correct .ck{color:var(--acc)}
+.choice.wrong{border-color:var(--red);background:color-mix(in srgb,var(--red) 12%,transparent);color:var(--white)}
+.choice.wrong .ck{color:var(--red)}
+.choice:disabled{cursor:default}
+.feedback{margin-top:16px;padding:13px 15px;border-radius:9px;background:var(--bg3);border-left:3px solid var(--cyan);font-size:.9rem;color:var(--tx);line-height:1.55;display:none}
+.feedback.v{display:block}
+.feedback b{color:var(--cyan)}
+.g-nav{display:flex;justify-content:space-between;gap:10px;margin-top:16px}
+.result{text-align:center;padding:5vh 0}
+.result .big{font-family:var(--serif);font-size:3rem;color:var(--acc);line-height:1}
+.result .lbl{color:var(--tx2);font-family:var(--mono);letter-spacing:.05em;margin:8px 0 20px}
+
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--acc);color:#03130b;
+  font-family:var(--mono);font-size:.72rem;font-weight:700;padding:10px 22px;border-radius:7px;z-index:300;transition:transform .3s;letter-spacing:.06em}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@media(max-width:880px){
+  .app{grid-template-columns:1fr}
+  .sidebar{position:static;max-height:40vh}
+  .main{max-height:none}
+  .brand span{display:none}
+}
+@media(max-width:560px){ .topbar{gap:8px;padding:9px 12px} .disclaimer{display:none} .mon-hr b{font-size:1.6rem} }
+
+</style>
+<style>
+/* =====================================================================
+ * SPM ECG Simulator — WebGL ambient field + glass + unified Tweaks + a11y
+ * ===================================================================== */
+#webgl-bg{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0;pointer-events:none;background:var(--bg)}
+.app{position:relative;z-index:1}
+
+/* Glass */
+body.glass{--glass-alpha:.6}
+body.glass{
+  --bg2:color-mix(in srgb,#0a110e calc(var(--glass-alpha)*100%),transparent);
+  --bg3:color-mix(in srgb,#0e1714 calc(var(--glass-alpha)*100%),transparent);
+  --bg4:color-mix(in srgb,#15201b calc(var(--glass-alpha)*100%),transparent);
+}
+:root[data-theme="light"] body.glass{
+  --bg2:color-mix(in srgb,#ffffff calc(var(--glass-alpha)*100%),transparent);
+  --bg3:color-mix(in srgb,#f5f8f6 calc(var(--glass-alpha)*100%),transparent);
+  --bg4:color-mix(in srgb,#e6ece8 calc(var(--glass-alpha)*100%),transparent);
+}
+body.glass .topbar,body.glass .sidebar,body.glass .crit,body.glass .blk.mgmt,
+body.glass .choice,body.glass .feedback,body.glass .tweaks{
+  -webkit-backdrop-filter:blur(13px) saturate(1.15);backdrop-filter:blur(13px) saturate(1.15);
+}
+
+/* Back-to-hub tab */
+.hub-link{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:99999;display:flex;align-items:center;gap:6px;
+  padding:9px 11px 9px 9px;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:#cdd6d9;text-decoration:none;background:rgba(8,16,12,.72);border:1px solid rgba(255,255,255,.12);border-left:0;
+  border-radius:0 9px 9px 0;-webkit-backdrop-filter:blur(10px) saturate(1.2);backdrop-filter:blur(10px) saturate(1.2);
+  box-shadow:0 8px 26px -12px rgba(0,0,0,.75);transition:background .15s,color .15s,padding .15s}
+.hub-link:hover{background:rgba(16,26,20,.92);color:#fff;padding-left:14px}
+.hub-link .hl-x{font-size:13px;line-height:1}
+:root[data-theme="light"] .hub-link{background:rgba(255,255,255,.82);color:#1e2a24;border-color:rgba(0,0,0,.1)}
+
+/* Unified Tweaks panel */
+.tweaks-scrim{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:400;opacity:0;pointer-events:none;transition:opacity .25s}
+.tweaks-scrim.open{opacity:1;pointer-events:auto}
+.tweaks{position:fixed;top:0;right:0;height:100%;width:320px;max-width:86vw;z-index:401;background:var(--bg2);
+  border-left:1px solid var(--border);box-shadow:-20px 0 60px -30px rgba(0,0,0,.8);transform:translateX(105%);
+  transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;padding:20px}
+.tweaks.open{transform:translateX(0)}
+.tweaks h3{font-family:var(--serif);font-size:1.3rem;color:var(--white);margin:0 0 2px}
+.tweaks .tw-sub{font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;color:var(--tx2);text-transform:uppercase;margin-bottom:18px}
+.tw-close{position:absolute;top:16px;right:16px;background:none;border:1px solid var(--border);color:var(--tx2);width:30px;height:30px;border-radius:6px;cursor:pointer;font-size:1rem}
+.tw-close:hover{border-color:var(--red);color:var(--red)}
+.tw-group{margin-bottom:18px;border:1px solid var(--border);border-radius:9px;padding:14px;background:var(--bg3)}
+.tw-label{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);margin-bottom:10px;display:block}
+.tw-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:9px 0;font-size:.84rem;color:var(--tx)}
+.tw-seg{display:flex;border:1px solid var(--border);border-radius:7px;overflow:hidden}
+.tw-seg button{flex:1;font-family:var(--mono);font-size:.64rem;padding:7px 9px;background:var(--bg2);color:var(--tx2);border:none;cursor:pointer;text-transform:uppercase;letter-spacing:.04em}
+.tw-seg button.on{background:var(--acc);color:#03130b;font-weight:700}
+.switch{position:relative;width:42px;height:23px;flex-shrink:0;cursor:pointer}
+.switch input{opacity:0;width:0;height:0;position:absolute}
+.switch .track{position:absolute;inset:0;background:var(--bg4);border:1px solid var(--border);border-radius:20px;transition:.2s}
+.switch .thumb{position:absolute;top:3px;left:3px;width:15px;height:15px;border-radius:50%;background:var(--tx2);transition:.2s}
+.switch input:checked+.track{background:var(--acc-dim);border-color:var(--acc)}
+.switch input:checked~.thumb{transform:translateX(19px);background:var(--acc)}
+.tw-range{width:100%;accent-color:var(--acc);margin-top:6px}
+
+/* Accessibility */
+.tbtn:focus-visible,.seg button:focus-visible,.rhy:focus-visible,.btn:focus-visible,.choice:focus-visible,
+.hub-link:focus-visible,.tw-seg button:focus-visible,.switch:focus-within,.sound-toggle:focus-visible,.gs-row select:focus-visible{
+  outline:2px solid var(--acc);outline-offset:2px;border-radius:6px}
+
+@media (prefers-reduced-motion: reduce){ #webgl-bg{will-change:auto} .brand .dot,.toast,.tweaks,.gbar i{animation:none;transition:none} }
+
+</style>
+</head>
+<body>
+<canvas id="webgl-bg" aria-hidden="true"></canvas>
+<a class="hub-link" href="../" title="Back to dashboard hub" aria-label="Back to dashboard hub"><span class="hl-x">‹</span><span>Hub</span></a>
+
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><span class="dot"></span>SPM · ECG<span>RHYTHM SIMULATOR</span></div>
+    <div class="seg" role="tablist" aria-label="Mode">
+      <button id="segLearn" class="on" type="button" role="tab" aria-selected="true">Learn</button>
+      <button id="segGame" type="button" role="tab" aria-selected="false">Game</button>
+    </div>
+    <div class="tools">
+      <button class="tbtn" id="themeQuick" type="button" title="Toggle theme">☾</button>
+      <button class="tbtn" id="tweaksBtn" type="button" title="Open tweaks" aria-haspopup="dialog">⚙</button>
+      <span class="disclaimer">⚠ STUDY AID — confirm on a 12-lead &amp; per ACLS</span>
+      <button id="soundToggle" class="sound-toggle" type="button" aria-pressed="false" title="Sound: off" aria-label="Toggle sound">
+        <svg viewBox="0 0 30 16" class="snd-ico" aria-hidden="true">
+          <line class="snd-line" x1="3" y1="8" x2="27" y2="8"/>
+          <g class="snd-bars">
+            <rect class="b b1" x="3" y="6" width="2.6" height="4" rx="1.3"/>
+            <rect class="b b2" x="8" y="3" width="2.6" height="10" rx="1.3"/>
+            <rect class="b b3" x="13" y="1.5" width="2.6" height="13" rx="1.3"/>
+            <rect class="b b4" x="18" y="3" width="2.6" height="10" rx="1.3"/>
+            <rect class="b b5" x="23" y="6" width="2.6" height="4" rx="1.3"/>
+          </g>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="side-head">Rhythm Library</div>
+  </aside>
+
+  <main class="main" id="main">
+    <div id="learnView">
+      <div class="monitor">
+        <canvas id="monCanvas"></canvas>
+        <div class="mon-hud">
+          <div class="mon-lead">II</div>
+          <div class="mon-hr"><b id="hrVal">--</b><small>bpm</small></div>
+        </div>
+        <div class="mon-name" id="monName">Normal Sinus Rhythm</div>
+        <div class="mon-pace" id="monPace">LEAD II · 25 mm/s · 10 mm/mV</div>
+      </div>
+      <div class="info" id="info"></div>
+    </div>
+    <div class="game" id="gameView"></div>
+  </main>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">COPIED</div>
+
+<noscript><div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#050a08;color:#6f8579;font:14px/1.5 system-ui,sans-serif;text-align:center;z-index:9999;padding:24px;">This ECG simulator requires JavaScript to run.</div></noscript>
+
+<script>
+/* =====================================================================
+ * Special Purpose Medic — ECG Simulator — WebGL ambient background
+ * ---------------------------------------------------------------------
+ * A self-contained, dependency-free WebGL layer that renders behind the
+ * whole dashboard: a slow domain-warped "aurora" field, a faint scrolling
+ * monitor grid, a travelling ECG pulse trace and a soft vignette + grain.
+ *
+ * The dominant colour tracks the ACTIVE PROMPT CATEGORY (scenarios =
+ * teal, text-to-image = violet, image-to-video = red, all = cyan). The
+ * app drives this through a tiny global API:
+ *
+ *     window.SPM_BG.setAccent([r,g,b]);   // 0..1 colour for the active tab
+ *     window.SPM_BG.setGlass(true);       // brighten when panels go glass
+ *
+ * Design goals:
+ *   - Purely decorative: pointer-events:none, never intercepts input.
+ *   - Theme aware: re-tints live on data-theme change.
+ *   - Considerate: caps DPR, pauses when hidden, single static frame under
+ *     prefers-reduced-motion, and bails silently if WebGL is unavailable.
+ * ===================================================================== */
+(function () {
+  'use strict';
+
+  var api = { setCondition: function () {}, setGlass: function () {}, setAccent: function () {} };
+  window.SPM_BG = api;
+
+  var canvas = document.getElementById('webgl-bg');
+  if (!canvas) return;
+
+  var gl = null;
+  try {
+    var opts = { alpha: true, antialias: false, premultipliedAlpha: false, powerPreference: 'low-power' };
+    gl = canvas.getContext('webgl', opts) || canvas.getContext('experimental-webgl', opts);
+  } catch (e) { gl = null; }
+  if (!gl) { canvas.style.display = 'none'; return; }
+
+  var prefersReduced = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- shaders ---------- */
+  var VERT = [
+    'attribute vec2 a_pos;',
+    'void main() { gl_Position = vec4(a_pos, 0.0, 1.0); }'
+  ].join('\n');
+
+  var FRAG = [
+    'precision highp float;',
+    'uniform vec2  u_res;',
+    'uniform float u_time;',
+    'uniform float u_theme;',   // 0 = dark, 1 = light
+    'uniform float u_gain;',    // overall intensity (raised in glass mode)
+    'uniform float u_tempo;',   // heartbeat speed multiplier
+    'uniform vec3  u_c1;',      // accent colour (primary aurora + ECG)
+    'uniform vec3  u_c2;',      // accent B (cyan)
+    'uniform vec3  u_c3;',      // accent C (violet)
+    'uniform vec3  u_bg;',      // deep background
+
+    'float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123); }',
+    'float noise(vec2 p){',
+    '  vec2 i = floor(p); vec2 f = fract(p);',
+    '  float a = hash(i);',
+    '  float b = hash(i + vec2(1.0, 0.0));',
+    '  float c = hash(i + vec2(0.0, 1.0));',
+    '  float d = hash(i + vec2(1.0, 1.0));',
+    '  vec2 u = f * f * (3.0 - 2.0 * f);',
+    '  return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;',
+    '}',
+    'float fbm(vec2 p){',
+    '  float v = 0.0; float amp = 0.5;',
+    '  for (int i = 0; i < 5; i++){ v += amp * noise(p); p *= 2.02; amp *= 0.5; }',
+    '  return v;',
+    '}',
+
+    'float ecgWave(float x, float t){',
+    '  float y = 0.0;',
+    '  float ph = fract(x * 0.8 - t * 0.12 * u_tempo);',
+    '  y += 0.10 * sin((x + t * 0.15) * 6.2831);',
+    '  float spike = smoothstep(0.46, 0.5, ph) - smoothstep(0.5, 0.54, ph);',
+    '  y += spike * 0.55;',
+    '  y -= (smoothstep(0.54, 0.57, ph) - smoothstep(0.57, 0.60, ph)) * 0.22;',
+    '  y += (smoothstep(0.30, 0.36, ph) - smoothstep(0.36, 0.42, ph)) * 0.07;',
+    '  return y;',
+    '}',
+
+    'void main(){',
+    '  vec2 uv = gl_FragCoord.xy / u_res.xy;',
+    '  vec2 p  = (gl_FragCoord.xy - 0.5 * u_res.xy) / u_res.y;',
+    '  float t = u_time;',
+
+    '  vec2 q = vec2(fbm(p * 1.6 + vec2(0.0, t * 0.05)),',
+    '                fbm(p * 1.6 + vec2(5.2, -t * 0.04)));',
+    '  vec2 r = vec2(fbm(p * 1.6 + q * 1.4 + vec2(1.7, 9.2) + t * 0.03),',
+    '                fbm(p * 1.6 + q * 1.4 + vec2(8.3, 2.8) - t * 0.025));',
+    '  float f = fbm(p * 1.6 + r * 1.2);',
+
+    '  float band1 = smoothstep(0.2, 0.9, f);',
+    '  float band2 = smoothstep(0.4, 1.0, fbm(p * 2.3 + r));',
+    '  vec3 col = u_bg;',
+    '  col = mix(col, u_c1, band1 * 0.60);',
+    '  col = mix(col, u_c2, band2 * 0.32);',
+    '  col = mix(col, u_c3, pow(band1 * band2, 1.5) * 0.45);',
+
+    '  vec2 gp = (gl_FragCoord.xy + vec2(t * 14.0, 0.0)) / 46.0;',
+    '  vec2 gline = abs(fract(gp) - 0.5);',
+    '  float grid = smoothstep(0.0, 0.03, min(gline.x, gline.y));',
+    '  col = mix(col, col + u_c1 * 0.10, (1.0 - grid) * 0.18);',
+
+    '  float ex = uv.x * 3.0;',
+    '  float ey = 0.5 + ecgWave(ex, t) * 0.16;',
+    '  float d  = abs(uv.y - ey);',
+    '  float glow = smoothstep(0.16, 0.0, d);',
+    '  float core = smoothstep(0.012, 0.0, d);',
+    '  float scan = smoothstep(0.55, 0.5, abs(uv.y - 0.5));',
+    '  float ecgAmt = (glow * 0.12 + core * 0.60) * scan;',
+    '  vec3 ecgDark  = col + u_c1 * ecgAmt;',
+    '  vec3 ecgLight = mix(col, u_c1, clamp(ecgAmt, 0.0, 1.0));',
+    '  col = mix(ecgDark, ecgLight, u_theme);',
+
+    '  col += u_c1 * smoothstep(0.9, 0.0, length(uv - vec2(0.08, 1.05))) * 0.07 * (1.0 - u_theme);',
+    '  col += u_c2 * smoothstep(0.9, 0.0, length(uv - vec2(1.05, -0.05))) * 0.05 * (1.0 - u_theme);',
+
+    '  col = mix(u_bg, col, u_gain);',
+
+    '  float vig = smoothstep(1.25, 0.25, length(uv - 0.5));',
+    '  col *= mix(mix(0.55, 0.82, u_theme), 1.0, vig);',
+
+    '  float g = hash(gl_FragCoord.xy + fract(t)) - 0.5;',
+    '  col += g * mix(0.02, 0.012, u_theme);',
+
+    '  gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);',
+    '}'
+  ].join('\n');
+
+  function compile(type, src) {
+    var sh = gl.createShader(type);
+    gl.shaderSource(sh, src);
+    gl.compileShader(sh);
+    if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
+      console.warn('[webgl-bg] shader error:', gl.getShaderInfoLog(sh));
+      return null;
+    }
+    return sh;
+  }
+
+  var vs = compile(gl.VERTEX_SHADER, VERT);
+  var fs = compile(gl.FRAGMENT_SHADER, FRAG);
+  if (!vs || !fs) { canvas.style.display = 'none'; return; }
+
+  var prog = gl.createProgram();
+  gl.attachShader(prog, vs);
+  gl.attachShader(prog, fs);
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+    console.warn('[webgl-bg] link error:', gl.getProgramInfoLog(prog));
+    canvas.style.display = 'none';
+    return;
+  }
+  gl.useProgram(prog);
+
+  var buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+    -1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1
+  ]), gl.STATIC_DRAW);
+  var loc = gl.getAttribLocation(prog, 'a_pos');
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+  var U = {
+    res: gl.getUniformLocation(prog, 'u_res'),
+    time: gl.getUniformLocation(prog, 'u_time'),
+    theme: gl.getUniformLocation(prog, 'u_theme'),
+    gain: gl.getUniformLocation(prog, 'u_gain'),
+    tempo: gl.getUniformLocation(prog, 'u_tempo'),
+    c1: gl.getUniformLocation(prog, 'u_c1'),
+    c2: gl.getUniformLocation(prog, 'u_c2'),
+    c3: gl.getUniformLocation(prog, 'u_c3'),
+    bg: gl.getUniformLocation(prog, 'u_bg')
+  };
+
+  /* ---------- palettes ---------- */
+  var THEME = {
+    dark:  { bg: [0.024, 0.035, 0.051], c2: [0.000, 0.898, 1.000], c3: [0.702, 0.533, 1.000], theme: 0.0 },
+    light: { bg: [0.933, 0.949, 0.957], c2: [0.122, 0.478, 0.600], c3: [0.478, 0.247, 0.639], theme: 1.0 }
+  };
+  // Default accent (cyan "all") — overridden per active tab by the app.
+  var DEFAULT_ACCENT = { dark: [0.000, 0.898, 1.000], light: [0.067, 0.553, 0.667] };
+
+  var accent = null;         // explicit accent [r,g,b]
+  function mix3(a, b, t) { return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]; }
+
+  var targetC1 = DEFAULT_ACCENT.dark.slice();
+  var targetC2 = THEME.dark.c2.slice();
+  var targetC3 = THEME.dark.c3.slice();
+  var curC1 = targetC1.slice(), curC2 = targetC2.slice(), curC3 = targetC3.slice();
+  var targetGain = 1.0, curGain = 1.0;
+  var targetTempo = 1.0, curTempo = 1.0;
+
+  function themeName() {
+    return document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+  }
+  function recomputeTargets() {
+    var th = THEME[themeName()];
+    var base = accent ? accent : DEFAULT_ACCENT[themeName()];
+    targetC1 = base.slice();
+    targetC2 = mix3(th.c2, targetC1, 0.55);
+    targetC3 = mix3(th.c3, targetC1, 0.35);
+  }
+  function applyTheme() {
+    var th = THEME[themeName()];
+    gl.uniform3fv(U.bg, th.bg);
+    gl.uniform1f(U.theme, th.theme);
+    recomputeTargets();
+  }
+  applyTheme();
+  curC1 = targetC1.slice(); curC2 = targetC2.slice(); curC3 = targetC3.slice();
+  gl.uniform3fv(U.c1, curC1);
+  gl.uniform3fv(U.c2, curC2);
+  gl.uniform3fv(U.c3, curC3);
+  gl.uniform1f(U.gain, curGain);
+  gl.uniform1f(U.tempo, curTempo);
+
+  /* ---------- public API ---------- */
+  api.setAccent = function (rgb) {
+    accent = (rgb && rgb.length === 3) ? rgb.slice() : null;
+    recomputeTargets();
+    if (!running) drawOnce();
+  };
+  api.setGlass = function (on) {
+    targetGain = on ? 1.28 : 1.0;
+    if (!running) drawOnce();
+  };
+  // kept for API parity with the other dashboards
+  api.setCondition = function () {};
+
+  new MutationObserver(function () {
+    applyTheme();
+    if (!running) drawOnce();
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  /* ---------- sizing ---------- */
+  function resize() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+    var w = Math.floor(window.innerWidth * dpr);
+    var h = Math.floor(window.innerHeight * dpr);
+    if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+    gl.viewport(0, 0, w, h);
+    gl.uniform2f(U.res, w, h);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  /* ---------- render loop ---------- */
+  var start = performance.now();
+  var last = start;
+  var running = false;
+  var raf = 0;
+
+  function step(dt) {
+    var k = Math.min(1, dt * 2.5);
+    for (var i = 0; i < 3; i++) {
+      curC1[i] += (targetC1[i] - curC1[i]) * k;
+      curC2[i] += (targetC2[i] - curC2[i]) * k;
+      curC3[i] += (targetC3[i] - curC3[i]) * k;
+    }
+    curGain += (targetGain - curGain) * k;
+    curTempo += (targetTempo - curTempo) * Math.min(1, dt * 1.5);
+    gl.uniform3fv(U.c1, curC1);
+    gl.uniform3fv(U.c2, curC2);
+    gl.uniform3fv(U.c3, curC3);
+    gl.uniform1f(U.gain, curGain);
+    gl.uniform1f(U.tempo, curTempo);
+  }
+
+  function drawOnce(now) {
+    now = now || performance.now();
+    step(Math.min(0.05, (now - last) / 1000));
+    last = now;
+    gl.uniform1f(U.time, (now - start) / 1000);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+  }
+
+  function frame(now) {
+    drawOnce(now);
+    raf = requestAnimationFrame(frame);
+  }
+  function play() {
+    if (running || prefersReduced) return;
+    running = true; last = performance.now();
+    raf = requestAnimationFrame(frame);
+  }
+  function pause() {
+    running = false;
+    if (raf) cancelAnimationFrame(raf);
+    raf = 0;
+  }
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) pause(); else play();
+  });
+
+  if (prefersReduced) {
+    curC1 = targetC1.slice(); curC2 = targetC2.slice(); curC3 = targetC3.slice();
+    curGain = targetGain; curTempo = targetTempo;
+    drawOnce();
+  } else {
+    play();
+  }
+})();
+
+</script>
+<script>
+/* =====================================================================
+ * SPM ECG Simulator — waveform engine (original, dependency-free)
+ * ---------------------------------------------------------------------
+ * Synthesises a continuous single-lead (II) ECG signal in millivolts for a
+ * library of cardiac rhythms. Each beat is built from Gaussian P/Q/R/S/T
+ * components; baselines add fibrillatory / flutter / chaotic activity. A
+ * Sampler streams value(t) over time and exposes the QRS times so the
+ * monitor can beep and compute a rate. All clinical teaching text is
+ * original and meant as a study aid — verify against ACLS / a 12-lead.
+ *
+ *   var s = ECG.makeSampler('afib');
+ *   s.value(tSeconds);            // → mV
+ *   s.qrsUpTo(tSeconds);          // → array of QRS times that have occurred
+ * ===================================================================== */
+(function () {
+  'use strict';
+
+  // Gaussian bump: amplitude `a` (mV), centre `c` (ms), width `w` (ms).
+  function g(ms, c, a, w) { var d = ms - c; return a * Math.exp(-(d * d) / (2 * w * w)); }
+
+  // ---- beat templates: value in mV given ms since the P-onset fiducial ----
+  // Normal sinus complex. R sits ~200 ms after the fiducial.
+  function tNormal(scale) {
+    scale = scale || 1;
+    return function (ms) {
+      return g(ms, 70, 0.13, 16) + g(ms, 188, -0.07, 7) + g(ms, 200, 1.05 * scale, 9)
+           + g(ms, 214, -0.22, 9) + g(ms, 360, 0.30, 40);
+    };
+  }
+  // QRS-T only (no P) — junctional/AF/where atrial activity is absent.
+  function tQRS(scale) {
+    scale = scale || 1;
+    return function (ms) {
+      return g(ms, 188, -0.07, 7) + g(ms, 200, 1.05 * scale, 9) + g(ms, 214, -0.22, 9) + g(ms, 360, 0.30, 40);
+    };
+  }
+  // Lone P wave (atrial activity, e.g. dissociated in 3rd-degree block).
+  function tP(a) { a = a == null ? 0.14 : a; return function (ms) { return g(ms, 70, a, 16); }; }
+  // Wide, bizarre ventricular complex (PVC/VT/idioventricular/BBB). dir flips axis.
+  function tWide(dir, scale) {
+    dir = dir || 1; scale = scale || 1;
+    return function (ms) {
+      return g(ms, 168, -0.18 * dir * scale, 16) + g(ms, 210, 1.05 * dir * scale, 30)
+           + g(ms, 262, -0.34 * dir * scale, 24) + g(ms, 410, -0.5 * dir, 64);
+    };
+  }
+  // Ventricular-paced complex: narrow pacing spike then a wide paced QRS.
+  function tPaced() {
+    var w = tWide(1, 1);
+    return function (ms) { return g(ms, 150, 0.6, 1.7) + w(ms); };
+  }
+
+  function rand(a, b) { return a + Math.random() * (b - a); }
+
+  // ---- baselines: value in mV given absolute t (seconds) ----
+  function blFlat() { return 0; }
+  function blWander(t) { return 0.025 * Math.sin(t * 2 * Math.PI * 0.25); }            // respiratory drift
+  function blFib(t) {                                                                  // AF fibrillatory waves
+    return 0.05 * Math.sin(t * 2 * Math.PI * 6.1) + 0.035 * Math.sin(t * 2 * Math.PI * 9.7 + 1.1)
+         + 0.025 * Math.sin(t * 2 * Math.PI * 13.3 + 2.3);
+  }
+  function blFlutter(t) {                                                              // ~300/min sawtooth F waves
+    var ph = (t * 5) % 1; return (0.5 - Math.abs(ph - 0.5) * 2) * 0.34 - 0.12;
+  }
+  function blVf(t) {                                                                   // coarse chaotic VF
+    var f = 4.5 + 1.6 * Math.sin(t * 1.7);
+    return 0.55 * Math.sin(t * 2 * Math.PI * f) * (0.7 + 0.3 * Math.sin(t * 3.1))
+         + 0.18 * Math.sin(t * 2 * Math.PI * (f * 1.9) + 1.0) + (Math.random() - 0.5) * 0.08;
+  }
+  function blNoise(t) { return (Math.random() - 0.5) * 0.02; }
+
+  // ---- rhythm specifications ----------------------------------------------
+  // model.kind drives beat scheduling; the rest is teaching metadata.
+  var RHYTHMS = [
+    { id: 'nsr', name: 'Normal Sinus Rhythm', cat: 'Sinus', rate: '60–100', reg: 'Regular',
+      p: 'Present, upright, 1 : 1 with QRS', pr: '0.12–0.20 s', qrs: '< 0.12 s (narrow)',
+      features: 'Every P followed by a QRS; uniform morphology; rate 60–100.',
+      clinical: 'The normal baseline. Establishes what "normal" looks like before you can call anything abnormal.',
+      mgmt: 'None — physiologic.', model: { kind: 'sinus', rate: 75 } },
+
+    { id: 'sbrady', name: 'Sinus Bradycardia', cat: 'Sinus', rate: '< 60', reg: 'Regular',
+      p: 'Normal sinus P, 1 : 1', pr: '0.12–0.20 s', qrs: 'Narrow',
+      features: 'Sinus rhythm with a rate below 60. Long, regular R-R intervals.',
+      clinical: 'Normal in athletes/sleep; pathologic with hypotension, syncope, ischemia, or drug effect (beta-blockers, calcium-channel blockers).',
+      mgmt: 'If unstable: atropine 1 mg IV; pacing / epinephrine or dopamine infusion if refractory.', model: { kind: 'sinus', rate: 44 } },
+
+    { id: 'stach', name: 'Sinus Tachycardia', cat: 'Sinus', rate: '100–150+', reg: 'Regular',
+      p: 'Normal sinus P, 1 : 1 (may bury in prior T)', pr: '0.12–0.20 s', qrs: 'Narrow',
+      features: 'Sinus rhythm above 100. P waves present but may merge with the preceding T at fast rates.',
+      clinical: 'Almost always a response to something — pain, fever, hypovolemia, hypoxia, anxiety, stimulants. Treat the cause, not the number.',
+      mgmt: 'Find and fix the trigger (volume, oxygen, analgesia, antipyretics).', model: { kind: 'sinus', rate: 130 } },
+
+    { id: 'sarr', name: 'Sinus Arrhythmia', cat: 'Sinus', rate: '60–100', reg: 'Irregular (phasic)',
+      p: 'Normal sinus P, 1 : 1', pr: '0.12–0.20 s', qrs: 'Narrow',
+      features: 'Sinus rhythm whose rate quickens on inspiration and slows on expiration — a cyclic, breathing-linked irregularity.',
+      clinical: 'A normal variant, common in the young and healthy. Reflects vagal tone changes with respiration.',
+      mgmt: 'None — benign.', model: { kind: 'sinusArr', rate: 72 } },
+
+    { id: 'afib', name: 'Atrial Fibrillation', cat: 'Atrial', rate: 'Variable (often 110–160 untreated)', reg: 'Irregularly irregular',
+      p: 'Absent — chaotic fibrillatory (f) waves', pr: 'Not measurable', qrs: 'Narrow',
+      features: 'No discernible P waves, an undulating baseline, and an irregularly irregular ventricular response — the hallmark.',
+      clinical: 'Most common sustained arrhythmia. Stasis in the atria → thromboembolic stroke risk. Rapid rates compromise filling.',
+      mgmt: 'Rate control (diltiazem, beta-blocker); anticoagulate by risk; cardiovert if unstable.', model: { kind: 'afib', rate: 140 } },
+
+    { id: 'aflutter', name: 'Atrial Flutter', cat: 'Atrial', rate: 'Atrial ~300; ventricular by ratio (e.g. 150 at 2:1)', reg: 'Often regular',
+      p: 'Sawtooth flutter (F) waves', pr: 'N/A', qrs: 'Narrow',
+      features: 'Classic sawtooth baseline at ~300/min with conduction ratios (2:1, 3:1, 4:1). 2:1 gives a regular ~150 ventricular rate.',
+      clinical: 'A re-entry circuit, usually right atrium. Suspect it whenever a regular narrow tachycardia sits near 150.',
+      mgmt: 'Rate control or cardiovert (low energy); anticoagulation considerations as in AF.', model: { kind: 'flutter', ratio: 3 } },
+
+    { id: 'svt', name: 'Supraventricular Tachycardia', cat: 'Atrial', rate: '150–250', reg: 'Regular',
+      p: 'Hidden or retrograde (rarely seen)', pr: 'Not measurable', qrs: 'Narrow',
+      features: 'A regular, narrow-complex tachycardia, usually 150–250, with no clearly visible P waves — too fast to see them.',
+      clinical: 'Re-entrant (AVNRT/AVRT). Often abrupt onset/offset, palpitations. Hemodynamically tolerated if not too fast/prolonged.',
+      mgmt: 'Vagal maneuvers; adenosine 6 mg → 12 mg IV push; synchronized cardioversion if unstable.', model: { kind: 'sinus', rate: 190, noP: true } },
+
+    { id: 'pac', name: 'Premature Atrial Contraction', cat: 'Atrial', rate: 'Underlying rate', reg: 'Irregular (with the early beat)',
+      p: 'Early, abnormal P before the premature beat', pr: 'May differ', qrs: 'Narrow',
+      features: 'An early beat arising from an ectopic atrial focus — abnormal P, narrow QRS, usually a non-compensatory pause after.',
+      clinical: 'Generally benign; frequent PACs may herald atrial fibrillation. Triggers: caffeine, stress, stimulants.',
+      mgmt: 'Usually none; reduce stimulants.', model: { kind: 'pac', rate: 75, every: 5 } },
+
+    { id: 'pvc', name: 'Premature Ventricular Contraction', cat: 'Ventricular', rate: 'Underlying rate', reg: 'Irregular (with the early beat)',
+      p: 'None before the ectopic', pr: 'N/A', qrs: 'Wide & bizarre (the PVC)',
+      features: 'An early, wide, bizarre complex with no preceding P and a discordant T, typically followed by a full compensatory pause.',
+      clinical: 'Common and often benign. Concerning when frequent, multiform, or in runs (→ VT). Note bigeminy/couplets.',
+      mgmt: 'Treat the patient, not the PVCs; correct electrolytes/ischemia.', model: { kind: 'pvc', rate: 75, every: 4 } },
+
+    { id: 'vtach', name: 'Ventricular Tachycardia (Monomorphic)', cat: 'Ventricular', rate: '100–250', reg: 'Regular',
+      p: 'Absent / AV dissociation', pr: 'N/A', qrs: 'Wide (> 0.12 s), uniform',
+      features: 'A run of wide, uniform complexes at a fast, regular rate. Three or more consecutive PVCs = VT.',
+      clinical: 'Life-threatening. May be pulseless (→ defibrillate) or with a pulse. Can degenerate into VF.',
+      mgmt: 'Pulseless: CPR + defibrillation. With pulse, unstable: synchronized cardioversion. Stable: amiodarone.', model: { kind: 'vt', rate: 180 } },
+
+    { id: 'torsades', name: 'Torsades de Pointes', cat: 'Ventricular', rate: '200–250', reg: 'Irregular',
+      p: 'Absent', pr: 'N/A', qrs: 'Wide, polymorphic — "twisting" amplitude',
+      features: 'Polymorphic VT whose QRS amplitude waxes and wanes, appearing to twist around the baseline. Arises from a long QT.',
+      clinical: 'Driven by QT prolongation (drugs, hypomagnesemia, hypokalemia). Can self-terminate or progress to VF.',
+      mgmt: 'IV magnesium sulfate; correct K⁺; stop offending drugs; defibrillate if pulseless; overdrive pacing.', model: { kind: 'torsades', rate: 230 } },
+
+    { id: 'vfib', name: 'Ventricular Fibrillation', cat: 'Ventricular', rate: 'None (chaotic)', reg: 'Chaotic',
+      p: 'None', pr: 'N/A', qrs: 'None — chaotic undulations',
+      features: 'A chaotic, irregular waveform with no identifiable P, QRS, or T. Coarse early, fine as it deteriorates.',
+      clinical: 'Cardiac arrest. No effective cardiac output. The shockable rhythm of sudden cardiac death.',
+      mgmt: 'Immediate CPR + defibrillation; epinephrine; amiodarone. Time is myocardium.', model: { kind: 'vfib' } },
+
+    { id: 'asystole', name: 'Asystole', cat: 'Arrest', rate: '0', reg: 'Flat',
+      p: 'None (or rare P-wave asystole)', pr: 'N/A', qrs: 'None',
+      features: 'A flat or nearly flat line. Confirm in two leads and check leads/connections before calling it.',
+      clinical: 'Cardiac arrest with no electrical activity. Non-shockable. Grim prognosis.',
+      mgmt: 'High-quality CPR + epinephrine; treat reversible causes (H’s & T’s). Do NOT shock.', model: { kind: 'asystole' } },
+
+    { id: 'avb1', name: '1st-Degree AV Block', cat: 'AV Block', rate: 'Underlying sinus', reg: 'Regular',
+      p: 'Normal, 1 : 1', pr: 'Prolonged & constant (> 0.20 s)', qrs: 'Narrow',
+      features: 'Every P conducts, but the PR interval is uniformly long (> 0.20 s). "A long-standing first-degree."',
+      clinical: 'Usually benign; a marker of conduction-system aging, drug effect, or increased vagal tone.',
+      mgmt: 'None if isolated; review AV-nodal blocking drugs.', model: { kind: 'avb1', rate: 70 } },
+
+    { id: 'avb2a', name: '2nd-Degree AV Block, Type I (Wenckebach)', cat: 'AV Block', rate: 'Atrial > ventricular', reg: 'Irregular (grouped)',
+      p: 'Present, more P’s than QRS', pr: 'Progressively lengthens until a QRS drops', qrs: 'Narrow',
+      features: 'PR stretches beat-to-beat until a P fails to conduct (dropped QRS), then the cycle resets — "longer, longer, drop."',
+      clinical: 'Usually AV-nodal and benign; often transient (inferior MI, vagal, drugs).',
+      mgmt: 'Observe; atropine if symptomatic bradycardia.', model: { kind: 'avb2a', rate: 75 } },
+
+    { id: 'avb2b', name: '2nd-Degree AV Block, Type II (Mobitz II)', cat: 'AV Block', rate: 'Atrial > ventricular', reg: 'Regular P–P; dropped QRS',
+      p: 'Present, intermittent non-conducted P', pr: 'Constant on conducted beats', qrs: 'Often wide',
+      features: 'Constant PR on conducted beats with sudden, intermittent dropped QRS complexes (no PR change before the drop).',
+      clinical: 'Infranodal disease — unstable and prone to progress to complete block. Treat seriously.',
+      mgmt: 'Pacing (transcutaneous → transvenous); atropine often ineffective and may worsen.', model: { kind: 'avb2b', rate: 75, ratio: 3 } },
+
+    { id: 'avb3', name: '3rd-Degree (Complete) AV Block', cat: 'AV Block', rate: 'Atrial and ventricular independent', reg: 'Regular but dissociated',
+      p: 'Present, marching through — no relation to QRS', pr: 'Varies (AV dissociation)', qrs: 'Narrow (junctional) or wide (ventricular escape)',
+      features: 'Complete AV dissociation: P waves and QRS complexes each regular but unrelated. A slow escape rhythm drives the ventricles.',
+      clinical: 'Hemodynamically dangerous; escape may fail. Emergent.',
+      mgmt: 'Transcutaneous pacing; epinephrine/dopamine bridge; transvenous pacing.', model: { kind: 'avb3', atrial: 90, vent: 38 } },
+
+    { id: 'junctional', name: 'Junctional Rhythm', cat: 'Junctional', rate: '40–60 (accelerated 60–100)', reg: 'Regular',
+      p: 'Absent, inverted, or retrograde', pr: 'Short or none', qrs: 'Narrow',
+      features: 'Narrow-complex escape from the AV junction. P waves absent or inverted (may precede, hide in, or follow the QRS).',
+      clinical: 'A backup pacemaker when the SA node fails or is suppressed. Accelerated junctional suggests digoxin toxicity or ischemia.',
+      mgmt: 'Treat the cause; atropine/pacing if symptomatic.', model: { kind: 'sinus', rate: 50, noP: true } },
+
+    { id: 'idio', name: 'Idioventricular Rhythm', cat: 'Ventricular', rate: '20–40 (accelerated 40–100)', reg: 'Regular',
+      p: 'Absent', pr: 'N/A', qrs: 'Wide & bizarre',
+      features: 'A slow, regular, wide-complex ventricular escape rhythm with no P waves — the ventricle’s last-resort pacemaker.',
+      clinical: 'Seen in failing hearts and after reperfusion (accelerated idioventricular rhythm, AIVR). Slow rates → poor output.',
+      mgmt: 'Treat cause; pacing if symptomatic. Do not suppress an escape rhythm.', model: { kind: 'vt', rate: 38, wideScale: 1 } },
+
+    { id: 'paced', name: 'Ventricular Paced Rhythm', cat: 'Paced', rate: 'Set by device (e.g. 60–80)', reg: 'Regular',
+      p: 'Variable; pacer spike precedes QRS', pr: 'N/A', qrs: 'Wide, preceded by a pacing spike',
+      features: 'A sharp pacing spike before each wide, paced QRS at the programmed rate. Atrial or AV spikes may also appear.',
+      clinical: 'Confirms a functioning ventricular pacemaker. Watch for failure to capture/sense.',
+      mgmt: 'Interrogate device for malfunction; magnet for asynchronous mode if needed.', model: { kind: 'paced', rate: 72 } }
+  ];
+
+  // ---- Sampler -------------------------------------------------------------
+  function Sampler(spec) {
+    this.m = spec.model;
+    this.events = [];       // {t, fn, qrs}
+    this.qrs = [];          // QRS times
+    this.built = -1;        // seconds built to
+    this._i = 0;            // moving window start index
+    this._build(12);
+  }
+  Sampler.prototype._push = function (t, fn, isQ) { this.events.push({ t: t, fn: fn, qrs: !!isQ }); if (isQ) this.qrs.push(t); };
+
+  // Extend the event schedule out to `to` seconds.
+  Sampler.prototype._build = function (to) {
+    var m = this.m, from = this.built < 0 ? 0 : this.built;
+    if (m.kind === 'vfib' || m.kind === 'asystole') { this.built = to; return; }
+    var rr;
+    if (m.kind === 'sinus') {
+      rr = 60 / m.rate; var tpl = m.noP ? tQRS(1) : tNormal(1);
+      for (var t = Math.ceil(from / rr) * rr; t < to; t += rr) this._push(t, tpl, true);
+    } else if (m.kind === 'sinusArr') {
+      // phasic R-R with respiration
+      var base = 60 / m.rate, t2 = from;
+      // re-seed deterministic-ish from 0 each call window
+      for (t2 = 0; t2 < to; ) { var k = base * (1 + 0.22 * Math.sin(t2 * 2 * Math.PI * 0.25)); if (t2 >= from) this._push(t2, tNormal(1), true); t2 += k; }
+    } else if (m.kind === 'afib') {
+      var mean = 60 / m.rate, t3 = 0;
+      for (t3 = 0; t3 < to; ) { if (t3 >= from) this._push(t3, tQRS(rand(0.85, 1.12)), true); t3 += mean * rand(0.55, 1.5); }
+    } else if (m.kind === 'flutter') {
+      rr = (60 / 300) * m.ratio; for (var t4 = Math.ceil(from / rr) * rr; t4 < to; t4 += rr) this._push(t4, tQRS(1), true);
+    } else if (m.kind === 'pac') {
+      rr = 60 / m.rate; var n = 0;
+      for (var t5 = Math.ceil(from / rr) * rr; t5 < to; t5 += rr) {
+        n = Math.round(t5 / rr);
+        if (n % m.every === 0 && n > 0) { var et = t5 - rr * 0.32; this._push(et, tNormal(0.9), true); } // early atrial beat
+        else this._push(t5, tNormal(1), true);
+      }
+    } else if (m.kind === 'pvc') {
+      rr = 60 / m.rate;
+      for (var t6 = Math.ceil(from / rr) * rr; t6 < to; t6 += rr) {
+        var n6 = Math.round(t6 / rr);
+        if (n6 % m.every === 0 && n6 > 0) this._push(t6 - rr * 0.30, tWide(1, 1.1), true); // early wide beat (then compensatory gap)
+        else this._push(t6, tNormal(1), true);
+      }
+    } else if (m.kind === 'vt') {
+      rr = 60 / m.rate; var dir = 1;
+      for (var t7 = Math.ceil(from / rr) * rr; t7 < to; t7 += rr) this._push(t7, tWide(1, m.wideScale || 1), true);
+    } else if (m.kind === 'torsades') {
+      rr = 60 / m.rate;
+      for (var t8 = Math.ceil(from / rr) * rr; t8 < to; t8 += rr) {
+        var env = Math.sin(t8 * 2 * Math.PI * 0.45);           // twisting envelope
+        this._push(t8, tWide(env >= 0 ? 1 : -1, 0.5 + 0.9 * Math.abs(env)), true);
+      }
+    } else if (m.kind === 'avb1') {
+      rr = 60 / m.rate; var pr1 = 0.30;
+      for (var t9 = Math.ceil(from / rr) * rr; t9 < to; t9 += rr) { this._push(t9, tP(0.14), false); this._push(t9 + pr1, tQRS(1), true); }
+    } else if (m.kind === 'avb2a') { // Wenckebach: PR lengthens then drop (4:3)
+      var pp = 60 / m.rate, idx = 0;
+      for (var t10 = 0; t10 < to; t10 += pp) {
+        var phase = idx % 4;
+        if (t10 >= from) this._push(t10, tP(0.14), false);
+        if (phase < 3) { var pr = 0.16 + phase * 0.07; if (t10 >= from) this._push(t10 + pr, tQRS(1), true); }
+        idx++;
+      }
+    } else if (m.kind === 'avb2b') { // Mobitz II: constant PR, drop every Nth (3:2)
+      var pp2 = 60 / m.rate, idx2 = 0, R = m.ratio || 3;
+      for (var t11 = 0; t11 < to; t11 += pp2) {
+        if (t11 >= from) this._push(t11, tP(0.14), false);
+        if ((idx2 % R) !== (R - 1)) { if (t11 >= from) this._push(t11 + 0.17, tWide(1, 0.9), true); }
+        idx2++;
+      }
+    } else if (m.kind === 'avb3') { // AV dissociation: independent P and escape QRS
+      var pa = 60 / m.atrial, pv = 60 / m.vent;
+      for (var ta = Math.ceil(from / pa) * pa; ta < to; ta += pa) this._push(ta, tP(0.14), false);
+      for (var tv = Math.ceil(from / pv) * pv; tv < to; tv += pv) this._push(tv, tWide(1, 0.85), true);
+    } else if (m.kind === 'paced') {
+      rr = 60 / m.rate; for (var tp = Math.ceil(from / rr) * rr; tp < to; tp += rr) this._push(tp, tPaced(), true);
+    }
+    this.events.sort(function (a, b) { return a.t - b.t; });
+    this.qrs.sort(function (a, b) { return a - b; });
+    this.built = to;
+  };
+
+  Sampler.prototype.value = function (t) {
+    if (t + 1 > this.built) this._build(this.built + 12);
+    var m = this.m, base = 0;
+    if (m.kind === 'vfib') return blVf(t);
+    if (m.kind === 'asystole') return blNoise(t) + 0.01 * Math.sin(t * 0.7);
+    if (m.kind === 'afib') base = blFib(t);
+    else if (m.kind === 'flutter') base = blFlutter(t);
+    else base = blWander(t);
+    // advance window pointer (playback is monotonic)
+    var ev = this.events;
+    while (this._i < ev.length && ev[this._i].t < t - 0.7) this._i++;
+    var sum = 0;
+    for (var i = this._i; i < ev.length; i++) {
+      var e = ev[i]; if (e.t > t + 0.05) break;
+      sum += e.fn((t - e.t) * 1000);
+    }
+    return base + sum;
+  };
+
+  // QRS times that have occurred up to time t (for beep + rate).
+  Sampler.prototype.qrsUpTo = function (t) { if (t + 1 > this.built) this._build(this.built + 12); return this.qrs; };
+
+  window.ECG = {
+    RHYTHMS: RHYTHMS,
+    byId: function (id) { for (var i = 0; i < RHYTHMS.length; i++) if (RHYTHMS[i].id === id) return RHYTHMS[i]; return null; },
+    makeSampler: function (id) { var s = ECG.byId(id); return s ? new Sampler(s) : null; }
+  };
+})();
+
+</script>
+<script>
+/* =====================================================================
+ * SPM ECG Simulator — app logic (vanilla JS, no deps)
+ *   - A scrolling single-lead monitor that streams ECG.makeSampler(id)
+ *   - LEARN: browse rhythms, see criteria + clinical notes
+ *   - GAME : identify the rhythm against the clock, with scoring
+ *   - Web-Audio QRS beep + correct/incorrect tones, theme/glass tweaks,
+ *     category-tinted WebGL field, back-to-hub.
+ * ===================================================================== */
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var el = function (t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
+  var RHY = window.ECG.RHYTHMS;
+
+  /* ---------- persisted state ---------- */
+  var store = {
+    get: function (k, d) { try { var v = localStorage.getItem('spm.ecg.' + k); return v == null ? d : v; } catch (e) { return d; } },
+    set: function (k, v) { try { localStorage.setItem('spm.ecg.' + k, v); } catch (e) {} }
+  };
+  var state = {
+    mode: 'learn', theme: store.get('theme', 'dark'),
+    glass: store.get('glass', '0') === '1', glassAlpha: parseFloat(store.get('glassAlpha', '0.6')),
+    sound: store.get('sound', '0') === '1', cur: store.get('rhythm', 'nsr')
+  };
+
+  /* ---------- audio (beep + feedback) ---------- */
+  var actx = null;
+  function actxInit() { if (!actx) { try { actx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { actx = null; } } }
+  function beep(freq, dur, peak, type) {
+    if (!state.sound || !actxInit() && !actx) return;
+    if (!actx) return;
+    if (actx.state === 'suspended') actx.resume();
+    var t = actx.currentTime, o = actx.createOscillator(), g = actx.createGain();
+    o.type = type || 'sine'; o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak || 0.08, t + 0.004);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + dur + 0.02);
+  }
+  var snd = {
+    qrs: function () { beep(880, 0.06, 0.05, 'sine'); },
+    correct: function () { beep(660, 0.1, 0.12, 'sine'); setTimeout(function () { beep(990, 0.12, 0.1, 'sine'); }, 90); },
+    wrong: function () { beep(180, 0.22, 0.1, 'sawtooth'); }
+  };
+
+  /* ---------- the monitor ---------- */
+  function Monitor(canvas) {
+    this.cv = canvas; this.ctx = canvas.getContext('2d');
+    this.pxPerMm = 6; this.mmPerSec = 25; this.mmPerMv = 9;
+    this.sampleRate = 200; this.buf = []; this.sampler = null;
+    this.t = 0; this.last = 0; this.acc = 0; this.raf = 0; this.running = false;
+    this.beepIdx = 0; this.rrTimes = []; this.onHR = null; this.colors = {};
+    this.readColors(); this.resize();
+    var self = this; window.addEventListener('resize', function () { self.resize(); });
+  }
+  Monitor.prototype.readColors = function () {
+    var cs = getComputedStyle(document.documentElement);
+    this.colors = {
+      grid: cs.getPropertyValue('--grid').trim() || '#0c2018',
+      grid2: cs.getPropertyValue('--grid2').trim() || '#123226',
+      trace: cs.getPropertyValue('--trace').trim() || '#27ff99'
+    };
+  };
+  Monitor.prototype.resize = function () {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = this.cv.clientWidth || 900, h = Math.round(Math.min(300, Math.max(200, w * 0.30)));
+    this.cv.style.height = h + 'px';
+    this.cv.width = Math.round(w * dpr); this.cv.height = Math.round(h * dpr);
+    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    this.W = w; this.H = h;
+    this.pxPerSample = (this.mmPerSec * this.pxPerMm) / this.sampleRate;
+    this.visN = Math.ceil(this.W / this.pxPerSample) + 4;
+  };
+  Monitor.prototype.setRhythm = function (id) {
+    this.sampler = window.ECG.makeSampler(id);
+    this.buf = []; this.t = 0; this.acc = 0; this.beepIdx = 0; this.rrTimes = [];
+    // prefill one screen so it doesn't start empty
+    var n = this.visN, dt = 1 / this.sampleRate;
+    for (var i = 0; i < n; i++) { this.t = i * dt; this.buf.push(this.sampler.value(this.t)); }
+  };
+  Monitor.prototype.start = function () { if (this.running) return; this.running = true; this.last = performance.now(); var self = this; this.raf = requestAnimationFrame(function (n) { self.frame(n); }); };
+  Monitor.prototype.stop = function () { this.running = false; if (this.raf) cancelAnimationFrame(this.raf); this.raf = 0; };
+  Monitor.prototype.frame = function (now) {
+    if (!this.running) return;
+    var dt = Math.min(0.05, (now - this.last) / 1000); this.last = now;
+    this.acc += dt;
+    var step = 1 / this.sampleRate;
+    while (this.acc >= step) {
+      this.t += step; this.acc -= step;
+      this.buf.push(this.sampler.value(this.t));
+      if (this.buf.length > this.visN) this.buf.shift();
+    }
+    // QRS beep + HR from sampler.qrs that have passed
+    var qs = this.sampler.qrsUpTo(this.t);
+    while (this.beepIdx < qs.length && qs[this.beepIdx] <= this.t) {
+      if (qs[this.beepIdx] >= this.t - 0.2) snd.qrs();
+      this.rrTimes.push(qs[this.beepIdx]); this.beepIdx++;
+    }
+    if (this.rrTimes.length > 8) this.rrTimes = this.rrTimes.slice(-8);
+    this.draw();
+    var self = this; this.raf = requestAnimationFrame(function (n) { self.frame(n); });
+    // HR readout
+    if (this.onHR) {
+      var hr = '--';
+      if (this.rrTimes.length >= 3) {
+        var rr = []; for (var i = 1; i < this.rrTimes.length; i++) rr.push(this.rrTimes[i] - this.rrTimes[i - 1]);
+        rr.sort(function (a, b) { return a - b; }); var med = rr[Math.floor(rr.length / 2)];
+        if (med > 0.15 && med < 4) hr = Math.round(60 / med);
+      }
+      this.onHR(hr);
+    }
+  };
+  Monitor.prototype.draw = function () {
+    var c = this.ctx, W = this.W, H = this.H, mm = this.pxPerMm;
+    c.clearRect(0, 0, W, H);
+    // grid
+    c.lineWidth = 1; c.strokeStyle = this.colors.grid; c.beginPath();
+    for (var x = 0; x <= W; x += mm) { c.moveTo(x + 0.5, 0); c.lineTo(x + 0.5, H); }
+    for (var y = 0; y <= H; y += mm) { c.moveTo(0, y + 0.5); c.lineTo(W, y + 0.5); }
+    c.stroke();
+    c.strokeStyle = this.colors.grid2; c.beginPath();
+    for (var x2 = 0; x2 <= W; x2 += mm * 5) { c.moveTo(x2 + 0.5, 0); c.lineTo(x2 + 0.5, H); }
+    for (var y2 = 0; y2 <= H; y2 += mm * 5) { c.moveTo(0, y2 + 0.5); c.lineTo(W, y2 + 0.5); }
+    c.stroke();
+    // trace
+    var base = H * 0.62, sc = this.mmPerMv * mm;
+    c.lineWidth = 2; c.strokeStyle = this.colors.trace; c.lineJoin = 'round'; c.lineCap = 'round';
+    c.shadowColor = this.colors.trace; c.shadowBlur = 6;
+    c.beginPath();
+    var n = this.buf.length, px = this.pxPerSample;
+    for (var i = 0; i < n; i++) {
+      var X = W - (n - 1 - i) * px, Y = base - this.buf[i] * sc;
+      if (i === 0) c.moveTo(X, Y); else c.lineTo(X, Y);
+    }
+    c.stroke(); c.shadowBlur = 0;
+  };
+
+  /* ---------- LEARN ---------- */
+  var monitor, hrEl, nameEl, paceEl, info;
+  function buildSidebar() {
+    var sb = $('sidebar');
+    var cats = {}; RHY.forEach(function (r) { (cats[r.cat] = cats[r.cat] || []).push(r); });
+    var order = ['Sinus', 'Atrial', 'Junctional', 'AV Block', 'Ventricular', 'Paced', 'Arrest'];
+    order.forEach(function (cat) {
+      if (!cats[cat]) return;
+      var g = el('div', 'cat'); g.appendChild(el('div', 'cat-h', cat));
+      cats[cat].forEach(function (r) {
+        var row = el('div', 'rhy'); row.dataset.id = r.id; row.setAttribute('role', 'button'); row.setAttribute('tabindex', '0');
+        row.appendChild(el('span', 'rn', r.name));
+        function open() { showRhythm(r.id); }
+        row.addEventListener('click', open);
+        row.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+        g.appendChild(row);
+      });
+      sb.appendChild(g);
+    });
+  }
+  function showRhythm(id) {
+    var r = window.ECG.byId(id); if (!r) return;
+    state.cur = id; store.set('rhythm', id);
+    $('sidebar').querySelectorAll('.rhy').forEach(function (x) { x.classList.toggle('act', x.dataset.id === id); });
+    monitor.setRhythm(id);
+    nameEl.textContent = r.name; paceEl.textContent = 'LEAD II · 25 mm/s · 10 mm/mV';
+    // info
+    info.innerHTML = '';
+    info.appendChild(el('h2', null, r.name));
+    info.appendChild(el('div', 'sub', r.cat + ' rhythm'));
+    var grid = el('div', 'crit-grid');
+    [['rate', 'Rate', r.rate], ['', 'Regularity', r.reg], ['', 'P wave', r.p], ['', 'PR interval', r.pr], ['qrs', 'QRS', r.qrs]].forEach(function (c) {
+      var cell = el('div', 'crit' + (c[0] ? ' ' + c[0] : ''));
+      cell.appendChild(el('div', 'cl', c[1])); cell.appendChild(el('div', 'cv', c[2])); grid.appendChild(cell);
+    });
+    info.appendChild(grid);
+    function blk(cls, h, txt) { var b = el('div', 'blk' + (cls ? ' ' + cls : '')); b.appendChild(el('div', 'bh', h)); b.appendChild(el('p', null, txt)); return b; }
+    info.appendChild(blk('', 'Recognition', r.features));
+    info.appendChild(blk('', 'Clinical significance', r.clinical));
+    info.appendChild(blk('mgmt', 'Management', r.mgmt));
+    info.classList.add('v');
+  }
+
+  /* ---------- GAME ---------- */
+  var game = { pool: [], i: 0, n: 10, score: 0, streak: 0, best: 0, answered: false, timer: 0, timeLeft: 0, tInt: null };
+  var gameEl;
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function gamePool() {
+    // exclude near-duplicates that look identical (junctional vs nsr-noP) to keep it fair
+    return RHY.map(function (r) { return r.id; });
+  }
+  function buildGameSetup() {
+    gameEl.innerHTML = '';
+    var w = el('div', 'game-setup');
+    w.appendChild(el('h1', null, 'Rhythm Challenge'));
+    w.appendChild(el('p', null, 'A six-second strip scrolls across the monitor. Identify the rhythm before the timer runs out. Build a streak, beat your accuracy.'));
+    var row = el('div', 'gs-row');
+    var len = el('select'); [['10', '10 rounds'], ['20', '20 rounds'], ['endless', 'Endless']].forEach(function (p) { var o = el('option', null, p[1]); o.value = p[0]; len.appendChild(o); });
+    row.appendChild(len);
+    var start = el('button', 'btn', 'Start'); start.addEventListener('click', function () { startGame(len.value); });
+    row.appendChild(start);
+    w.appendChild(row);
+    w.appendChild(el('p', null, 'Best streak: ' + (parseInt(store.get('best', '0'), 10) || 0)));
+    gameEl.appendChild(w);
+  }
+  function startGame(lenVal) {
+    game.pool = shuffle(gamePool()); game.i = 0; game.score = 0; game.streak = 0;
+    game.best = parseInt(store.get('best', '0'), 10) || 0;
+    game.endless = lenVal === 'endless'; game.n = game.endless ? Infinity : parseInt(lenVal, 10);
+    renderRound();
+  }
+  function nextQuestionId() {
+    if (game.i < game.pool.length) return game.pool[game.i];
+    game.pool = shuffle(gamePool()); return game.pool[game.i % game.pool.length];
+  }
+  function renderRound() {
+    if (!game.endless && game.i >= game.n) return finishGame();
+    game.answered = false;
+    var id = nextQuestionId(), r = window.ECG.byId(id);
+    gameEl.innerHTML = '';
+    // HUD
+    var hud = el('div', 'hud');
+    hud.appendChild(roundStat('Round', game.endless ? (game.i + 1) : (game.i + 1) + ' / ' + game.n));
+    var sc = roundStat('Score', game.score); sc.classList.add('score'); hud.appendChild(sc);
+    var st = roundStat('Streak', game.streak); st.classList.add('streak'); hud.appendChild(st);
+    gameEl.appendChild(hud);
+    // monitor
+    var mwrap = el('div', 'monitor'); var cv = el('canvas'); mwrap.appendChild(cv);
+    var hud2 = el('div', 'mon-hud'); hud2.appendChild(el('div', 'mon-lead', 'II'));
+    var hr = el('div', 'mon-hr'); var hrb = el('b', null, '--'); var hrs = el('small', null, 'bpm'); hr.appendChild(hrb); hr.appendChild(hrs); hud2.appendChild(hr);
+    mwrap.appendChild(hud2);
+    mwrap.appendChild(el('div', 'mon-pace', 'LEAD II · 25 mm/s'));
+    gameEl.appendChild(mwrap);
+    // its own monitor instance
+    if (game.mon) game.mon.stop();
+    game.mon = new Monitor(cv); game.mon.onHR = function (v) { hrb.textContent = v; }; game.mon.setRhythm(id); game.mon.start();
+    // timer bar
+    var bar = el('div', 'gbar'); var fill = el('i'); bar.appendChild(fill); gameEl.appendChild(bar);
+    gameEl.appendChild(el('div', 'q-prompt', 'What is this rhythm?'));
+    // choices
+    var choices = el('div', 'choices');
+    var opts = makeChoices(r);
+    var fb = el('div', 'feedback');
+    opts.forEach(function (o, n) {
+      var b = el('button', 'choice'); b.type = 'button';
+      b.appendChild(el('span', 'ck', String.fromCharCode(65 + n)));
+      b.appendChild(el('span', null, o.name));
+      b.addEventListener('click', function () { answer(b, o.id === id, r, choices, fb); });
+      choices.appendChild(b);
+    });
+    gameEl.appendChild(choices); gameEl.appendChild(fb);
+    var nav = el('div', 'g-nav');
+    var quit = el('button', 'btn sec', 'End'); quit.addEventListener('click', function () { if (game.mon) game.mon.stop(); buildGameSetup(); });
+    var next = el('button', 'btn', game.endless ? 'Next →' : (game.i + 1 >= game.n ? 'Results' : 'Next →')); next.id = 'gNext'; next.style.visibility = 'hidden';
+    next.addEventListener('click', function () { if (game.mon) game.mon.stop(); game.i++; renderRound(); });
+    nav.appendChild(quit); nav.appendChild(next); gameEl.appendChild(nav);
+    // countdown
+    game.timeLeft = 22; fill.style.width = '100%';
+    if (game.tInt) clearInterval(game.tInt);
+    var t0 = performance.now();
+    game.tInt = setInterval(function () {
+      var elapsed = (performance.now() - t0) / 1000, left = Math.max(0, game.timeLeft - elapsed);
+      fill.style.width = (left / game.timeLeft * 100) + '%';
+      bar.classList.toggle('warn', left < 6);
+      if (left <= 0) { clearInterval(game.tInt); if (!game.answered) answer(null, false, r, choices, fb); }
+    }, 100);
+  }
+  function roundStat(label, val) { var s = el('div', 'stat'); s.appendChild(document.createTextNode(label + ' ')); s.appendChild(el('b', null, String(val))); return s; }
+  function makeChoices(correct) {
+    var same = RHY.filter(function (r) { return r.cat === correct.cat && r.id !== correct.id; });
+    var other = RHY.filter(function (r) { return r.cat !== correct.cat; });
+    var picks = [correct].concat(shuffle(same).slice(0, 2)).concat(shuffle(other));
+    var seen = {}, out = [];
+    for (var i = 0; i < picks.length && out.length < 4; i++) { if (!seen[picks[i].id]) { seen[picks[i].id] = 1; out.push({ id: picks[i].id, name: picks[i].name }); } }
+    return shuffle(out);
+  }
+  function answer(btn, correct, r, choices, fb) {
+    if (game.answered) return; game.answered = true;
+    if (game.tInt) clearInterval(game.tInt);
+    if (correct) { btn.classList.add('correct'); game.score++; game.streak++; snd.correct(); if (game.streak > game.best) { game.best = game.streak; store.set('best', String(game.best)); } }
+    else { if (btn) btn.classList.add('wrong'); game.streak = 0; snd.wrong(); }
+    choices.querySelectorAll('.choice').forEach(function (b) {
+      b.disabled = true;
+      if (b.querySelector('span:last-child').textContent === r.name) b.classList.add('correct');
+    });
+    fb.innerHTML = '<b>' + (correct ? 'Correct — ' : 'Answer: ') + r.name + '.</b> ' + r.features;
+    fb.classList.add('v');
+    var nx = $('gNext'); if (nx) nx.style.visibility = 'visible';
+  }
+  function finishGame() {
+    if (game.mon) game.mon.stop();
+    gameEl.innerHTML = '';
+    var done = game.n === Infinity ? game.i : game.n;
+    var pct = done ? Math.round(game.score / done * 100) : 0;
+    var w = el('div', 'result');
+    w.appendChild(el('div', 'big', pct + '%'));
+    w.appendChild(el('div', 'lbl', game.score + ' / ' + done + ' correct · best streak ' + (parseInt(store.get('best', '0'), 10) || 0)));
+    var again = el('button', 'btn', 'Play again'); again.addEventListener('click', buildGameSetup); w.appendChild(again);
+    gameEl.appendChild(w);
+    pct >= 70 ? snd.correct() : snd.wrong();
+  }
+
+  /* ---------- mode switch ---------- */
+  function setMode(m) {
+    state.mode = m;
+    $('segLearn').classList.toggle('on', m === 'learn'); $('segLearn').setAttribute('aria-selected', String(m === 'learn'));
+    $('segGame').classList.toggle('on', m === 'game'); $('segGame').setAttribute('aria-selected', String(m === 'game'));
+    var learn = $('learnView'), gv = $('gameView');
+    if (m === 'learn') {
+      gv.classList.remove('v'); if (game.mon) game.mon.stop(); if (game.tInt) clearInterval(game.tInt);
+      learn.style.display = ''; $('sidebar').style.display = '';
+      monitor.start(); showRhythm(state.cur);
+      if (window.SPM_BG) window.SPM_BG.setAccent([0.0, 0.78, 0.46]);
+    } else {
+      learn.style.display = 'none'; $('sidebar').style.display = 'none'; monitor.stop();
+      gv.classList.add('v'); buildGameSetup();
+      if (window.SPM_BG) window.SPM_BG.setAccent([1.0, 0.7, 0.0]);
+    }
+  }
+
+  /* ---------- theme / glass / sound / tweaks ---------- */
+  var themeSeg = { dark: null, light: null };
+  function setTheme(th) {
+    state.theme = th; document.documentElement.setAttribute('data-theme', th); store.set('theme', th);
+    if (monitor) monitor.readColors(); if (game.mon) game.mon.readColors();
+    if (themeSeg.dark) { themeSeg.dark.classList.toggle('on', th === 'dark'); themeSeg.light.classList.toggle('on', th === 'light'); }
+    var q = $('themeQuick'); if (q) q.textContent = th === 'dark' ? '☾' : '☀';
+  }
+  function applyGlass() {
+    document.body.classList.toggle('glass', state.glass);
+    document.body.style.setProperty('--glass-alpha', String(state.glassAlpha));
+    if (window.SPM_BG) window.SPM_BG.setGlass(state.glass);
+    store.set('glass', state.glass ? '1' : '0'); store.set('glassAlpha', String(state.glassAlpha));
+  }
+  function setSound(on) {
+    state.sound = on; if (on) actxInit();
+    var b = $('soundToggle'); if (b) { b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); b.title = 'Sound: ' + (on ? 'on' : 'off'); }
+    store.set('sound', on ? '1' : '0');
+  }
+  function mkSwitch(on, cb) {
+    var lab = el('label', 'switch'); lab.tabIndex = 0; lab.setAttribute('role', 'switch'); lab.setAttribute('aria-checked', String(on));
+    var inp = el('input'); inp.type = 'checkbox'; inp.checked = on; var tr = el('span', 'track'), th = el('span', 'thumb');
+    lab.appendChild(inp); lab.appendChild(tr); lab.appendChild(th);
+    function fire() { lab.setAttribute('aria-checked', String(inp.checked)); cb(inp.checked); }
+    inp.addEventListener('change', fire);
+    lab.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); inp.checked = !inp.checked; fire(); } });
+    return lab;
+  }
+  function buildTweaks() {
+    var scrim = el('div', 'tweaks-scrim'); var panel = el('aside', 'tweaks'); panel.id = 'tweaksPanel';
+    panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-label', 'Tweaks'); panel.setAttribute('aria-hidden', 'true');
+    var close = el('button', 'tw-close', '×'); close.type = 'button'; close.setAttribute('aria-label', 'Close'); panel.appendChild(close);
+    panel.appendChild(el('h3', null, 'Tweaks')); panel.appendChild(el('div', 'tw-sub', 'Theme · field'));
+    var gT = el('div', 'tw-group'); gT.appendChild(el('span', 'tw-label', 'Theme'));
+    var tseg = el('div', 'tw-seg');
+    var bD = el('button', state.theme === 'dark' ? 'on' : '', 'Monitor'); bD.type = 'button';
+    var bL = el('button', state.theme === 'light' ? 'on' : '', 'Paper'); bL.type = 'button';
+    tseg.appendChild(bD); tseg.appendChild(bL); gT.appendChild(tseg); panel.appendChild(gT);
+    themeSeg.dark = bD; themeSeg.light = bL;
+    bD.addEventListener('click', function () { setTheme('dark'); }); bL.addEventListener('click', function () { setTheme('light'); });
+    var gF = el('div', 'tw-group'); gF.appendChild(el('span', 'tw-label', 'Ambient field'));
+    var r1 = el('div', 'tw-row'); r1.appendChild(document.createTextNode('Glass panels')); r1.appendChild(mkSwitch(state.glass, function (v) { state.glass = v; applyGlass(); })); gF.appendChild(r1);
+    var r2 = el('div', 'tw-row'); r2.style.display = 'block'; r2.appendChild(document.createTextNode('Panel opacity'));
+    var rng = el('input', 'tw-range'); rng.type = 'range'; rng.min = '0.3'; rng.max = '0.92'; rng.step = '0.01'; rng.value = String(state.glassAlpha); rng.setAttribute('aria-label', 'Panel opacity');
+    rng.addEventListener('input', function () { state.glassAlpha = parseFloat(rng.value); applyGlass(); }); r2.appendChild(rng); gF.appendChild(r2);
+    panel.appendChild(gF);
+    document.body.appendChild(scrim); document.body.appendChild(panel);
+    function open() { scrim.classList.add('open'); panel.classList.add('open'); panel.setAttribute('aria-hidden', 'false'); close.focus(); }
+    function shut() { scrim.classList.remove('open'); panel.classList.remove('open'); panel.setAttribute('aria-hidden', 'true'); }
+    close.addEventListener('click', shut); scrim.addEventListener('click', shut);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && panel.classList.contains('open')) shut(); });
+    $('tweaksBtn').addEventListener('click', open);
+  }
+
+  /* ---------- boot ---------- */
+  monitor = new Monitor($('monCanvas'));
+  hrEl = $('hrVal'); nameEl = $('monName'); paceEl = $('monPace'); info = $('info'); gameEl = $('gameView');
+  monitor.onHR = function (v) { if (hrEl) hrEl.textContent = v; };
+  buildSidebar(); buildTweaks();
+  setTheme(state.theme); applyGlass(); setSound(state.sound);
+  $('segLearn').addEventListener('click', function () { setMode('learn'); });
+  $('segGame').addEventListener('click', function () { setMode('game'); });
+  $('themeQuick').addEventListener('click', function () { setTheme(state.theme === 'dark' ? 'light' : 'dark'); });
+  $('soundToggle').addEventListener('click', function () { setSound(!state.sound); if (state.sound && actx && actx.state === 'suspended') actx.resume(); });
+  setMode('learn');
+})();
+
+</script>
+</body>
+</html>

@@ -41,7 +41,7 @@ jobs:
           mkdir -p _site
           # Landing hub at the root, dashboards in their own folders.
           cp index.html _site/
-          cp -r pfc tccc t360 humanoid pharm prompts formulary cocom _site/
+          cp -r pfc tccc t360 humanoid pharm prompts formulary cocom ecg _site/
           # Disable Jekyll processing — we serve the files exactly as-is.
           touch _site/.nojekyll
 
