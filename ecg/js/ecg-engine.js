@@ -303,3 +303,58 @@
     makeSampler: function (id) { var s = ECG.byId(id); return s ? new Sampler(s) : null; }
   };
 })();
+
+/* =====================================================================
+ * Extensions: derived 12-lead gains + a parametric (Builder) sampler.
+ * The 12-lead montage derives each lead from the lead-II signal by a gain
+ * (sign flips for aVR / V1) — a representative teaching montage, not a true
+ * vectorcardiographic reconstruction. The CustomSampler turns live slider
+ * values (rate, PR, QRS width, P/ST/T) into a continuously updating rhythm.
+ * ===================================================================== */
+(function () {
+  'use strict';
+  function g(ms, c, a, w) { var d = ms - c; return a * Math.exp(-(d * d) / (2 * w * w)); }
+
+  window.ECG.LEADS = [
+    { n: 'I', k: 0.55 }, { n: 'II', k: 1.0 }, { n: 'III', k: 0.62 },
+    { n: 'aVR', k: -0.7 }, { n: 'aVL', k: 0.42 }, { n: 'aVF', k: 0.82 },
+    { n: 'V1', k: -0.45 }, { n: 'V2', k: 0.72 }, { n: 'V3', k: 1.0 },
+    { n: 'V4', k: 1.15 }, { n: 'V5', k: 1.05 }, { n: 'V6', k: 0.85 }
+  ];
+
+  function tCustom(p) {
+    var f = Math.max(0.5, (p.qrsW || 0.1) / 0.1);   // QRS width factor
+    var pc = 200 - (p.pr * 1000);                    // P precedes R by PR
+    return function (ms) {
+      var v = 0;
+      if (p.pAmp > 0) v += g(ms, pc, p.pAmp, 16);
+      v += g(ms, 200 - 13 * f, -0.06, 7 * f) + g(ms, 200, 1.0, 9 * f) + g(ms, 200 + 15 * f, -0.20, 9 * f);
+      if (p.st) v += p.st * Math.exp(-Math.pow((ms - 280) / 60, 2) / 2) * 0.9;   // ST elevation/depression
+      v += g(ms, 368, p.tAmp, 44);
+      return v;
+    };
+  }
+
+  function CustomSampler(p) { this.p = p; this.events = []; this.qrs = []; this.built = 0; this._i = 0; this._ext(0, 4); }
+  CustomSampler.prototype._ext = function (from, to) {
+    var p = this.p, rr = 60 / Math.max(20, Math.min(260, p.rate));
+    for (var t = Math.ceil(from / rr) * rr; t < to; t += rr * (p.irregular ? (0.72 + Math.random() * 0.56) : 1)) {
+      this.events.push({ t: t, fn: tCustom(p) }); this.qrs.push(t);
+    }
+    this.events.sort(function (a, b) { return a.t - b.t; }); this.qrs.sort(function (a, b) { return a - b; }); this.built = to;
+  };
+  CustomSampler.prototype.replan = function (t) {       // rebuild the future with current params
+    this.events = this.events.filter(function (e) { return e.t < t; });
+    this.qrs = this.qrs.filter(function (x) { return x < t; });
+    this.built = t; this._i = 0; this._ext(t, t + 4);
+  };
+  CustomSampler.prototype.value = function (t) {
+    if (t + 1 > this.built) this._ext(this.built, this.built + 4);
+    var ev = this.events; while (this._i < ev.length && ev[this._i].t < t - 0.7) this._i++;
+    var sum = 0.02 * Math.sin(t * 2 * Math.PI * 0.25);
+    for (var i = this._i; i < ev.length; i++) { var e = ev[i]; if (e.t > t + 0.05) break; sum += e.fn((t - e.t) * 1000); }
+    return sum;
+  };
+  CustomSampler.prototype.qrsUpTo = function (t) { if (t + 1 > this.built) this._ext(this.built, this.built + 4); return this.qrs; };
+  window.ECG.makeCustom = function (p) { return new CustomSampler(p); };
+})();
