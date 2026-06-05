@@ -19,6 +19,8 @@
     <div class="brand"><span class="dot"></span>SPM · ECG<span>RHYTHM SIMULATOR</span></div>
     <div class="seg" role="tablist" aria-label="Mode">
       <button id="segLearn" class="on" type="button" role="tab" aria-selected="true">Learn</button>
+      <button id="seg12" type="button" role="tab" aria-selected="false">12-Lead</button>
+      <button id="segBuild" type="button" role="tab" aria-selected="false">Builder</button>
       <button id="segGame" type="button" role="tab" aria-selected="false">Game</button>
     </div>
     <div class="tools">
@@ -45,19 +47,45 @@
   </aside>
 
   <main class="main" id="main">
-    <div id="learnView">
-      <div class="monitor">
-        <canvas id="monCanvas"></canvas>
-        <div class="mon-hud">
-          <div class="mon-lead">II</div>
-          <div class="mon-hr"><b id="hrVal">--</b><small>bpm</small></div>
+    <div id="learnView" class="view v">
+      <div class="center">
+        <div class="monitor">
+          <canvas id="monCanvas"></canvas>
+          <div class="mon-hud">
+            <div class="mon-lead">II</div>
+            <div class="mon-hr"><b id="hrVal">--</b><small>bpm</small></div>
+          </div>
+          <div class="mon-name" id="monName">Normal Sinus Rhythm</div>
+          <div class="mon-pace" id="monPace">LEAD II · 25 mm/s · 10 mm/mV</div>
         </div>
-        <div class="mon-name" id="monName">Normal Sinus Rhythm</div>
-        <div class="mon-pace" id="monPace">LEAD II · 25 mm/s · 10 mm/mV</div>
+        <div class="info" id="info"></div>
       </div>
-      <div class="info" id="info"></div>
     </div>
-    <div class="game" id="gameView"></div>
+
+    <div id="twelveView" class="view">
+      <div class="center wide">
+        <div class="tw-head">
+          <label class="tw-sel-wrap">Rhythm <select id="twSel" aria-label="Rhythm for 12-lead"></select></label>
+          <div class="mon-hr"><b id="tw12hr">--</b><small>bpm</small></div>
+        </div>
+        <div class="tw-grid" id="twGrid"></div>
+        <p class="tw-note">Derived 12-lead montage (representative lead morphology projected from lead II) · 25 mm/s · study aid — read true morphology on a recorded 12-lead.</p>
+      </div>
+    </div>
+
+    <div id="builderView" class="view">
+      <div class="center">
+        <div class="monitor">
+          <canvas id="bMon"></canvas>
+          <div class="mon-hud"><div class="mon-lead">II</div><div class="mon-hr"><b id="bHr">--</b><small>bpm</small></div></div>
+          <div class="mon-name">Builder — custom rhythm</div>
+          <div class="mon-pace">LEAD II · 25 mm/s · 10 mm/mV</div>
+        </div>
+        <div class="builder" id="bCtrls"></div>
+      </div>
+    </div>
+
+    <div id="gameView" class="view game"></div>
   </main>
 </div>
 

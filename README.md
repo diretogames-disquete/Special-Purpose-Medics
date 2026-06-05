@@ -18,7 +18,7 @@ the site root links them all.
 | **Prompt Library** · SOF Medic AI prompts (200, MARCH PAWS sort) | `/prompts/` | `…github.io/special-purpose-medics/prompts/` |
 | **Special Purpose Medic Drug Box** · Robust drug reference + quiz (165 drugs) | `/formulary/` | `…github.io/special-purpose-medics/formulary/` |
 | **See the COCOMs** · Regional SOF scenarios by Combatant Command (100 cases) | `/cocom/` | `…github.io/special-purpose-medics/cocom/` |
-| **ECG Simulator** · Rhythm monitor — Learn & Game (20 rhythms) | `/ecg/` | `…github.io/special-purpose-medics/ecg/` |
+| **ECG Simulator** · Rhythm monitor — Learn · 12-Lead · Builder · Game (20 rhythms) | `/ecg/` | `…github.io/special-purpose-medics/ecg/` |
 
 The **TCCC 360°** dashboard (in [`t360/`](t360/)) is a DD-1380 tactical casualty
 card: injury map with front/back body diagrams, mechanism + acute findings, a
@@ -88,10 +88,7 @@ The **ECG Simulator** (in [`ecg/`](ecg/)) is an original rhythm trainer — a sc
 single-lead (II) monitor that **synthesises the waveform procedurally** (P/Q/R/S/T as
 Gaussian components, with fibrillatory / flutter / chaotic baselines) for **20 cardiac
 rhythms** across sinus, atrial, junctional, AV block, ventricular, paced and arrest
-categories. **Learn** mode browses each rhythm with recognition criteria (rate,
-regularity, P wave, PR, QRS) plus clinical significance and management; **Game** mode
-hides the label and challenges you to identify the rhythm against a countdown, with
-streak scoring and a best-streak record. QRS beep and correct/incorrect tones, a
+categories, shown across four tabs: **Learn** (recognition criteria + clinical significance + management), a derived **12-Lead** montage (representative per-lead morphology projected from lead II), an interactive **Builder** whose sliders (rate, PR, QRS width, P/ST/T, regularity) reshape the waveform live, and a timed **Game** that hides the label and challenges you to identify the rhythm with streak scoring. QRS beep and correct/incorrect tones, a
 category-tinted WebGL field, the unified Tweaks panel, and the hub-style sound toggle.
 Offline standalone: `ecg/SPM_ECG_Simulator_Standalone.html`.
 
