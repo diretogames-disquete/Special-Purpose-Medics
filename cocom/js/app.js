@@ -69,8 +69,38 @@
     var p = btn.closest('.cocom-panel');
     p.querySelectorAll('.fpill').forEach(function (x) { x.classList.remove('active'); });
     btn.classList.add('active'); p.dataset.tag = btn.getAttribute('data-tag');
-    applyFilters(p); tick();
+    applyFilters(p);
+    // Fold the pill cloud down to the active filter once a specific tag is
+    // chosen, then bring the first matching scenario into view. "All" re-opens
+    // the cloud for browsing.
+    var specific = p.dataset.tag !== 'ALL';
+    setFpillsCollapsed(p, specific);
+    if (specific) {
+      var first = null;
+      p.querySelectorAll('.scenario').forEach(function (s) { if (!first && s.style.display !== 'none') first = s; });
+      if (first) first.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    tick();
   };
+  // Collapse/expand a panel's filter cloud (collapsed = active pill + toggle only).
+  function setFpillsCollapsed(p, collapsed) {
+    var fp = p && p.querySelector('.fpills'); if (!fp) return;
+    fp.classList.toggle('collapsed', !!collapsed);
+    var tg = fp.querySelector('.fpill-toggle');
+    if (tg) { tg.textContent = collapsed ? '▾ Filters' : '▴ Hide'; tg.setAttribute('aria-expanded', String(!collapsed)); }
+  }
+  // Inject a reopen/collapse toggle chip into every theater's pill cloud.
+  function initFpills() {
+    document.querySelectorAll('.cocom-panel .fpills').forEach(function (fp) {
+      if (fp.querySelector('.fpill-toggle')) return;
+      var tg = el('button', 'fpill-toggle', '▴ Hide'); tg.type = 'button';
+      tg.setAttribute('aria-expanded', 'true'); tg.setAttribute('aria-label', 'Show or hide filters');
+      tg.addEventListener('click', function () {
+        setFpillsCollapsed(fp.closest('.cocom-panel'), !fp.classList.contains('collapsed'));
+      });
+      fp.insertBefore(tg, fp.firstChild);
+    });
+  }
   function applyFilters(p) {
     if (!p) return;
     var qn = norm(searchEl.value), toks = qn ? qn.split(' ') : [], tag = p.dataset.tag || 'ALL', shown = 0;
@@ -152,6 +182,7 @@
   /* ---------- boot ---------- */
   document.querySelectorAll('.scenario').forEach(function (s) { s.classList.add('collapsed'); });
   buildTweaks();
+  initFpills();
   // restore theme
   var th = store.get('theme', 'dark'); document.documentElement.setAttribute('data-theme', th);
   var tb = $('themeBtn'); if (tb) tb.textContent = th === 'light' ? '☼ Light' : '☾ Dark';
