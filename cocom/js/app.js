@@ -16,8 +16,9 @@
     set: function (k, v) { try { localStorage.setItem('spm.cocom.' + k, v); } catch (e) {} }
   };
 
-  // Per-COCOM WebGL accent (0..1 rgb): AFRICOM gold/savanna, CENTCOM desert cyan.
-  var ACCENT = { af: [0.847, 0.635, 0.231], ce: [0.16, 0.78, 0.92] };
+  // Per-COCOM WebGL accent (0..1 rgb): AFRICOM gold/savanna, CENTCOM desert cyan,
+  // INDOPACOM jungle/maritime jade.
+  var ACCENT = { af: [0.847, 0.635, 0.231], ce: [0.16, 0.78, 0.92], in: [0.20, 0.68, 0.60] };
   var tintOn = store.get('tint', '1') === '1';
 
   /* ---------- click sound (from the source) ---------- */
