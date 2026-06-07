@@ -19,12 +19,15 @@ _gen/
 # tokens). Never deployed — pages.yml stages only the dashboard folders.
 # Ignore machine-specific + cheaply-regenerable bits (no inline comments — git
 # treats the whole line as the pattern):
-# absolute path to a local Python interpreter — per-machine
-graphify-out/.graphify_python
+# all graphify scratch/intermediate dotfiles (.graphify_python pointer,
+# .graphify_labels.json, .graphify_root, .graphify_*.py step scripts, chunk
+# fragments, etc.) — regenerated each run, never part of the committed graph
+graphify-out/.graphify_*
+graphify-out/.needs_update
+graphify-out/needs_update
 # local token-spend tracker
 graphify-out/cost.json
 # 1.25 MB viewer, regenerate any time with /graphify
 graphify-out/graph.html
-# leftover step / helper scripts, if any
-graphify-out/.graphify_*.py
+# leftover helper scripts, if any
 graphify-out/_*.py
