@@ -3,6 +3,9 @@
 Thumbs.db
 *.swp
 
+# local Claude Code settings (per-machine permissions, not shared)
+.claude/settings.local.json
+
 # local server / logs
 *.log
 
@@ -10,3 +13,18 @@ Thumbs.db
 _src/
 _audit/
 _gen/
+
+# graphify knowledge graph: commit the queryable graph, report, manifest, and
+# semantic cache (lets `--update` reuse extractions instead of re-spending
+# tokens). Never deployed — pages.yml stages only the dashboard folders.
+# Ignore machine-specific + cheaply-regenerable bits (no inline comments — git
+# treats the whole line as the pattern):
+# absolute path to a local Python interpreter — per-machine
+graphify-out/.graphify_python
+# local token-spend tracker
+graphify-out/cost.json
+# 1.25 MB viewer, regenerate any time with /graphify
+graphify-out/graph.html
+# leftover step / helper scripts, if any
+graphify-out/.graphify_*.py
+graphify-out/_*.py

@@ -1,0 +1,8 @@
+# Vendored third-party libraries — not our code, no graph value
+**/js/vendor/
+**/vendor/
+**/babel.min.js
+**/react.development.js
+**/react-dom.development.js
+**/spline-viewer.module.js
+graphify-out/
