@@ -42,6 +42,9 @@ jobs:
           # Landing hub at the root, dashboards in their own folders.
           cp index.html _site/
           cp -r pfc tccc t360 humanoid pharm prompts formulary cocom ecg _site/
+          # Custom domain: GitHub Actions deploys drop the Pages custom domain
+          # unless a CNAME is present in the published artifact, so copy it in.
+          cp CNAME _site/
           # Disable Jekyll processing — we serve the files exactly as-is.
           touch _site/.nojekyll
 
