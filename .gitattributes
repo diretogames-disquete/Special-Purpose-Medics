@@ -1,0 +1,8 @@
+# Normalize line endings: store text as LF in the repo, check out LF on every
+# platform. Keeps the OneDrive/Windows working copy from churning CRLF into
+# diffs. Existing files normalize as they're next modified (no repo-wide rewrite
+# was forced when this was added).
+* text=auto eol=lf
+
+# Generated graphify cache/graph artifacts are JSON text — treat as text too.
+graphify-out/**/*.json text eol=lf
