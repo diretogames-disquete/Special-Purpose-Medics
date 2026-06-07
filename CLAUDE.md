@@ -11,6 +11,16 @@ A suite of medical-training dashboards deployed to GitHub Pages. A landing
   any "add a dashboard / enhance this html / same treatment" request.
 - **`docs/HOW_THIS_WAS_BUILT.md`** — plain-language explanation of the whole build.
 
+## Token-efficient navigation (graphify)
+- If a `graphify-out/` graph is present (built locally with
+  [graphify](https://github.com/safishamsi/graphify), `/graphify .`), **query it
+  instead of bulk-reading large files**. Use the graphify MCP tools
+  (`query_graph`, `get_node`, `get_neighbors`, `shortest_path`) to locate
+  functions/sections — the big dashboards (e.g. `cocom/index.html`, ~12.5k lines)
+  are expensive to read whole just to navigate.
+- Complements, doesn't replace, the cheap habits: `/compact` at breakpoints,
+  narrow `Read` ranges over whole-file reads, route big JSON dumps to files.
+
 ## Quick conventions
 - Separate HTML / CSS / JS; never ship one blob.
 - Every dashboard keeps an offline `*_Standalone.html` built by its
