@@ -60,9 +60,9 @@
     "semantic_hash": "8138763f8e45517b1f81bf4439495855"
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\humanoid\\build_standalone.py": {
-    "mtime": 1780796238.1941702,
-    "ast_hash": "7aa9cb6f381ddb1684003c1d2a3f4bf2",
-    "semantic_hash": "7aa9cb6f381ddb1684003c1d2a3f4bf2"
+    "mtime": 1780992331.9692855,
+    "ast_hash": "6a0f58f8d74ddfdd54f52024952de262",
+    "semantic_hash": ""
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\humanoid\\assets\\spline\\navmesh.js": {
     "mtime": 1780796252.2162395,
@@ -95,9 +95,9 @@
     "semantic_hash": "92583f1593c30b478a48ae2cecf03ea1"
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\pfc\\build_standalone.py": {
-    "mtime": 1780796269.6819859,
-    "ast_hash": "ba692e470576ce679b40369882c72183",
-    "semantic_hash": "ba692e470576ce679b40369882c72183"
+    "mtime": 1780992327.7405274,
+    "ast_hash": "eed0c27215342912241babb26fce9682",
+    "semantic_hash": ""
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\pfc\\js\\sound.js": {
     "mtime": 1780796285.5512874,
@@ -195,9 +195,9 @@
     "semantic_hash": "e772d89264a57c80b5ce2b90e6395b50"
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\t360\\build_standalone.py": {
-    "mtime": 1780796314.337214,
-    "ast_hash": "807d2426a9afb282ba3ffdb5a61032af",
-    "semantic_hash": "807d2426a9afb282ba3ffdb5a61032af"
+    "mtime": 1780992330.6432543,
+    "ast_hash": "920f3500e7a2762275578f1ee1bbd88d",
+    "semantic_hash": ""
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\t360\\js\\heart-audio.js": {
     "mtime": 1780796334.3801792,
@@ -245,9 +245,9 @@
     "semantic_hash": "970f4dcd9a7d7d24d46667a7311a9498"
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\tccc\\build_standalone.py": {
-    "mtime": 1780796350.7679656,
-    "ast_hash": "74c8cda2707a8fde52e0ac780c2c7533",
-    "semantic_hash": "74c8cda2707a8fde52e0ac780c2c7533"
+    "mtime": 1780992328.747292,
+    "ast_hash": "2883f0f0a3aed8925e2b65cfd7ffbbc8",
+    "semantic_hash": ""
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\tccc\\js\\resources.js": {
     "mtime": 1780796368.012226,
@@ -340,9 +340,9 @@
     "semantic_hash": "4f4fdb6adc06442828c1f99580b2cc4c"
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\ecg\\index.html": {
-    "mtime": 1780796223.5395572,
-    "ast_hash": "fc5ecc531add985d9682d0f512587ce8",
-    "semantic_hash": "fc5ecc531add985d9682d0f512587ce8"
+    "mtime": 1780991783.1761024,
+    "ast_hash": "2460f9bb1a1b8483db6bacd21c933677",
+    "semantic_hash": ""
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\ecg\\SPM_ECG_Simulator_Standalone.html": {
     "mtime": 1780796224.522071,
@@ -350,9 +350,9 @@
     "semantic_hash": "d89400dda2b944687b0cf4ae59ddbbbb"
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\formulary\\index.html": {
-    "mtime": 1780796234.338787,
-    "ast_hash": "bd3ff0f124227dd9a313c76e1db9620c",
-    "semantic_hash": "bd3ff0f124227dd9a313c76e1db9620c"
+    "mtime": 1780991783.1771011,
+    "ast_hash": "c6ed973c4c18f199a88b1e35f4f6699f",
+    "semantic_hash": ""
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\formulary\\SPM_DrugBox_Standalone.html": {
     "mtime": 1780796230.9537048,
@@ -365,14 +365,14 @@
     "semantic_hash": "a999c3ae16e211de6520adac346efce9"
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\humanoid\\index.html": {
-    "mtime": 1780796242.2978182,
-    "ast_hash": "fdf32227f8e7e4390c3c7b5c06a17dd3",
-    "semantic_hash": "fdf32227f8e7e4390c3c7b5c06a17dd3"
+    "mtime": 1780991783.1705804,
+    "ast_hash": "b2c2d4bf5606e6ecad98711badbf41ee",
+    "semantic_hash": ""
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\pfc\\index.html": {
-    "mtime": 1780796271.14813,
-    "ast_hash": "482b361f2f7550e3e9a002256419ef89",
-    "semantic_hash": "482b361f2f7550e3e9a002256419ef89"
+    "mtime": 1780991783.1666596,
+    "ast_hash": "ca16e20d93049c10d0b36be0484bdecf",
+    "semantic_hash": ""
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\pfc\\PFC_Dashboard_Standalone.html": {
     "mtime": 1780796268.1548374,
@@ -380,9 +380,9 @@
     "semantic_hash": "eb4e6651ae077cabd77f23800fa0532e"
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\pharm\\index.html": {
-    "mtime": 1780796301.2083497,
-    "ast_hash": "16c920051b3016ec3dcd3493450a62ad",
-    "semantic_hash": "16c920051b3016ec3dcd3493450a62ad"
+    "mtime": 1780991783.1730945,
+    "ast_hash": "566764dbd408534961614ee53d9fb3c0",
+    "semantic_hash": ""
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\pharm\\Pharmacology_Standalone.html": {
     "mtime": 1780796295.1814065,
@@ -390,9 +390,9 @@
     "semantic_hash": "bd37b24ab290310bcaf9496dda52226c"
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\prompts\\index.html": {
-    "mtime": 1780796307.0614405,
-    "ast_hash": "ddac496637f5af21b1bc0810e10ce5c6",
-    "semantic_hash": "ddac496637f5af21b1bc0810e10ce5c6"
+    "mtime": 1780991783.1751182,
+    "ast_hash": "216636502a6cca101a295de45058f446",
+    "semantic_hash": ""
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\prompts\\SOFMedic_Prompts_Standalone.html": {
     "mtime": 1780796303.3929093,
@@ -400,9 +400,9 @@
     "semantic_hash": "451d7234d1ce405263ac46167b2aacf9"
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\t360\\index.html": {
-    "mtime": 1780796317.2129588,
-    "ast_hash": "f1fbe0f38dd2ba96ad4481ada67a9fe5",
-    "semantic_hash": "f1fbe0f38dd2ba96ad4481ada67a9fe5"
+    "mtime": 1780991783.1695802,
+    "ast_hash": "8ef322640d38fc211c3c0cecb62bc16f",
+    "semantic_hash": ""
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\t360\\TCCC360_Standalone.html": {
     "mtime": 1780796311.0310266,
@@ -410,9 +410,9 @@
     "semantic_hash": "6083cd54a5c6d76a82f78a585da5543a"
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\tccc\\index.html": {
-    "mtime": 1780796347.9959564,
-    "ast_hash": "342499818580e62d1afd319ff911b1b3",
-    "semantic_hash": "342499818580e62d1afd319ff911b1b3"
+    "mtime": 1780991783.168574,
+    "ast_hash": "15325aacd0576cfb61d78eecdf5f9357",
+    "semantic_hash": ""
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\tccc\\TCCC_Dashboard_Standalone.html": {
     "mtime": 1780796348.9683251,
@@ -440,8 +440,8 @@
     "semantic_hash": "5655eedb90340bcab14b3d47ea8db750"
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\.claude\\settings.local.json": {
-    "mtime": 1780990304.4741719,
-    "ast_hash": "75a690b80c2d219e1a367a60b3a8f10a",
+    "mtime": 1780992523.320516,
+    "ast_hash": "3c9180f188006533bcd04c72524178c1",
     "semantic_hash": ""
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\docs\\GRAPHIFY_SETUP_WINDOWS.md": {

@@ -91,6 +91,10 @@ def main():
         p.append('<script>\n' + v + '\n</script>')
     for name, c in comps:
         p.append(f'<script type="text/babel">\n/* {name} */\n' + c + '\n</script>')
+    import re as _re
+    _bed = _re.search(r'<!-- SPM ambient soundbed.*?</script>', read("index.html"), _re.S)
+    if _bed:
+        p.append(_bed.group(0))
     p.append('</body></html>')
 
     html = "\n".join(p)

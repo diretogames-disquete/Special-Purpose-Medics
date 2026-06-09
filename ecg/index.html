@@ -96,5 +96,112 @@
 <script src="js/webgl-background.js"></script>
 <script src="js/ecg-engine.js"></script>
 <script src="js/app.js"></script>
+<!-- SPM ambient soundbed — shared tactical combat-medic bed (matches the hub),
+     with a wavy EQ toggle. Auto-on; browsers block autoplay so it arms on the
+     first gesture. Off is remembered site-wide (spm.hubSound). Fully synthesized
+     Web Audio, no files — survives the offline standalone. -->
+<script>
+(function () {
+  if (window.__SPM_BED__) return; window.__SPM_BED__ = true;
+
+  // ---- wavy toggle styles (EQ bars, like the hub) ----
+  var st = document.createElement('style');
+  st.textContent =
+    '.spm-bed-tgl{position:fixed;left:18px;bottom:18px;z-index:99990;display:inline-flex;align-items:center;gap:8px;'
+    + 'background:rgba(18,20,24,.6);color:#cfd6dd;border:1px solid rgba(255,255,255,.18);border-radius:999px;'
+    + 'padding:7px 13px;font:600 10.5px/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.14em;'
+    + 'text-transform:uppercase;cursor:pointer;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);transition:.15s}'
+    + '.spm-bed-tgl:hover{border-color:#7fd1c4;color:#fff}'
+    + '.spm-bed-tgl:focus-visible{outline:2px solid #7fd1c4;outline-offset:2px}'
+    + '.spm-bed-tgl svg{width:26px;height:14px;overflow:visible}'
+    + '.spm-bed-tgl .ln{stroke:currentColor;stroke-width:2;stroke-linecap:round}'
+    + '.spm-bed-tgl .br{opacity:0}'
+    + '.spm-bed-tgl.on .ln{opacity:0}.spm-bed-tgl.on .br{opacity:1}'
+    + '.spm-bed-tgl .b{fill:currentColor;transform-box:fill-box;transform-origin:center}'
+    + '.spm-bed-tgl.on .b{animation:spmEq .9s ease-in-out infinite}'
+    + '.spm-bed-tgl.on .b2{animation-delay:.18s}.spm-bed-tgl.on .b3{animation-delay:.36s}'
+    + '.spm-bed-tgl.on .b4{animation-delay:.12s}.spm-bed-tgl.on .b5{animation-delay:.28s}'
+    + '@keyframes spmEq{0%,100%{transform:scaleY(.32)}50%{transform:scaleY(1)}}'
+    + '@media (prefers-reduced-motion:reduce){.spm-bed-tgl.on .b{animation:none;transform:scaleY(.8)}}';
+  document.head.appendChild(st);
+
+  // ---- the wavy toggle button ----
+  var btn = document.createElement('button');
+  btn.type = 'button'; btn.className = 'spm-bed-tgl'; btn.setAttribute('aria-pressed', 'false'); btn.title = 'Ambient music';
+  btn.innerHTML = '<svg viewBox="0 0 26 14" aria-hidden="true">'
+    + '<line class="ln" x1="2" y1="7" x2="24" y2="7"/>'
+    + '<g class="br"><rect class="b b1" x="2" y="5" width="2.4" height="4" rx="1.2"/>'
+    + '<rect class="b b2" x="7" y="2" width="2.4" height="10" rx="1.2"/>'
+    + '<rect class="b b3" x="12" y="1" width="2.4" height="12" rx="1.2"/>'
+    + '<rect class="b b4" x="17" y="2" width="2.4" height="10" rx="1.2"/>'
+    + '<rect class="b b5" x="22" y="5" width="2.4" height="4" rx="1.2"/></g></svg><span>Music</span>';
+
+  // ---- tactical combat-medic soundbed (synthesized; mirrors the hub) ----
+  var ctx, master, noiseBuf, on = false, built = false, timer = null;
+  var BPM = 80, SIXT = (60 / BPM) / 4, BAR = (60 / BPM) * 4;
+  var bass = [73.42, 73.42, 58.27, 55.00], step = 0, nextT = 0;
+  function noise() { var s = ctx.createBufferSource(); s.buffer = noiseBuf; return s; }
+  function env(g, t, peak, a, d) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + a + d); }
+  function bassSwell(t, f, dur) {
+    var lp = ctx.createBiquadFilter(), g = ctx.createGain();
+    lp.type = 'lowpass'; lp.frequency.setValueAtTime(150, t); lp.frequency.linearRampToValueAtTime(420, t + dur * 0.4); lp.frequency.linearRampToValueAtTime(150, t + dur); lp.Q.value = 3;
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.12, t + dur * 0.3); g.gain.setValueAtTime(0.10, t + dur * 0.7); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    lp.connect(g).connect(master);
+    [0, 8].forEach(function (c) { var o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f; o.detune.value = c; o.connect(lp); o.start(t); o.stop(t + dur + 0.05); });
+  }
+  function heart(t) {
+    var o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(60, t); o.frequency.exponentialRampToValueAtTime(36, t + 0.16);
+    env(g, t, 0.30, 0.012, 0.17); o.connect(g).connect(master); o.start(t); o.stop(t + 0.22);
+    var o2 = ctx.createOscillator(), g2 = ctx.createGain(); o2.type = 'sine';
+    o2.frequency.setValueAtTime(52, t + 0.18); o2.frequency.exponentialRampToValueAtTime(32, t + 0.30);
+    env(g2, t + 0.18, 0.18, 0.012, 0.13); o2.connect(g2).connect(master); o2.start(t + 0.18); o2.stop(t + 0.34);
+  }
+  function beep(t) { var o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'sine'; o.frequency.value = 920; env(g, t, 0.06, 0.004, 0.07); o.connect(g).connect(master); o.start(t); o.stop(t + 0.1); }
+  function tick(t, v) { var n = noise(), hp = ctx.createBiquadFilter(), g = ctx.createGain(); hp.type = 'highpass'; hp.frequency.value = 8500; env(g, t, v, 0.002, 0.025); n.connect(hp).connect(g).connect(master); n.start(t); n.stop(t + 0.04); }
+  function impact(t) {
+    var n = noise(), lp = ctx.createBiquadFilter(), g = ctx.createGain();
+    lp.type = 'lowpass'; lp.frequency.value = 360; env(g, t, 0.42, 0.005, 0.7); n.connect(lp).connect(g).connect(master); n.start(t); n.stop(t + 0.8);
+    var o = ctx.createOscillator(), og = ctx.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(64, t); o.frequency.exponentialRampToValueAtTime(32, t + 0.55);
+    env(og, t, 0.34, 0.006, 0.6); o.connect(og).connect(master); o.start(t); o.stop(t + 0.65);
+  }
+  function playStep(s, t) {
+    var b = s % 16, bar = Math.floor(s / 16);
+    if (b === 0) bassSwell(t, bass[bar % 4], BAR * 0.96);
+    if (bar % 4 === 0 && b === 0) impact(t);
+    if (b === 6 || b === 14) tick(t, 0.05);
+    if (b === 0 || b === 8) { beep(t); heart(t); }
+  }
+  function scheduler() { while (nextT < ctx.currentTime + 0.12) { playStep(step, nextT); nextT += SIXT; step++; } }
+  function build() {
+    var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return false;
+    ctx = new AC();
+    master = ctx.createGain(); master.gain.value = 0; master.connect(ctx.destination);
+    var sr = ctx.sampleRate; noiseBuf = ctx.createBuffer(1, sr * 1.5, sr);
+    var d = noiseBuf.getChannelData(0); for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    var dlp = ctx.createBiquadFilter(); dlp.type = 'lowpass'; dlp.frequency.value = 300; dlp.Q.value = 2; dlp.connect(master);
+    var dlfo = ctx.createOscillator(); dlfo.type = 'sine'; dlfo.frequency.value = 0.04;
+    var dlg = ctx.createGain(); dlg.gain.value = 120; dlfo.connect(dlg).connect(dlp.frequency); dlfo.start();
+    [73.42, 110.0].forEach(function (f) { var o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f; var g = ctx.createGain(); g.gain.value = 0.04; o.connect(g).connect(dlp); o.start(); });
+    built = true; return true;
+  }
+  function paint() { btn.classList.toggle('on', on); btn.setAttribute('aria-pressed', String(on)); btn.title = on ? 'Ambient music: on' : 'Ambient music: off'; }
+  function startBed() { if (!built && !build()) return; if (ctx.state === 'suspended') ctx.resume(); master.gain.cancelScheduledValues(ctx.currentTime); master.gain.linearRampToValueAtTime(0.24, ctx.currentTime + 0.6); step = 0; nextT = ctx.currentTime + 0.08; if (!timer) timer = setInterval(scheduler, 25); }
+  function stopBed() { if (ctx) { master.gain.cancelScheduledValues(ctx.currentTime); master.gain.linearRampToValueAtTime(0.0001, ctx.currentTime + 0.4); } if (timer) { clearInterval(timer); timer = null; } }
+  btn.addEventListener('click', function () { on = !on; if (on) startBed(); else stopBed(); paint(); try { localStorage.setItem('spm.hubSound', on ? '1' : '0'); } catch (e) {} });
+
+  // ---- mount + auto-on (gesture-armed; off is remembered) ----
+  var pref = '1'; try { var sv = localStorage.getItem('spm.hubSound'); pref = (sv === null) ? '1' : sv; } catch (e) {}
+  function init() {
+    (document.body || document.documentElement).appendChild(btn);
+    if (pref === '1') {
+      on = true; paint();
+      var arm = function () { document.removeEventListener('pointerdown', arm, true); document.removeEventListener('keydown', arm, true); if (on) startBed(); };
+      document.addEventListener('pointerdown', arm, true); document.addEventListener('keydown', arm, true);
+    } else { paint(); }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
 </body>
 </html>
