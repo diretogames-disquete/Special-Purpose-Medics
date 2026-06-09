@@ -1,60 +1,65 @@
-# Graph Report - .  (2026-06-09)
+# Graph Report - Special-Purpose-Medics-claude-loving-johnson-JdWD9  (2026-06-09)
 
 ## Corpus Check
-- 83 files · ~3,310,000 words
+- 69 files · ~1,672,900 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1930 nodes · 2856 edges · 198 communities (151 shown, 47 thin omitted)
+- 1945 nodes · 2895 edges · 196 communities (150 shown, 46 thin omitted)
 - Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 270 edges (avg confidence: 0.83)
-- Token cost: 414,725 input · 0 output
+- Token cost: 0 input · 0 output
+
+## Graph Freshness
+- Built from commit: `5f1464cf`
+- Run `git rev-parse HEAD` and compare to check if the graph is stale.
+- Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- [[_COMMUNITY_Humanoid WASM Glue (Emscripten)|Humanoid WASM Glue (Emscripten)]]
-- [[_COMMUNITY_SOF-Medic Prompt Categories|SOF-Medic Prompt Categories]]
-- [[_COMMUNITY_NORTHCOM Homeland-Defense Doctrine|NORTHCOM Homeland-Defense Doctrine]]
-- [[_COMMUNITY_CENTCOM Prolonged-Care Scenarios|CENTCOM Prolonged-Care Scenarios]]
-- [[_COMMUNITY_NORTHCOM Bioterror (Category A Agents)|NORTHCOM Bioterror (Category A Agents)]]
-- [[_COMMUNITY_PFC Dashboard Components|PFC Dashboard Components]]
-- [[_COMMUNITY_NORTHCOM CBRN & Radiation|NORTHCOM CBRN & Radiation]]
-- [[_COMMUNITY_PFC Casualty-Card Docs Engine|PFC Casualty-Card Docs Engine]]
-- [[_COMMUNITY_Ranger Medic Doctrine & Battle Cases|Ranger Medic Doctrine & Battle Cases]]
-- [[_COMMUNITY_CENTCOM CBRN & Nerve-Agent Scenarios|CENTCOM CBRN & Nerve-Agent Scenarios]]
-- [[_COMMUNITY_Pharmacology PKPD Engine|Pharmacology PK/PD Engine]]
-- [[_COMMUNITY_Humanoid Scene App (vitalsECG)|Humanoid Scene App (vitals/ECG)]]
-- [[_COMMUNITY_Humanoid WASM Virtual FS (paths)|Humanoid WASM Virtual FS (paths)]]
-- [[_COMMUNITY_Humanoid Navmesh (Recast WASM)|Humanoid Navmesh (Recast WASM)]]
-- [[_COMMUNITY_ECG Simulator App & Builder|ECG Simulator App & Builder]]
-- [[_COMMUNITY_SOUTHCOM Tropical-Disease Scenarios|SOUTHCOM Tropical-Disease Scenarios]]
-- [[_COMMUNITY_Build Conventions & Project Memory|Build Conventions & Project Memory]]
-- [[_COMMUNITY_AFRICOM Infectious-Disease Scenarios|AFRICOM Infectious-Disease Scenarios]]
-- [[_COMMUNITY_Crush Syndrome & Acute Kidney Injury|Crush Syndrome & Acute Kidney Injury]]
-- [[_COMMUNITY_Drug Box App & Quiz|Drug Box App & Quiz]]
-- [[_COMMUNITY_Envenomation & Malaria Scenarios|Envenomation & Malaria Scenarios]]
-- [[_COMMUNITY_Cross-Dashboard Build & WebGL Modules|Cross-Dashboard Build & WebGL Modules]]
-- [[_COMMUNITY_High-Altitude Illness (HACEHAPE)|High-Altitude Illness (HACE/HAPE)]]
-- [[_COMMUNITY_WebGL Ambient Field Renderer|WebGL Ambient Field Renderer]]
-- [[_COMMUNITY_Tweaks Panel UI Controls|Tweaks Panel UI Controls]]
-- [[_COMMUNITY_Humanoid WASM File Storage|Humanoid WASM File Storage]]
-- [[_COMMUNITY_Prolonged Casualty Care Documentation|Prolonged Casualty Care Documentation]]
-- [[_COMMUNITY_PCC  TCCC-to-PCC Transition|PCC / TCCC-to-PCC Transition]]
-- [[_COMMUNITY_TCCC Procedural Audio Engine|TCCC Procedural Audio Engine]]
-- [[_COMMUNITY_ECG Waveform Engine (rhythms)|ECG Waveform Engine (rhythms)]]
-- [[_COMMUNITY_Humanoid WASM FS InitMount|Humanoid WASM FS Init/Mount]]
-- [[_COMMUNITY_T360 Drip-Dosage Calculator|T360 Drip-Dosage Calculator]]
-- [[_COMMUNITY_T360 Vitals & ECG Tiles|T360 Vitals & ECG Tiles]]
-- [[_COMMUNITY_T360 App & Timeline|T360 App & Timeline]]
-- [[_COMMUNITY_Humanoid WASM File Descriptors|Humanoid WASM File Descriptors]]
-- [[_COMMUNITY_T360 Body Diagram & Burn Calc|T360 Body Diagram & Burn Calc]]
-- [[_COMMUNITY_Riverine Febrile Illness (Doxycycline)|Riverine Febrile Illness (Doxycycline)]]
-- [[_COMMUNITY_Sepsis & Telemedicine PFC|Sepsis & Telemedicine PFC]]
-- [[_COMMUNITY_Prompt Library UI|Prompt Library UI]]
-- [[_COMMUNITY_Humanoid WASM StringStream IO|Humanoid WASM String/Stream I/O]]
-- [[_COMMUNITY_TCCC App & Decision Log|TCCC App & Decision Log]]
-- [[_COMMUNITY_Hemorrhage & Whole-Blood Resuscitation|Hemorrhage & Whole-Blood Resuscitation]]
-- [[_COMMUNITY_INDOPACOM Tropical Scenarios|INDOPACOM Tropical Scenarios]]
-- [[_COMMUNITY_Rabies PEP Scenario|Rabies PEP Scenario]]
-- [[_COMMUNITY_Exertional Heat & Rhabdomyolysis|Exertional Heat & Rhabdomyolysis]]
+- [[_COMMUNITY_Community 0|Community 0]]
+- [[_COMMUNITY_Community 1|Community 1]]
+- [[_COMMUNITY_Community 2|Community 2]]
+- [[_COMMUNITY_Community 3|Community 3]]
+- [[_COMMUNITY_Community 4|Community 4]]
+- [[_COMMUNITY_Community 5|Community 5]]
+- [[_COMMUNITY_Community 6|Community 6]]
+- [[_COMMUNITY_Community 7|Community 7]]
+- [[_COMMUNITY_Community 8|Community 8]]
+- [[_COMMUNITY_Community 9|Community 9]]
+- [[_COMMUNITY_Community 10|Community 10]]
+- [[_COMMUNITY_Community 11|Community 11]]
+- [[_COMMUNITY_Community 12|Community 12]]
+- [[_COMMUNITY_Community 13|Community 13]]
+- [[_COMMUNITY_Community 14|Community 14]]
+- [[_COMMUNITY_Community 15|Community 15]]
+- [[_COMMUNITY_Community 16|Community 16]]
+- [[_COMMUNITY_Community 17|Community 17]]
+- [[_COMMUNITY_Community 18|Community 18]]
+- [[_COMMUNITY_Community 19|Community 19]]
+- [[_COMMUNITY_Community 20|Community 20]]
+- [[_COMMUNITY_Community 21|Community 21]]
+- [[_COMMUNITY_Community 22|Community 22]]
+- [[_COMMUNITY_Community 23|Community 23]]
+- [[_COMMUNITY_Community 24|Community 24]]
+- [[_COMMUNITY_Community 25|Community 25]]
+- [[_COMMUNITY_Community 26|Community 26]]
+- [[_COMMUNITY_Community 27|Community 27]]
+- [[_COMMUNITY_Community 28|Community 28]]
+- [[_COMMUNITY_Community 29|Community 29]]
+- [[_COMMUNITY_Community 30|Community 30]]
+- [[_COMMUNITY_Community 31|Community 31]]
+- [[_COMMUNITY_Community 32|Community 32]]
+- [[_COMMUNITY_Community 33|Community 33]]
+- [[_COMMUNITY_Community 34|Community 34]]
+- [[_COMMUNITY_Community 35|Community 35]]
+- [[_COMMUNITY_Community 36|Community 36]]
+- [[_COMMUNITY_Community 37|Community 37]]
+- [[_COMMUNITY_Community 38|Community 38]]
+- [[_COMMUNITY_Community 39|Community 39]]
+- [[_COMMUNITY_Community 40|Community 40]]
+- [[_COMMUNITY_Community 41|Community 41]]
+- [[_COMMUNITY_Community 43|Community 43]]
+- [[_COMMUNITY_Community 44|Community 44]]
+- [[_COMMUNITY_Community 45|Community 45]]
 - [[_COMMUNITY_Community 46|Community 46]]
 - [[_COMMUNITY_Community 47|Community 47]]
 - [[_COMMUNITY_Community 48|Community 48]]
@@ -121,7 +126,6 @@
 - [[_COMMUNITY_Community 112|Community 112]]
 - [[_COMMUNITY_Community 113|Community 113]]
 - [[_COMMUNITY_Community 114|Community 114]]
-- [[_COMMUNITY_Community 115|Community 115]]
 - [[_COMMUNITY_Community 116|Community 116]]
 - [[_COMMUNITY_Community 117|Community 117]]
 - [[_COMMUNITY_Community 118|Community 118]]
@@ -135,7 +139,6 @@
 - [[_COMMUNITY_Community 126|Community 126]]
 - [[_COMMUNITY_Community 127|Community 127]]
 - [[_COMMUNITY_Community 128|Community 128]]
-- [[_COMMUNITY_Community 129|Community 129]]
 - [[_COMMUNITY_Community 130|Community 130]]
 - [[_COMMUNITY_Community 131|Community 131]]
 - [[_COMMUNITY_Community 132|Community 132]]
@@ -236,191 +239,195 @@
 - **Mogadishu lesson driving TCCC and junctional hemorrhage doctrine** —  [INFERRED]
 - **Every-Ranger-a-Lifesaver system eliminating preventable death (813-casualty review)** —  [INFERRED]
 
-## Communities (198 total, 47 thin omitted)
+## Communities (196 total, 46 thin omitted)
 
-### Community 0 - "Humanoid WASM Glue (Emscripten)"
+### Community 0 - "Community 0"
 Cohesion: 0.04
 Nodes (26): abort(), addOnPostRun(), addOnPreRun(), addRunDependency(), analyzePath(), assert(), craftInvokerFunction(), createNamedFunction() (+18 more)
 
-### Community 1 - "SOF-Medic Prompt Categories"
+### Community 1 - "Community 1"
 Cohesion: 0.05
 Nodes (51): Category: Airborne, Category: Analgesia / Procedural Sedation, Category: Arctic / Frostbite / Avalanche, Category: Burns / Inhalation, Category: CBRN / Chem, Category: Conflicts / Data, Category: Diagnostic / Assessment, Category: Divergent (+43 more)
 
-### Community 2 - "NORTHCOM Homeland-Defense Doctrine"
-Cohesion: 0.04
-Nodes (49): Blast Lung — Deadly, Often-Occult Primary Overpressure Injury, Organized Casualty/Patient Flow & Referral Pathways, Clear Clinical Communication — Make-or-Break Reach-Back Skill, Crisis-Standards-of-Care Scarce-Resource Allocation, Delayed Pulmonary Effects from Heavy Agent Exposure, Don't Overpathologize Normal Stress / Reduce Stigma, DSCA Doctrine — Civilian-Led, Military-Supporting (Posse Comitatus), Expectant (Gray) Triage Category (+41 more)
+### Community 2 - "Community 2"
+Cohesion: 0.22
+Nodes (11): Care Under Fire — Fire Superiority is the Best Medicine, CTLS Task List (331-SOM-XXXX) + 2025 Ranger Medic Handbook Protocols, Regiment's Five Casualty-Response Principles, Junctional Hemorrhage Control (CAT, 2nd TQ, junctional TQ, packing, clamping), Lethal Triad Prevention (hypothermia/coagulopathy/acidosis; HPMK, calcium), Ranger Medic Panel — 75th Ranger Regiment Training Scenarios (CTLS + 2025 RMH), Permissive Hypotension (no-TBI target: palpable radial pulse / SBP 80-90), ROLO Whole Blood Transfusion (Ranger O Low-Titer) (+3 more)
 
-### Community 3 - "CENTCOM Prolonged-Care Scenarios"
+### Community 3 - "Community 3"
 Cohesion: 0.05
 Nodes (49): CENTCOM Medical Scenarios Panel, Acute Kidney Injury (AKI), Primary Blast Lung Injury, Pain / Anxiety / Delirium in Sustained Care, 'Died of Wounds' (Delayed Infection Death), Controlled Extremity Hemorrhage (Tourniquet Candidate), Hyperkalemia, Respiratory Failure Requiring Mechanical Ventilation (+41 more)
 
-### Community 4 - "NORTHCOM Bioterror (Category A Agents)"
-Cohesion: 0.05
-Nodes (47): Airborne + Contact Isolation, Airway / Ventilatory Support, Aminoglycoside Antibiotics (Streptomycin / Gentamicin), Botulinum Antitoxin, Botulism (Botulinum Toxin), Category A Bioterrorism Agents, CDC Botulism Service (24/7), Decon Zones / Throughput / Cross-Contamination Control (Hot/Warm/Cold) (+39 more)
+### Community 4 - "Community 4"
+Cohesion: 0.06
+Nodes (42): Airborne + Contact Isolation, Airway / Ventilatory Support, Aminoglycoside Antibiotics (Streptomycin / Gentamicin), Botulinum Antitoxin, Botulism (Botulinum Toxin), Category A Bioterrorism Agents, CDC Botulism Service (24/7), Decon Zones / Throughput / Cross-Contamination Control (Hot/Warm/Cold) (+34 more)
 
-### Community 5 - "PFC Dashboard Components"
+### Community 5 - "Community 5"
 Cohesion: 0.06
 Nodes (46): PFC App root component, PFC FootStrip, PFC QuickReference, PFC SoundPrompt, PFC TopBar, EcgMonitor, ScenarioIndex (left nav), ScenarioMain (center column) (+38 more)
 
-### Community 6 - "NORTHCOM CBRN & Radiation"
+### Community 6 - "Community 6"
 Cohesion: 0.05
 Nodes (44): Acute Radiation Syndrome (ARS), Acetylcholinesterase 'Aging', Anthrax Treatment vs Post-Exposure Prophylaxis, Atropine (nerve-agent antidote), Burn Fluid Resuscitation (Rule of Nines / Parkland), Carbon Monoxide Poisoning, CBRN / Mass-Casualty / Disaster Threat Set, Combined Injury (Radiation + Trauma) (+36 more)
 
-### Community 7 - "PFC Casualty-Card Docs Engine"
+### Community 7 - "Community 7"
 Cohesion: 0.08
 Nodes (28): autoMarks(), BasicVitalsChart(), capabilityRows(), CARD_ROWS, CARE_GROUPS, CarePlanGrid(), deriveVent(), DOC_TABS (+20 more)
 
-### Community 8 - "Ranger Medic Doctrine & Battle Cases"
+### Community 8 - "Community 8"
 Cohesion: 0.06
 Nodes (32): Lethal Triad (hypothermia, coagulopathy, acidosis), Acute Appendicitis, Bacterial Meningitis, Testicular Torsion, Ketamine (Procedural Sedation), Battle of Cisterna, Operation Just Cause, Pointe du Hoc (D-Day Cliffs) (+24 more)
 
-### Community 9 - "CENTCOM CBRN & Nerve-Agent Scenarios"
+### Community 9 - "Community 9"
 Cohesion: 0.07
 Nodes (29): Acetylcholinesterase Inhibition, ATNAA / DuoDote Autoinjector, Atropine (muscarinic blocker), Benzodiazepine (diazepam/midazolam) for Seizures, CENTCOM Scenario 11: MERS-CoV Pneumonia After Camel Contact (Operation Dromedary), Cholinergic Toxidrome (DUMBELS/SLUDGE), Copper Sulfate Contraindicated, Dromedary Camel (MERS-CoV Reservoir) (+21 more)
 
-### Community 10 - "Pharmacology PK/PD Engine"
-Cohesion: 0.14
-Nodes (26): activeModLabels(), bateman(), buildDrugs(), clearanceFactor(), dt, et, findDrugByKey(), fmtT() (+18 more)
+### Community 10 - "Community 10"
+Cohesion: 0.05
+Nodes (92): $(), activeModLabels(), activePanel(), actxInit(), allQuestions(), answer(), applyAccent(), applyFilters() (+84 more)
 
-### Community 11 - "Humanoid Scene App (vitals/ECG)"
+### Community 11 - "Community 11"
 Cohesion: 0.11
 Nodes (19): App(), BLOOD_TYPES, BPTile(), ECG_POINTS, EVAC_OPTS, HeartAudio, INNOVATIONS, mapLabel() (+11 more)
 
-### Community 12 - "Humanoid WASM Virtual FS (paths)"
-Cohesion: 0.14
-Nodes (27): chdir(), destroyNode(), doStat(), flagsToPermissionString(), getMounts(), getPath(), hashAddNode(), hashName() (+19 more)
-
-### Community 14 - "ECG Simulator App & Builder"
+### Community 12 - "Community 12"
 Cohesion: 0.15
-Nodes (20): $(), actxInit(), answer(), beep(), buildGameSetup(), finishGame(), initBuilder(), initTwelve() (+12 more)
+Nodes (25): chdir(), destroyNode(), doStat(), getMounts(), getPath(), hashAddNode(), hashName(), hashRemoveNode() (+17 more)
 
-### Community 15 - "SOUTHCOM Tropical-Disease Scenarios"
+### Community 13 - "Community 13"
+Cohesion: 0.08
+Nodes (6): abort(), addRunDependency(), assert(), createWasm(), getBinary(), getBinaryPromise()
+
+### Community 14 - "Community 14"
+Cohesion: 0.32
+Nodes (12): buildBed(), disable(), enable(), ensure(), freq(), lowPulse(), monitorBlip(), pluck() (+4 more)
+
+### Community 15 - "Community 15"
 Cohesion: 0.08
 Nodes (24): Amphotericin B (liposomal preferred), Chagas Disease, Cutaneous Leishmaniasis (primary ulcer), SFC Carla 'Doc' Bautista (18D, yellow fever medic), SFC Marisol 'Doc' Quintero (18D, leishmaniasis medic), Faget Sign (relative bradycardia with fever), Leishmania (V.) braziliensis, Malaria Exclusion (smear/RDT) (+16 more)
 
-### Community 16 - "Build Conventions & Project Memory"
+### Community 16 - "Community 16"
 Cohesion: 0.17
 Nodes (24): window.PFC_BG WebGL Control API, Project Memory (CLAUDE.md), Back-to-Hub Link Convention, Domain Correctness (drip math, PK/PD Bateman, laterality), Glass Mode (translucent panels via design tokens), Headless Chromium Verification (0 console errors), Mobile Sizing (design-width viewport scale-to-fit), React-in-Browser via Babel + Scope Gotcha (+16 more)
 
-### Community 17 - "AFRICOM Infectious-Disease Scenarios"
+### Community 17 - "Community 17"
 Cohesion: 0.10
 Nodes (23): AFRICOM Medical Scenarios Panel, Combatant Command Tab Selector, WHO Rabies Exposure Categories (I/II/III), Tag Filter Pills, filterTag() function, jumpTo() function, setCocom() function, Scenario 10: MEDCAP Pediatric Emergency (SAM) (+15 more)
 
-### Community 18 - "Crush Syndrome & Acute Kidney Injury"
-Cohesion: 0.15
-Nodes (22): Acute Kidney Injury (pre-renal + myoglobinuric), Aggressive IV Crystalloid / Fluid Resuscitation, Calcium / Albuterol / Sodium Bicarbonate (hyperkalemia field countermeasures), Compartment Syndrome, Crush Syndrome (Reperfusion Injury), Scenario 15: Crush Injury — Rockfall in a Mountain Pass (OP ROCK SHATTER), Scenario 19: Exertional Rhabdomyolysis — Cold-Weather Ruck (OP HEAVY LOAD), Foley / Hourly Urine-Output Monitoring (+14 more)
+### Community 18 - "Community 18"
+Cohesion: 0.16
+Nodes (21): Acute Kidney Injury (pre-renal + myoglobinuric), Aggressive IV Crystalloid / Fluid Resuscitation, Calcium / Albuterol / Sodium Bicarbonate (hyperkalemia field countermeasures), Compartment Syndrome, Crush Syndrome (Reperfusion Injury), Scenario 15: Crush Injury — Rockfall in a Mountain Pass (OP ROCK SHATTER), Scenario 19: Exertional Rhabdomyolysis — Cold-Weather Ruck (OP HEAVY LOAD), Foley / Hourly Urine-Output Monitoring (+13 more)
 
-### Community 19 - "Drug Box App & Quiz"
-Cohesion: 0.24
-Nodes (21): allQuestions(), boldify(), buildQuizSetup(), buildSidebar(), buildVitalsCell(), catColor(), catRank(), dutyBadge() (+13 more)
+### Community 19 - "Community 19"
+Cohesion: 0.18
+Nodes (11): Delayed Pulmonary Effects from Heavy Agent Exposure, Care Based on Need & Human Dignity (impartial medical ethics), Acute Environmental Injury — Dehydration / Heat (treat first), Kinetic-Impact-Projectile ('Rubber Bullet') Trauma — Treat as Genuine Trauma, Neutral, Dignified Care in a Politically Charged Environment, Population-Level Infectious-Disease Management & Infection Control, Merck Manual — Riot-Control Chemical Agents (CS/OC), Riot-Control Agents (CS/OC) — Decontamination & Reassurance (+3 more)
 
-### Community 20 - "Envenomation & Malaria Scenarios"
-Cohesion: 0.10
-Nodes (21): Species/Region-Relevant Antivenom, Any Fever in a Malaria Area Is Malaria Until Proven Otherwise, Avoid Snakebite Folklore (no incision/suction/tourniquet/ice), Buthid Scorpion (Androctonus / Leiurus), Hypercatecholaminergic Myocarditis / Pulmonary Edema, Catecholamine Storm (autonomic short-circuit), CENTCOM Theater Tab, Check Glucose / Correct Hypoglycemia (+13 more)
+### Community 20 - "Community 20"
+Cohesion: 0.06
+Nodes (34): Species/Region-Relevant Antivenom, Any Fever in a Malaria Area Is Malaria Until Proven Otherwise, Avoid Snakebite Folklore (no incision/suction/tourniquet/ice), Buthid Scorpion (Androctonus / Leiurus), Hypercatecholaminergic Myocarditis / Pulmonary Edema, Catecholamine Storm (autonomic short-circuit), CENTCOM Theater Tab, Cerebral Malaria (impaired consciousness/seizures) (+26 more)
 
-### Community 21 - "Cross-Dashboard Build & WebGL Modules"
+### Community 21 - "Community 21"
 Cohesion: 0.22
 Nodes (21): COCOM Scenarios app.js, COCOM build_standalone.py, COCOM webgl-background.js, ECG Simulator app.js, ECG build_standalone.py, ECG waveform engine (ecg-engine.js), ECG webgl-background.js, Drug Box app.js (+13 more)
 
-### Community 22 - "High-Altitude Illness (HACE/HAPE)"
+### Community 22 - "Community 22"
 Cohesion: 0.11
 Nodes (20): Gradual Ascent / Acclimatization (climb high, sleep low), Acetazolamide (AMS prophylaxis/adjunct), Acute Mountain Sickness (AMS), AMS-HACE Spectrum, Ataxia (truncal/gait), Patient Brooks (HACE scenario), Immediate Descent, Descent (definitive treatment for HACE/HAPE) (+12 more)
 
-### Community 23 - "WebGL Ambient Field Renderer"
+### Community 23 - "Community 23"
 Cohesion: 0.55
 Nodes (11): applyTheme(), compile(), drawOnce(), frame(), mix3(), pause(), play(), recomputeTargets() (+3 more)
 
-### Community 24 - "Tweaks Panel UI Controls"
+### Community 24 - "Community 24"
 Cohesion: 0.37
 Nodes (14): TweakButton(), TweakColor(), TweakNumber(), TweakRadio(), TweakRow(), TweakSection(), TweakSelect(), TweakSlider() (+6 more)
 
-### Community 25 - "Humanoid WASM File Storage"
+### Community 25 - "Community 25"
 Cohesion: 0.18
 Nodes (18): allocate(), createNode(), doMsync(), expandFileStorage(), get_char(), getattr(), isBlkdev(), isChrdev() (+10 more)
 
-### Community 26 - "Prolonged Casualty Care Documentation"
-Cohesion: 0.16
-Nodes (17): ABO / Titer Compatibility Safeguards, TCCC Casualty Card (DD Form 1380), CENTCOM Scenario 10: PCC 72-Hour Hold (Operation Long Night), Damage Control Resuscitation / Permissive Hypotension, Evacuation Decision / Priority, JTS Whole Blood Transfusion CPG, MARC²H³-PAWS-L Reassessment Framework, Minimum / Better / Best Tiering & Ruck-Truck-House-Plane (+9 more)
+### Community 26 - "Community 26"
+Cohesion: 0.19
+Nodes (13): TCCC Casualty Card (DD Form 1380), CENTCOM Scenario 10: PCC 72-Hour Hold (Operation Long Night), Damage Control Resuscitation / Permissive Hypotension, Evacuation Decision / Priority, MARC²H³-PAWS-L Reassessment Framework, Minimum / Better / Best Tiering & Ruck-Truck-House-Plane, MIST Structured Handoff, Nursing Fundamentals (PCC) (+5 more)
 
-### Community 27 - "PCC / TCCC-to-PCC Transition"
-Cohesion: 0.15
-Nodes (17): Anticipation / Proactive Planning, Ceftriaxone, Goal: Get Out of PCC (drive evacuation), JTS PCC Clinical Practice Guideline, MARC²H³-PAWS-L Framework, PCC Nursing Care, Prolonged Casualty Care (PCC / PFC), PCC/PFC Documentation Flowsheet (+9 more)
+### Community 27 - "Community 27"
+Cohesion: 0.19
+Nodes (13): Anticipation / Proactive Planning, Goal: Get Out of PCC (drive evacuation), JTS PCC Clinical Practice Guideline, MARC²H³-PAWS-L Framework, PCC Nursing Care, Prolonged Casualty Care (PCC / PFC), PCC/PFC Documentation Flowsheet, Scenario 35 — TCCC to PCC Transition (Operation Long Hold) (+5 more)
 
-### Community 28 - "TCCC Procedural Audio Engine"
+### Community 28 - "Community 28"
 Cohesion: 0.15
 Nodes (11): c, Cue, envelope(), init(), monitorState, noise(), play(), startAsystole() (+3 more)
 
-### Community 29 - "ECG Waveform Engine (rhythms)"
+### Community 29 - "Community 29"
 Cohesion: 0.17
 Nodes (7): g(), tCustom(), tNormal(), tP(), tPaced(), tQRS(), tWide()
 
-### Community 30 - "Humanoid WASM FS Init/Mount"
+### Community 30 - "Community 30"
 Cohesion: 0.17
 Nodes (17): createDefaultDevices(), createDefaultDirectories(), createDevice(), createPath(), createSpecialDirectories(), createStandardStreams(), ensureErrnoError(), init() (+9 more)
 
-### Community 31 - "T360 Drip-Dosage Calculator"
+### Community 31 - "Community 31"
 Cohesion: 0.15
 Nodes (10): Bolus(), DOSE_UNITS, DripVisual(), DROP_SETS, Fluid(), GAUGE_FLOW, Infusion(), INFUSION_PRESETS (+2 more)
 
-### Community 32 - "T360 Vitals & ECG Tiles"
+### Community 32 - "Community 32"
 Cohesion: 0.17
 Nodes (10): nowHHMM(), classifyHR(), classifyPain(), classifyRR(), classifySBP(), classifySpO2(), ecgPip(), __getEcgAudioCtx() (+2 more)
 
-### Community 33 - "T360 App & Timeline"
+### Community 33 - "Community 33"
 Cohesion: 0.20
 Nodes (17): WebGL tints to patient acuity, Tweaks host postMessage protocol, Audio/visual tempo follows heart rate, T360 App Root, T360 Timeline (TQ+meds+vitals events), T360 build_standalone.py, T360 Bolus calc, T360 DripCalcTab (+9 more)
 
-### Community 34 - "Humanoid WASM File Descriptors"
+### Community 34 - "Community 34"
 Cohesion: 0.13
 Nodes (16): calculateAt(), chmod(), chown(), fchmod(), fchown(), _fd_read(), _fd_seek(), _fd_write() (+8 more)
 
-### Community 35 - "T360 Body Diagram & Burn Calc"
+### Community 35 - "Community 35"
 Cohesion: 0.15
 Nodes (12): BodyDiagram(), BURN_REGIONS, __burnPatchPctCache, getSilhouettePixelCount(), parkland(), patchTBSAPercent(), polygonArea(), TQ_LIMB_X (+4 more)
 
-### Community 36 - "Riverine Febrile Illness (Doxycycline)"
+### Community 36 - "Community 36"
 Cohesion: 0.15
 Nodes (15): Avoid Rifampin where TB Co-Endemic, Brucellosis (Undulant Fever), Severe Calf Myalgia, Conjunctival Suffusion (red eyes, no exudate), Doxycycline, Weekly Doxycycline Prophylaxis (high-risk water exposure), Empiric Doxycycline Covers Rickettsial Mimic, Early Empiric Antibiotics on Suspicion (+7 more)
 
-### Community 37 - "Sepsis & Telemedicine PFC"
+### Community 37 - "Community 37"
 Cohesion: 0.15
 Nodes (15): Antibiotics, Fire-Spreading-Through-a-House Analogy, Fluid Resuscitation / Vasopressors, General-Contractor-Calling-Specialists Analogy, JTS Sepsis Management in PFC CPG, Lactate / i-STAT Monitoring, Medic SSG Andre 'Doc' Reyes, Minimum/Better/Best Paradigm (+7 more)
 
-### Community 38 - "Prompt Library UI"
-Cohesion: 0.25
-Nodes (13): applyTheme(), chip(), copyRow(), copyText(), fallbackCopy(), filter(), layout(), mediaPanel() (+5 more)
+### Community 38 - "Community 38"
+Cohesion: 0.22
+Nodes (9): Organized Casualty/Patient Flow & Referral Pathways, Don't Overpathologize Normal Stress / Reduce Stigma, Medical Logistics — Backbone of Sustained Disaster Operations, Operational Stress Injury & Moral Injury (responders), Prevention / Public Health (WASH, surveillance) — Prevents Secondary Crises, Psychological First Aid (PFA) — Not Formal Therapy, NORTHCOM Scenario 46 — Wide-Area Disaster: Medical Logistics & Sustained Operations (Operation Long Relief), NORTHCOM Scenario 49 — Behavioral Health & Responder Resilience (Operation Steady Hand) (+1 more)
 
-### Community 39 - "Humanoid WASM String/Stream I/O"
+### Community 39 - "Community 39"
 Cohesion: 0.14
 Nodes (15): UTF8ArrayToString(), UTF8ToString(), close(), closeStream(), convertReturnValue(), _fd_close(), "fromWireType"(), fsync() (+7 more)
 
-### Community 40 - "TCCC App & Decision Log"
+### Community 40 - "Community 40"
 Cohesion: 0.22
 Nodes (15): TCCC App Root, TCCC Debrief modal, TCCC DecisionLog, TCCC generateReasoning, TCCC OutcomePanel, TCCC build_standalone.py, TCCC CasualtyPanel, TCCC vital classifiers + formatClock (+7 more)
 
-### Community 41 - "Hemorrhage & Whole-Blood Resuscitation"
-Cohesion: 0.21
-Nodes (14): Amputation Tourniquet Non-Conversion Rule, Damage-Control Resuscitation (TXA, Calcium, Whole Blood), Hemorrhagic Shock, High-and-Tight CoTCCC Limb Tourniquet, Operation Crimson Lifeline, Operation Severed Tide, Permissive Hypotension, Prolonged Field Care (PFC) Theme (+6 more)
+### Community 41 - "Community 41"
+Cohesion: 0.19
+Nodes (17): ABO / Titer Compatibility Safeguards, Amputation Tourniquet Non-Conversion Rule, Damage-Control Resuscitation (TXA, Calcium, Whole Blood), Hemorrhagic Shock, High-and-Tight CoTCCC Limb Tourniquet, JTS Whole Blood Transfusion CPG, Operation Crimson Lifeline, Operation Severed Tide (+9 more)
 
-### Community 43 - "INDOPACOM Tropical Scenarios"
+### Community 43 - "Community 43"
 Cohesion: 0.19
 Nodes (13): Disease and Non-Battle Injury (DNBI) Dominance, INDOPACOM Theater Tab, Operation Monsoon Shield, Operation Rice Paddy Vigil, Operation (Leptospirosis riverine crossing, Thailand), Operation Shattered Reef, AFRICOM Operational Environment Card, Ranger Medic Handbook (RMH) References (+5 more)
 
-### Community 44 - "Rabies PEP Scenario"
+### Community 44 - "Community 44"
 Cohesion: 0.18
 Nodes (13): 10-Day Animal Observation Rule, Medic Nkemba, Operation Silent Bite, Patient Kemp, Rabies, Rabies Immunoglobulin (RIG, passive), Post-Exposure Prophylaxis (PEP), Pre-Exposure Prophylaxis (PrEP) (+5 more)
 
-### Community 45 - "Exertional Heat & Rhabdomyolysis"
+### Community 45 - "Community 45"
 Cohesion: 0.21
 Nodes (13): Drink-to-Thirst Prevention, Exercise-Associated Hyponatremia (EAH), Exertional Heat Stroke, Exertional Rhabdomyolysis, Hyperkalemia Algorithm (calcium / insulin+dextrose / remove), 3% Hypertonic Saline (severe EAH treatment), Nelson et al., NEJM 2016 (Army SCT cohort), Rectal Core Temperature (key discriminator) (+5 more)
 
 ### Community 46 - "Community 46"
-Cohesion: 0.17
-Nodes (13): Cerebral Malaria (impaired consciousness/seizures), Doc Whitlock (medic, malaria scenario), 'Firestorm' Analogy (rapid lethal malaria), Hypoglycemia in Severe Malaria, Intensive Organ-Directed Supportive Care (severe malaria), IV Artesunate, IV Quinine (older standard antimalarial), Mandatory Parallel Malaria Testing (+5 more)
+Cohesion: 0.25
+Nodes (8): Clear Clinical Communication — Make-or-Break Reach-Back Skill, Plan for Intermittent Connectivity / Retain Autonomous Capability, Prolonged Casualty Care (hours-to-days to definitive care), JTS CPG — CBRN Injury Response (Parts 1-4), JTS CPG — Prolonged Casualty Care Guidelines (21 Dec 2021), SALT Mass Casualty Triage — National Disaster Life Support Foundation, NORTHCOM References Section (verified live-web citations, Scenarios 1-50), NORTHCOM Scenario 44 — Telemedicine Reach-Back (Operation Long Wire)
 
 ### Community 47 - "Community 47"
-Cohesion: 0.27
-Nodes (12): activePanel(), applyAccent(), applyFilters(), applyGlass(), buildTweaks(), initFpills(), mkSwitch(), norm() (+4 more)
+Cohesion: 0.29
+Nodes (8): Crisis-Standards-of-Care Scarce-Resource Allocation, DSCA Doctrine — Civilian-Led, Military-Supporting (Posse Comitatus), Incident Command System (ICS) — Civilian Framework, Integration as the Ultimate DSCA Force-Multiplier, Plain-Language MIST Handoffs Across the Seam, NORTHCOM Scenario 45 — EMS/ICS Integration: Military-Civilian Seam (Operation Common Cause), NORTHCOM Scenario 50 — Integrated Multi-Threat Homeland Capstone, Self/Team Protection — Non-Negotiable Foundation
 
 ### Community 48 - "Community 48"
 Cohesion: 0.15
@@ -431,8 +438,8 @@ Cohesion: 0.17
 Nodes (12): Defervescence / Critical Phase, Narrowing Pulse Pressure, Plasma Leakage (rising Hct, falling platelets), Leptospirosis, Severe Dengue (plasma leakage / impending shock), Weil's Disease (severe icteric leptospirosis), Conjunctival Suffusion, Jarisch-Herxheimer Reaction (+4 more)
 
 ### Community 50 - "Community 50"
-Cohesion: 0.17
-Nodes (12): Delirium (hyperactive/hypoactive), Expectant Category (resource-dependent), Ketamine (analgesia), Moral Injury & Team/Self Support, Naloxone (opioid reversal), Palliative / Comfort Care, Scenario 34 — TCCC Triple-Option Analgesia (Operation Steady Hand), Scenario 45: Analgesia, Sedation & Delirium Over Days (Operation Long Night) (+4 more)
+Cohesion: 0.22
+Nodes (9): Expectant Category (resource-dependent), Ketamine (analgesia), Moral Injury & Team/Self Support, Palliative / Comfort Care, Scenario 34 — TCCC Triple-Option Analgesia (Operation Steady Hand), Scenario 48: Austere MASCAL Triage (Operation Hard Choices), Scenario 49: The Awake, Suffering & Expectant Patient (Operation Quiet Company), Tension Pneumothorax Needle Decompression (+1 more)
 
 ### Community 51 - "Community 51"
 Cohesion: 0.18
@@ -455,8 +462,8 @@ Cohesion: 0.20
 Nodes (11): Hemorrhage-First Priority (combat doctrine over ATLS ABC), MARCH Algorithm (Massive hemorrhage, Airway, Respiration, Circulation, Hypothermia/Head), Tactical Combat Casualty Care (TCCC), Battle of Mogadishu (3-4 Oct 1993), DD Form 3019 Prolonged Casualty Care Flow Sheet, Junctional Hemorrhage Control (groin/inguinal GSW), TCCC Guidelines, 25 January 2024 (CoTCCC), Scenario: Documentation as a Weapon — The Card That Saves the Next Ranger (+3 more)
 
 ### Community 56 - "Community 56"
-Cohesion: 0.22
-Nodes (11): Critical-Thinking Questions (answer key) block, Differential Diagnosis (reveal) UI block, revealDiff() — reveal differential diagnosis, toggleAns() — reveal answer key, toggleSc() — expand/collapse scenario, Scenario 25: Severe (Cerebral) Falciparum Malaria, Scenario 26: Leptospirosis / Weil's Disease (Operation Floodwater), Scenario 27: Oroya Fever / Bartonellosis (Operation Silent Drain) (+3 more)
+Cohesion: 0.15
+Nodes (17): Calabar Swellings, Critical-Thinking Questions (answer key) block, Differential Diagnosis (reveal) UI block, revealDiff() — reveal differential diagnosis, toggleAns() — reveal answer key, toggleSc() — expand/collapse scenario, Ivermectin-Induced Encephalopathy (high Loa load), Loa Loa (Loiasis / African Eyeworm) (+9 more)
 
 ### Community 57 - "Community 57"
 Cohesion: 0.18
@@ -467,8 +474,8 @@ Cohesion: 0.25
 Nodes (11): Amiodarone, ATNAA (Atropine/Pralidoxime Autoinjector), Atropine, Antihistamines, Cardiovascular & Emergency, CBRN & Antidotes, Diphenhydramine, Epinephrine (+3 more)
 
 ### Community 59 - "Community 59"
-Cohesion: 0.25
-Nodes (11): __addDays(), __arraySum(), __isLeapYear(), _strftime(), _strftime_l(), writeArrayToMemory(), compareByDay(), getFirstWeekStartDate() (+3 more)
+Cohesion: 0.21
+Nodes (13): __addDays(), __arraySum(), intArrayFromString(), __isLeapYear(), _strftime(), _strftime_l(), stringToUTF8Array(), writeArrayToMemory() (+5 more)
 
 ### Community 60 - "Community 60"
 Cohesion: 0.29
@@ -491,8 +498,8 @@ Cohesion: 0.20
 Nodes (10): Dead-End Host (JE not person-to-person), JE Enzootic Transmission Cycle (pigs, wading birds, rice paddies), Bacterial Meningitis, Cerebral Malaria, HSV / Viral Encephalitis, Japanese Encephalitis Virus (JE), Acyclovir (empiric HSV cover), JE Supportive Care + Neurocritical Evacuation (+2 more)
 
 ### Community 65 - "Community 65"
-Cohesion: 0.24
-Nodes (10): Care Under Fire, Scenario 21: MASCAL Triage Under Fire (OP — care under fire / NATO corridor), Scenario 22: FPV Drone Blast & Fragmentation — Multi-Region Penetrating Trauma (OP VIPER DRONE), Junctional Hemorrhage, Junctional Tourniquet Device, MARCH Framework (Massive hemorrhage, Airway, Respiration, Circulation, Hypothermia), MASCAL Triage (maximize total survivors), Tourniquet Use (+2 more)
+Cohesion: 0.50
+Nodes (5): Care Under Fire, Scenario 21: MASCAL Triage Under Fire (OP — care under fire / NATO corridor), MASCAL Triage (maximize total survivors), Tourniquet Use, Walking Wounded as Force Multiplier
 
 ### Community 66 - "Community 66"
 Cohesion: 0.24
@@ -527,24 +534,24 @@ Cohesion: 0.31
 Nodes (9): Severe Hypothermia, Nerve Agent (Organophosphate) Toxidrome, ATNAA / MARK-1 Auto-Injector, Atropine, Pralidoxime (2-PAM), Ranger Medic Handbook (RMH) / 331 SOM Reference, Gentle Core Rewarming / Hypothermia Burrito, Scenario 11: Severe Hypothermia — Afterdrop & Gentle Rewarming (+1 more)
 
 ### Community 75 - "Community 75"
-Cohesion: 0.25
-Nodes (9): 9-Line MEDEVAC Request, Casualty Documentation (casualty card), Electronic Warfare (GPS/comms jamming), EUCOM Theater Tab, Evacuation Precedence (Urgent/Priority/Routine), NATO Interoperability, Scenario 34: Tick-Borne Encephalitis (Operation context), Scenario 38: Whole Blood Transfusion (Operation Frozen Vein) (+1 more)
+Cohesion: 0.14
+Nodes (15): 9-Line MEDEVAC Request, Acute Radiation Syndrome (ARS), Blast/Fragmentation Trauma, Casualty Documentation (casualty card), Electronic Warfare (GPS/comms jamming), EUCOM Theater Tab, Evacuation Precedence (Urgent/Priority/Routine), MARCH (TCCC algorithm) (+7 more)
 
 ### Community 76 - "Community 76"
 Cohesion: 0.25
 Nodes (9): MARCH Algorithm (TCCC), Scenario 28 — Tension Pneumothorax (Operation Hollow Reed), Scenario 29 — Hemorrhagic Shock / Damage-Control Resuscitation (Operation Crimson Ledger), Scenario 30 — Airway Trauma & Surgical Cricothyroidotomy (Operation Shattered Jaw), Scenario 31 — Traumatic Brain Injury / Blast TBI (Operation Glass Ridge), Scenario 32 — Burn Management (Operation Fuel Fire), Scenario 33 — Pelvic Fracture & Traumatic Amputation (Operation Broken Anvil), Scenario 36 — Prolonged Damage-Control Resuscitation (Operation Crimson Reserve) (+1 more)
 
 ### Community 77 - "Community 77"
-Cohesion: 0.28
-Nodes (9): "clone"(), create(), createDataFile(), createFile(), createLazyFile(), createStream(), mknod(), nextfd() (+1 more)
+Cohesion: 0.22
+Nodes (11): "clone"(), create(), createDataFile(), createFile(), createLazyFile(), createStream(), flagsToPermissionString(), mayOpen() (+3 more)
 
 ### Community 80 - "Community 80"
 Cohesion: 0.32
 Nodes (8): VHF Infection-Control / Isolation Posture, Scenario 14: Lassa Fever, Scenario 15: Marburg Virus Disease, Scenario 02: Yellow Fever (Toxic Phase), Scenario 03: Exertional Heat Stroke, Scenario Card Structure (OPQRST/Vitals/Dx/Q&A/Actions/Pearls), Faget Sign (relative bradycardia with fever), Cold-Water Immersion (heat stroke cooling)
 
 ### Community 81 - "Community 81"
-Cohesion: 0.39
-Nodes (8): Avalanche Partial Burial + Blunt Trauma, Scenario 17: Avalanche Trauma — Hypothermia/Asphyxia/Trauma Triad (OP WHITEOUT TRIAD), Scenario 24: Hemorrhagic Shock + Hypothermia — Trauma Triad in Winter (OP COLD TRIAD), Hypothermia Prevention / Aggressive Rewarming, Non-Compressible (Truncal/Junctional) Hemorrhage, Open Tib/Fib Fracture with Active Bleeding, Trauma Triad of Death (hypothermia/acidosis/coagulopathy), Whole Blood / Component Therapy + TXA
+Cohesion: 0.22
+Nodes (14): Avalanche Partial Burial + Blunt Trauma, Scenario 17: Avalanche Trauma — Hypothermia/Asphyxia/Trauma Triad (OP WHITEOUT TRIAD), Scenario 22: FPV Drone Blast & Fragmentation — Multi-Region Penetrating Trauma (OP VIPER DRONE), Scenario 24: Hemorrhagic Shock + Hypothermia — Trauma Triad in Winter (OP COLD TRIAD), Hypothermia Prevention / Aggressive Rewarming, Junctional Hemorrhage, Junctional Tourniquet Device, MARCH Framework (Massive hemorrhage, Airway, Respiration, Circulation, Hypothermia) (+6 more)
 
 ### Community 82 - "Community 82"
 Cohesion: 0.29
@@ -603,16 +610,16 @@ Cohesion: 0.48
 Nodes (6): esc(), inline_fonts(), main(), Neutralise any literal </script so inlined JS can't close its tag early., read(), read_bytes()
 
 ### Community 97 - "Community 97"
-Cohesion: 0.38
-Nodes (7): intArrayFromString(), lengthBytesUTF8(), stringToUTF8Array(), forceLoadFile(), intArrayFromString(), "toWireType"(), writeFile()
+Cohesion: 0.40
+Nodes (5): lengthBytesUTF8(), forceLoadFile(), intArrayFromString(), "toWireType"(), writeFile()
 
 ### Community 98 - "Community 98"
 Cohesion: 0.29
 Nodes (7): T360 BPTile (MAP calc), T360 ecgPip (Web Audio), T360 ECGWave, T360 PulseTile, T360 VitalsPanel, T360 VitalTile, TCCC ECG canvas waveform
 
 ### Community 99 - "Community 99"
-Cohesion: 0.47
-Nodes (6): Calabar Swellings, Ivermectin-Induced Encephalopathy (high Loa load), Loa Loa (Loiasis / African Eyeworm), Scenario 20: The Loa loa / Ivermectin Trap, Scenario 06: Human African Trypanosomiasis, Test-and-Not-Treat Strategy
+Cohesion: 0.29
+Nodes (7): Blast Lung — Deadly, Often-Occult Primary Overpressure Injury, Expectant (Gray) Triage Category, Four Blast-Injury Mechanisms (primary/secondary/tertiary/quaternary), SALT Triage (Sort-Assess-Lifesaving interventions-Treatment/Transport), NORTHCOM Scenario 47 — Domestic Terror Bombing: Blast Injury Mass Casualty (Operation Shattered Square), Secondary-Device Threat — Care Under Threat / Scene Safety, START Triage
 
 ### Community 100 - "Community 100"
 Cohesion: 0.40
@@ -635,8 +642,8 @@ Cohesion: 0.40
 Nodes (6): Capnography (EtCO2 Monitoring), DOPE Mnemonic (vent deterioration), Lung-Protective Ventilation, Oxygen Stewardship / Conservation, Scenario 43: Ventilation & Oxygenation in PCC (Operation Steady Breath), Transport Ventilator (SAVe-type)
 
 ### Community 105 - "Community 105"
-Cohesion: 0.33
-Nodes (6): Open Wound / Delayed Primary Closure, Irrigation & Conservative Debridement, Invasive / Necrotizing Soft-Tissue Infection, Scenario 41: Wound Care & Debridement in PCC (Operation Tide), Sepsis Management (source control), Tetanus Prophylaxis
+Cohesion: 0.22
+Nodes (10): Ceftriaxone, Open Wound / Delayed Primary Closure, Irrigation & Conservative Debridement, Invasive / Necrotizing Soft-Tissue Infection, Scenario 39 — Sepsis in Prolonged Field Care (Operation Slow Burn), Scenario 41 — Wound Care & Debridement in PCC (Operation Slow Tide), Scenario 41: Wound Care & Debridement in PCC (Operation Tide), Sepsis Management (source control) (+2 more)
 
 ### Community 106 - "Community 106"
 Cohesion: 0.33
@@ -647,8 +654,8 @@ Cohesion: 0.33
 Nodes (6): Cold-Water Immersion, Core Rewarming (afterdrop avoidance), Severe Hypothermia, Near-Drowning / Aspiration, "Not Dead Until Warm and Dead", Scenario 39: Cold-Water Immersion & Near-Drowning (Operation Cold Harbor)
 
 ### Community 108 - "Community 108"
-Cohesion: 0.40
-Nodes (6): AFRICOM (U.S. Africa Command), Lethal Triad (hypothermia / acidosis / coagulopathy), One-Health / Zoonotic Partner-Force Medicine, Scenario 22 — Brucellosis (Operation Pastoral Fringe), Scenario 23 — Leptospirosis / Weil's Disease (Operation Floodplain), Scenario 27 — Junctional Hemorrhage (Operation Thorn Gate)
+Cohesion: 0.20
+Nodes (11): AFRICOM (U.S. Africa Command), Assisted Ventilation (the lifesaver), Lethal Triad (hypothermia / acidosis / coagulopathy), Neurotoxic Elapid Envenomation (Black Mamba / Cobra), One-Health / Zoonotic Partner-Force Medicine, Pressure Immobilization (indicated for neurotoxic bite), SAIMR Polyvalent Antivenom, Scenario 22 — Brucellosis (Operation Pastoral Fringe) (+3 more)
 
 ### Community 109 - "Community 109"
 Cohesion: 0.33
@@ -667,12 +674,8 @@ Cohesion: 0.40
 Nodes (5): Anticipation & Readiness — Core Skill of Protective Medicine, Cover-and-Evacuate + TCCC/MARCH On-the-Move Trauma Care, Mission-Priority Tension — Principal vs. Bystanders, Pre-Coordination with Local EMS / Hospitals / Routes, NORTHCOM Scenario 43 — Protective Medicine / VIP Dignitary Support (Operation Close Guard)
 
 ### Community 114 - "Community 114"
-Cohesion: 0.40
-Nodes (5): Acute Radiation Syndrome (ARS), Blast/Fragmentation Trauma, MARCH (TCCC algorithm), Radiological Dispersal Device (Dirty Bomb), Scenario 36: Radiological Dispersal / Dirty Bomb (Operation Scattered Dust)
-
-### Community 115 - "Community 115"
-Cohesion: 0.40
-Nodes (5): Assisted Ventilation (the lifesaver), Neurotoxic Elapid Envenomation (Black Mamba / Cobra), Pressure Immobilization (indicated for neurotoxic bite), SAIMR Polyvalent Antivenom, Scenario 26 — Neurotoxic Snakebite (Operation Silent Fang)
+Cohesion: 0.67
+Nodes (3): Delirium (hyperactive/hypoactive), Naloxone (opioid reversal), Scenario 45: Analgesia, Sedation & Delirium Over Days (Operation Long Night)
 
 ### Community 116 - "Community 116"
 Cohesion: 0.50
@@ -725,10 +728,6 @@ Nodes (4): CNS & Neurological, Reversal Agents, Flumazenil, Midazolam
 ### Community 128 - "Community 128"
 Cohesion: 0.50
 Nodes (4): alignUp(), emscripten_realloc_buffer(), _emscripten_resize_heap(), updateGlobalBufferAndViews()
-
-### Community 129 - "Community 129"
-Cohesion: 0.50
-Nodes (4): abort(), assert(), getBinary(), getBinaryPromise()
 
 ### Community 130 - "Community 130"
 Cohesion: 0.67
@@ -789,22 +788,22 @@ Nodes (3): Acyclovir, Antivirals, Oseltamivir
 ## Knowledge Gaps
 - **488 isolated node(s):** `PFC · Prolonged Casualty Care Scenarios Dashboard`, `code:block1 (index.html                 Page shell · loads styles, fonts,)`, `The WebGL integration`, `1. Standalone single file (no server — just double-click)`, `code:bash (python3 -m http.server 8000)` (+483 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **47 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **46 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Prolonged Casualty Care (PCC / PFC)` connect `PCC / TCCC-to-PCC Transition` to `Community 68`, `Sepsis & Telemedicine PFC`, `Community 76`, `Exertional Heat & Rhabdomyolysis`, `Community 115`?**
-  _High betweenness centrality (0.018) - this node is a cross-community bridge._
-- **Why does `Combatant Command Tab Selector` connect `AFRICOM Infectious-Disease Scenarios` to `Community 66`, `Community 72`, `Community 75`, `INDOPACOM Tropical Scenarios`, `Envenomation & Malaria Scenarios`?**
-  _High betweenness centrality (0.014) - this node is a cross-community bridge._
-- **Why does `Prolonged Casualty Care (PCC)` connect `CENTCOM Prolonged-Care Scenarios` to `Community 81`, `Community 73`, `Crush Syndrome & Acute Kidney Injury`?**
+- **Why does `Combatant Command Tab Selector` connect `Community 17` to `Community 66`, `Community 72`, `Community 75`, `Community 43`, `Community 20`?**
+  _High betweenness centrality (0.015) - this node is a cross-community bridge._
+- **Why does `Prolonged Casualty Care (PCC / PFC)` connect `Community 27` to `Community 68`, `Community 37`, `Community 105`, `Community 108`, `Community 45`, `Community 76`?**
   _High betweenness centrality (0.013) - this node is a cross-community bridge._
+- **Why does `Prolonged Casualty Care (PCC)` connect `Community 3` to `Community 81`, `Community 73`, `Community 18`?**
+  _High betweenness centrality (0.011) - this node is a cross-community bridge._
 - **Are the 24 inferred relationships involving `el()` (e.g. with `initFpills()` and `buildTweaks()`) actually correct?**
   _`el()` has 24 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `PFC · Prolonged Casualty Care Scenarios Dashboard`, `code:block1 (index.html                 Page shell · loads styles, fonts,)`, `The WebGL integration` to the rest of the system?**
   _566 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Humanoid WASM Glue (Emscripten)` be split into smaller, more focused modules?**
+- **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.03894230769230769 - nodes in this community are weakly interconnected._
-- **Should `SOF-Medic Prompt Categories` be split into smaller, more focused modules?**
+- **Should `Community 1` be split into smaller, more focused modules?**
   _Cohesion score 0.050980392156862744 - nodes in this community are weakly interconnected._

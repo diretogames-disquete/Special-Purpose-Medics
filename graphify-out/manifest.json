@@ -1,13 +1,13 @@
 {
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\cocom\\build_standalone.py": {
-    "mtime": 1780796212.3460119,
-    "ast_hash": "bbbdb6b2d96d94e61b49cca347b4ab69",
-    "semantic_hash": "bbbdb6b2d96d94e61b49cca347b4ab69"
+    "mtime": 1780990110.6194239,
+    "ast_hash": "396924820c392803bd44e51f7b834e6f",
+    "semantic_hash": ""
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\cocom\\js\\app.js": {
-    "mtime": 1780987956.6553833,
-    "ast_hash": "67ad5228c6e719fd2f0687963c452b6b",
-    "semantic_hash": "67ad5228c6e719fd2f0687963c452b6b"
+    "mtime": 1780990085.399912,
+    "ast_hash": "293fcf75e688e0f8f481e57c9b9ad32e",
+    "semantic_hash": ""
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\cocom\\js\\webgl-background.js": {
     "mtime": 1780796222.1822581,
@@ -325,9 +325,9 @@
     "semantic_hash": "8bb3b525ee74b60fd857240424544c73"
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\cocom\\index.html": {
-    "mtime": 1780987931.1372952,
-    "ast_hash": "a1669066d8671cc4479a32fd707dd4a1",
-    "semantic_hash": "a1669066d8671cc4479a32fd707dd4a1"
+    "mtime": 1780990043.9176793,
+    "ast_hash": "48e216bd6bd48f233253866c7ac14d37",
+    "semantic_hash": ""
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\cocom\\SPM_COCOM_Scenarios_Standalone.html": {
     "mtime": 1780988134.3862827,
@@ -440,9 +440,9 @@
     "semantic_hash": "5655eedb90340bcab14b3d47ea8db750"
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\.claude\\settings.local.json": {
-    "mtime": 1780989007.975909,
-    "ast_hash": "9773b016ebe99525013612df4ac8feea",
-    "semantic_hash": "9773b016ebe99525013612df4ac8feea"
+    "mtime": 1780990145.2389526,
+    "ast_hash": "6ea3240a04408bdbc606be3770d92d64",
+    "semantic_hash": ""
   },
   "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\docs\\GRAPHIFY_SETUP_WINDOWS.md": {
     "mtime": 1780802457.4906023,
@@ -458,5 +458,10 @@
     "mtime": 1780972278.3089461,
     "ast_hash": "3e30cb0f0de7025687ced0c84c2ac549",
     "semantic_hash": "3e30cb0f0de7025687ced0c84c2ac549"
+  },
+  "C:\\Users\\diret\\OneDrive\\Documents\\Repos\\Special-Purpose-Medics-claude-loving-johnson-JdWD9\\cocom\\js\\region-music.js": {
+    "mtime": 1780989993.6870227,
+    "ast_hash": "7c721149251b595bc0b8f598c5aa1d61",
+    "semantic_hash": ""
   }
 }

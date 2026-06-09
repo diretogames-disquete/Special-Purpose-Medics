@@ -23,6 +23,7 @@ def main():
     styles = read("css/styles.css")
     webgl_css = read("css/webgl.css")
     webgl_js = read("js/webgl-background.js").replace("</script", "<\\/script")
+    region_js = read("js/region-music.js").replace("</script", "<\\/script")
     app_js = read("js/app.js").replace("</script", "<\\/script")
 
     html = html.replace('<link rel="stylesheet" href="css/styles.css">',
@@ -31,6 +32,8 @@ def main():
                         '<style>\n' + webgl_css + '\n</style>')
     html = html.replace('<script src="js/webgl-background.js"></script>',
                         '<script>\n' + webgl_js + '\n</script>')
+    html = html.replace('<script src="js/region-music.js"></script>',
+                        '<script>\n' + region_js + '\n</script>')
     html = html.replace('<script src="js/app.js"></script>',
                         '<script>\n' + app_js + '\n</script>')
 

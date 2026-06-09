@@ -132,6 +132,7 @@
     document.querySelectorAll('.cocom-panel').forEach(function (p) { p.classList.toggle('active', p.dataset.pfx === pfx); });
     document.querySelectorAll('.cocom-seg button').forEach(function (b) { var on = b.dataset.pfx === pfx; b.classList.toggle('on', on); b.setAttribute('aria-selected', String(on)); });
     if (window.SPM_BG && tintOn) window.SPM_BG.setAccent(ACCENT[pfx]);
+    if (window.SPM_MUSIC) window.SPM_MUSIC.setRegion(pfx);
     applyFilters(activePanel());
     store.set('cocom', pfx);
     window.scrollTo(0, 0); tick();
@@ -199,6 +200,28 @@
     sndBtn.title = 'Sound: ' + (soundOn ? 'on' : 'off');
     if (soundOn) tick();
   });
+  // region ambient music toggle — themes per theater, low + slow tactical bed.
+  // Browsers block autoplay, so a remembered "on" arms on the first user gesture.
+  var musicBtn = $('musicBtn');
+  if (musicBtn && window.SPM_MUSIC && window.SPM_MUSIC.available) {
+    var syncMusicBtn = function (on) {
+      musicBtn.classList.toggle('on', on);
+      musicBtn.setAttribute('aria-pressed', String(on));
+      musicBtn.textContent = on ? '♫ Music' : '♪ Music';
+    };
+    musicBtn.addEventListener('click', function () {
+      if (window.SPM_MUSIC.isOn()) { window.SPM_MUSIC.disable(); syncMusicBtn(false); store.set('music', '0'); }
+      else { window.SPM_MUSIC.setRegion(activePanel().dataset.pfx); window.SPM_MUSIC.enable(); syncMusicBtn(true); store.set('music', '1'); }
+      tick();
+    });
+    if (store.get('music', '0') === '1') {
+      var startMusic = function () {
+        document.removeEventListener('pointerdown', startMusic); document.removeEventListener('keydown', startMusic);
+        if (!window.SPM_MUSIC.isOn()) { window.SPM_MUSIC.setRegion(activePanel().dataset.pfx); window.SPM_MUSIC.enable(); syncMusicBtn(true); }
+      };
+      document.addEventListener('pointerdown', startMusic); document.addEventListener('keydown', startMusic);
+    }
+  }
   // '/' focuses search
   document.addEventListener('keydown', function (e) { if (e.key === '/' && document.activeElement !== searchEl) { e.preventDefault(); searchEl.focus(); } });
 })();
