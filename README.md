@@ -17,7 +17,7 @@ the site root links them all.
 | **Pharmacology** · Tiered drug reference (PK/PD graphs) | `/pharm/` | `…github.io/special-purpose-medics/pharm/` |
 | **Prompt Library** · SOF Medic AI prompts (200, MARCH PAWS sort) | `/prompts/` | `…github.io/special-purpose-medics/prompts/` |
 | **Special Purpose Medic Drug Box** · Robust drug reference + quiz (165 drugs) | `/formulary/` | `…github.io/special-purpose-medics/formulary/` |
-| **See the COCOMs** · Regional SOF scenarios by Combatant Command (100 cases) | `/cocom/` | `…github.io/special-purpose-medics/cocom/` |
+| **See the COCOMs** · Regional SOF scenarios by Geographic Combatant Command + Ranger Medic (350 cases) | `/cocom/` | `…github.io/special-purpose-medics/cocom/` |
 | **ECG Simulator** · Rhythm monitor — Learn · 12-Lead · Builder · Game (20 rhythms) | `/ecg/` | `…github.io/special-purpose-medics/ecg/` |
 
 The **TCCC 360°** dashboard (in [`t360/`](t360/)) is a DD-1380 tactical casualty
@@ -74,8 +74,9 @@ covering every drug, filterable by category and level) and optional **UI click s
 Offline standalone: `formulary/SPM_DrugBox_Standalone.html`.
 
 The **See the COCOMs** dashboard (in [`cocom/`](cocom/)) merges regional SOF medical
-training scenario sets by **Combatant Command** behind one switcher — **AFRICOM** and
-**CENTCOM**, 50 character-driven cases each (100 total). Every case has full clinical
+training scenario sets by **Geographic Combatant Command** behind one switcher — **AFRICOM**,
+**CENTCOM**, **INDOPACOM**, **EUCOM**, **SOUTHCOM** and **NORTHCOM**, plus a **Ranger Medic**
+training set — 50 character-driven cases each (350 total). Every case has full clinical
 work-ups (character/environment, OPQRST, vitals, exam), a **reveal-on-demand differential**,
 **answer-keyed Socratic questions**, critical actions, clinical pearls, a resolution, and
 current evidence with live references. Tap a theater to switch; search, tag-filter, expand,

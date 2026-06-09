@@ -17,8 +17,9 @@
   };
 
   // Per-COCOM WebGL accent (0..1 rgb): AFRICOM gold/savanna, CENTCOM desert cyan,
-  // INDOPACOM jungle/maritime jade, EUCOM alpine/Baltic steel-blue, SOUTHCOM tropical green.
-  var ACCENT = { af: [0.847, 0.635, 0.231], ce: [0.16, 0.78, 0.92], in: [0.20, 0.68, 0.60], eu: [0.42, 0.60, 0.88], so: [0.38, 0.78, 0.45] };
+  // INDOPACOM jungle/maritime jade, EUCOM alpine/Baltic steel-blue, SOUTHCOM tropical green,
+  // NORTHCOM arctic/homeland ice-blue, Ranger Medic regiment buckskin tan.
+  var ACCENT = { af: [0.847, 0.635, 0.231], ce: [0.16, 0.78, 0.92], in: [0.20, 0.68, 0.60], eu: [0.42, 0.60, 0.88], so: [0.38, 0.78, 0.45], no: [0.55, 0.74, 0.86], rm: [0.74, 0.52, 0.30] };
   var tintOn = store.get('tint', '1') === '1';
 
   /* ---------- click sound (from the source) ---------- */
