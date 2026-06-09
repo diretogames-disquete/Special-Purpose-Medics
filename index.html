@@ -311,6 +311,29 @@
       paint();
       try { localStorage.setItem('spm.hubSound', on ? '1' : '0'); } catch (e) {}
     });
+
+    // Default ON ("auto"): reflect the on-state at load and arm the soundbed to
+    // start on the first user gesture (browsers block autoplay until then).
+    // Turning it off is remembered and skips auto-start on the next visit.
+    var hubPref = '1';
+    try { var sv = localStorage.getItem('spm.hubSound'); hubPref = (sv === null) ? '1' : sv; } catch (e) {}
+    if (hubPref === '1') {
+      on = true; paint();
+      var startBed = function () {
+        document.removeEventListener('pointerdown', startBed, true);
+        document.removeEventListener('keydown', startBed, true);
+        if (!on) return;                          // toggled off before interacting
+        if (!built && !build()) return;
+        if (ctx.state === 'suspended') ctx.resume();
+        master.gain.cancelScheduledValues(ctx.currentTime);
+        master.gain.linearRampToValueAtTime(0.26, ctx.currentTime + 0.6);
+        step = 0; nextT = ctx.currentTime + 0.08;
+        if (!timer) timer = setInterval(scheduler, 25);
+        paint();
+      };
+      document.addEventListener('pointerdown', startBed, true);
+      document.addEventListener('keydown', startBed, true);
+    }
   })();
   </script>
 </body>
