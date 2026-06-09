@@ -176,6 +176,9 @@
 
   window.SPM_MUSIC = {
     enable: enable, disable: disable, toggle: toggle,
+    // resume a context that was created suspended (default-on autoplay block) —
+    // called on the first user gesture so audio actually starts.
+    resume: function () { if (ctx && ctx.state === 'suspended') { try { ctx.resume(); } catch (e) {} } },
     isOn: function () { return enabled; },
     setRegion: setRegion, region: function () { return curPfx; }, available: true
   };

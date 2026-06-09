@@ -214,12 +214,20 @@
       else { window.SPM_MUSIC.setRegion(activePanel().dataset.pfx); window.SPM_MUSIC.enable(); syncMusicBtn(true); store.set('music', '1'); }
       tick();
     });
-    if (store.get('music', '0') === '1') {
-      var startMusic = function () {
-        document.removeEventListener('pointerdown', startMusic); document.removeEventListener('keydown', startMusic);
-        if (!window.SPM_MUSIC.isOn()) { window.SPM_MUSIC.setRegion(activePanel().dataset.pfx); window.SPM_MUSIC.enable(); syncMusicBtn(true); }
+    // Default ON ("auto"): reflect the on-state and start the engine now.
+    // Browsers suspend audio until the first user gesture, so resume on the
+    // earliest interaction. Turning it off is remembered and skips auto-start.
+    if (store.get('music', '1') === '1') {
+      syncMusicBtn(true);
+      window.SPM_MUSIC.setRegion(activePanel().dataset.pfx);
+      window.SPM_MUSIC.enable();
+      var armMusic = function () {
+        document.removeEventListener('pointerdown', armMusic, true);
+        document.removeEventListener('keydown', armMusic, true);
+        if (window.SPM_MUSIC.isOn()) window.SPM_MUSIC.resume();
       };
-      document.addEventListener('pointerdown', startMusic); document.addEventListener('keydown', startMusic);
+      document.addEventListener('pointerdown', armMusic, true);
+      document.addEventListener('keydown', armMusic, true);
     }
   }
   // '/' focuses search

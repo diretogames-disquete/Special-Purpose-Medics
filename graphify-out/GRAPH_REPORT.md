@@ -1,16 +1,16 @@
 # Graph Report - Special-Purpose-Medics-claude-loving-johnson-JdWD9  (2026-06-09)
 
 ## Corpus Check
-- 69 files · ~1,672,900 words
+- 69 files · ~1,672,992 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1945 nodes · 2895 edges · 196 communities (150 shown, 46 thin omitted)
+- 1947 nodes · 2919 edges · 200 communities (154 shown, 46 thin omitted)
 - Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 270 edges (avg confidence: 0.83)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `5f1464cf`
+- Built from commit: `7f0d540a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -126,6 +126,7 @@
 - [[_COMMUNITY_Community 112|Community 112]]
 - [[_COMMUNITY_Community 113|Community 113]]
 - [[_COMMUNITY_Community 114|Community 114]]
+- [[_COMMUNITY_Community 115|Community 115]]
 - [[_COMMUNITY_Community 116|Community 116]]
 - [[_COMMUNITY_Community 117|Community 117]]
 - [[_COMMUNITY_Community 118|Community 118]]
@@ -139,6 +140,7 @@
 - [[_COMMUNITY_Community 126|Community 126]]
 - [[_COMMUNITY_Community 127|Community 127]]
 - [[_COMMUNITY_Community 128|Community 128]]
+- [[_COMMUNITY_Community 129|Community 129]]
 - [[_COMMUNITY_Community 130|Community 130]]
 - [[_COMMUNITY_Community 131|Community 131]]
 - [[_COMMUNITY_Community 132|Community 132]]
@@ -197,6 +199,8 @@
 - [[_COMMUNITY_Community 195|Community 195]]
 - [[_COMMUNITY_Community 196|Community 196]]
 - [[_COMMUNITY_Community 197|Community 197]]
+- [[_COMMUNITY_Community 198|Community 198]]
+- [[_COMMUNITY_Community 199|Community 199]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `Ranger Medic CTLS Scenario Theater` - 42 edges
@@ -239,7 +243,7 @@
 - **Mogadishu lesson driving TCCC and junctional hemorrhage doctrine** —  [INFERRED]
 - **Every-Ranger-a-Lifesaver system eliminating preventable death (813-casualty review)** —  [INFERRED]
 
-## Communities (196 total, 46 thin omitted)
+## Communities (200 total, 46 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.04
@@ -298,7 +302,7 @@ Cohesion: 0.08
 Nodes (6): abort(), addRunDependency(), assert(), createWasm(), getBinary(), getBinaryPromise()
 
 ### Community 14 - "Community 14"
-Cohesion: 0.32
+Cohesion: 0.41
 Nodes (12): buildBed(), disable(), enable(), ensure(), freq(), lowPulse(), monitorBlip(), pluck() (+4 more)
 
 ### Community 15 - "Community 15"
@@ -314,16 +318,16 @@ Cohesion: 0.10
 Nodes (23): AFRICOM Medical Scenarios Panel, Combatant Command Tab Selector, WHO Rabies Exposure Categories (I/II/III), Tag Filter Pills, filterTag() function, jumpTo() function, setCocom() function, Scenario 10: MEDCAP Pediatric Emergency (SAM) (+15 more)
 
 ### Community 18 - "Community 18"
-Cohesion: 0.16
-Nodes (21): Acute Kidney Injury (pre-renal + myoglobinuric), Aggressive IV Crystalloid / Fluid Resuscitation, Calcium / Albuterol / Sodium Bicarbonate (hyperkalemia field countermeasures), Compartment Syndrome, Crush Syndrome (Reperfusion Injury), Scenario 15: Crush Injury — Rockfall in a Mountain Pass (OP ROCK SHATTER), Scenario 19: Exertional Rhabdomyolysis — Cold-Weather Ruck (OP HEAVY LOAD), Foley / Hourly Urine-Output Monitoring (+13 more)
+Cohesion: 0.22
+Nodes (14): Acute Kidney Injury (pre-renal + myoglobinuric), Crush Syndrome (Reperfusion Injury), Hyperkalemia (the acute killer of AKI), Myoglobinuric Acute Kidney Injury, Nephrotoxin Avoidance & Renal Dose Adjustment, Operation Rubble Line, Pre-Release Aggressive Fluid Loading, Prolonged Tourniquet Time / Reperfusion Risk (+6 more)
 
 ### Community 19 - "Community 19"
 Cohesion: 0.18
 Nodes (11): Delayed Pulmonary Effects from Heavy Agent Exposure, Care Based on Need & Human Dignity (impartial medical ethics), Acute Environmental Injury — Dehydration / Heat (treat first), Kinetic-Impact-Projectile ('Rubber Bullet') Trauma — Treat as Genuine Trauma, Neutral, Dignified Care in a Politically Charged Environment, Population-Level Infectious-Disease Management & Infection Control, Merck Manual — Riot-Control Chemical Agents (CS/OC), Riot-Control Agents (CS/OC) — Decontamination & Reassurance (+3 more)
 
 ### Community 20 - "Community 20"
-Cohesion: 0.06
-Nodes (34): Species/Region-Relevant Antivenom, Any Fever in a Malaria Area Is Malaria Until Proven Otherwise, Avoid Snakebite Folklore (no incision/suction/tourniquet/ice), Buthid Scorpion (Androctonus / Leiurus), Hypercatecholaminergic Myocarditis / Pulmonary Edema, Catecholamine Storm (autonomic short-circuit), CENTCOM Theater Tab, Cerebral Malaria (impaired consciousness/seizures) (+26 more)
+Cohesion: 0.10
+Nodes (21): Species/Region-Relevant Antivenom, Any Fever in a Malaria Area Is Malaria Until Proven Otherwise, Avoid Snakebite Folklore (no incision/suction/tourniquet/ice), Buthid Scorpion (Androctonus / Leiurus), Hypercatecholaminergic Myocarditis / Pulmonary Edema, Catecholamine Storm (autonomic short-circuit), CENTCOM Theater Tab, Check Glucose / Correct Hypoglycemia (+13 more)
 
 ### Community 21 - "Community 21"
 Cohesion: 0.22
@@ -346,8 +350,8 @@ Cohesion: 0.18
 Nodes (18): allocate(), createNode(), doMsync(), expandFileStorage(), get_char(), getattr(), isBlkdev(), isChrdev() (+10 more)
 
 ### Community 26 - "Community 26"
-Cohesion: 0.19
-Nodes (13): TCCC Casualty Card (DD Form 1380), CENTCOM Scenario 10: PCC 72-Hour Hold (Operation Long Night), Damage Control Resuscitation / Permissive Hypotension, Evacuation Decision / Priority, MARC²H³-PAWS-L Reassessment Framework, Minimum / Better / Best Tiering & Ruck-Truck-House-Plane, MIST Structured Handoff, Nursing Fundamentals (PCC) (+5 more)
+Cohesion: 0.18
+Nodes (14): TCCC Casualty Card (DD Form 1380), CENTCOM Scenario 10: PCC 72-Hour Hold (Operation Long Night), Damage Control Resuscitation / Permissive Hypotension, Evacuation Decision / Priority, Foley / Hourly Urine-Output Monitoring, MARC²H³-PAWS-L Reassessment Framework, Minimum / Better / Best Tiering & Ruck-Truck-House-Plane, MIST Structured Handoff (+6 more)
 
 ### Community 27 - "Community 27"
 Cohesion: 0.19
@@ -438,8 +442,8 @@ Cohesion: 0.17
 Nodes (12): Defervescence / Critical Phase, Narrowing Pulse Pressure, Plasma Leakage (rising Hct, falling platelets), Leptospirosis, Severe Dengue (plasma leakage / impending shock), Weil's Disease (severe icteric leptospirosis), Conjunctival Suffusion, Jarisch-Herxheimer Reaction (+4 more)
 
 ### Community 50 - "Community 50"
-Cohesion: 0.22
-Nodes (9): Expectant Category (resource-dependent), Ketamine (analgesia), Moral Injury & Team/Self Support, Palliative / Comfort Care, Scenario 34 — TCCC Triple-Option Analgesia (Operation Steady Hand), Scenario 48: Austere MASCAL Triage (Operation Hard Choices), Scenario 49: The Awake, Suffering & Expectant Patient (Operation Quiet Company), Tension Pneumothorax Needle Decompression (+1 more)
+Cohesion: 0.17
+Nodes (12): Delirium (hyperactive/hypoactive), Expectant Category (resource-dependent), Ketamine (analgesia), Moral Injury & Team/Self Support, Naloxone (opioid reversal), Palliative / Comfort Care, Scenario 34 — TCCC Triple-Option Analgesia (Operation Steady Hand), Scenario 45: Analgesia, Sedation & Delirium Over Days (Operation Long Night) (+4 more)
 
 ### Community 51 - "Community 51"
 Cohesion: 0.18
@@ -462,8 +466,8 @@ Cohesion: 0.20
 Nodes (11): Hemorrhage-First Priority (combat doctrine over ATLS ABC), MARCH Algorithm (Massive hemorrhage, Airway, Respiration, Circulation, Hypothermia/Head), Tactical Combat Casualty Care (TCCC), Battle of Mogadishu (3-4 Oct 1993), DD Form 3019 Prolonged Casualty Care Flow Sheet, Junctional Hemorrhage Control (groin/inguinal GSW), TCCC Guidelines, 25 January 2024 (CoTCCC), Scenario: Documentation as a Weapon — The Card That Saves the Next Ranger (+3 more)
 
 ### Community 56 - "Community 56"
-Cohesion: 0.15
-Nodes (17): Calabar Swellings, Critical-Thinking Questions (answer key) block, Differential Diagnosis (reveal) UI block, revealDiff() — reveal differential diagnosis, toggleAns() — reveal answer key, toggleSc() — expand/collapse scenario, Ivermectin-Induced Encephalopathy (high Loa load), Loa Loa (Loiasis / African Eyeworm) (+9 more)
+Cohesion: 0.22
+Nodes (11): Critical-Thinking Questions (answer key) block, Differential Diagnosis (reveal) UI block, revealDiff() — reveal differential diagnosis, toggleAns() — reveal answer key, toggleSc() — expand/collapse scenario, Scenario 25: Severe (Cerebral) Falciparum Malaria, Scenario 26: Leptospirosis / Weil's Disease (Operation Floodwater), Scenario 27: Oroya Fever / Bartonellosis (Operation Silent Drain) (+3 more)
 
 ### Community 57 - "Community 57"
 Cohesion: 0.18
@@ -534,8 +538,8 @@ Cohesion: 0.31
 Nodes (9): Severe Hypothermia, Nerve Agent (Organophosphate) Toxidrome, ATNAA / MARK-1 Auto-Injector, Atropine, Pralidoxime (2-PAM), Ranger Medic Handbook (RMH) / 331 SOM Reference, Gentle Core Rewarming / Hypothermia Burrito, Scenario 11: Severe Hypothermia — Afterdrop & Gentle Rewarming (+1 more)
 
 ### Community 75 - "Community 75"
-Cohesion: 0.14
-Nodes (15): 9-Line MEDEVAC Request, Acute Radiation Syndrome (ARS), Blast/Fragmentation Trauma, Casualty Documentation (casualty card), Electronic Warfare (GPS/comms jamming), EUCOM Theater Tab, Evacuation Precedence (Urgent/Priority/Routine), MARCH (TCCC algorithm) (+7 more)
+Cohesion: 0.25
+Nodes (9): 9-Line MEDEVAC Request, Casualty Documentation (casualty card), Electronic Warfare (GPS/comms jamming), EUCOM Theater Tab, Evacuation Precedence (Urgent/Priority/Routine), NATO Interoperability, Scenario 34: Tick-Borne Encephalitis (Operation context), Scenario 38: Whole Blood Transfusion (Operation Frozen Vein) (+1 more)
 
 ### Community 76 - "Community 76"
 Cohesion: 0.25
@@ -654,8 +658,8 @@ Cohesion: 0.33
 Nodes (6): Cold-Water Immersion, Core Rewarming (afterdrop avoidance), Severe Hypothermia, Near-Drowning / Aspiration, "Not Dead Until Warm and Dead", Scenario 39: Cold-Water Immersion & Near-Drowning (Operation Cold Harbor)
 
 ### Community 108 - "Community 108"
-Cohesion: 0.20
-Nodes (11): AFRICOM (U.S. Africa Command), Assisted Ventilation (the lifesaver), Lethal Triad (hypothermia / acidosis / coagulopathy), Neurotoxic Elapid Envenomation (Black Mamba / Cobra), One-Health / Zoonotic Partner-Force Medicine, Pressure Immobilization (indicated for neurotoxic bite), SAIMR Polyvalent Antivenom, Scenario 22 — Brucellosis (Operation Pastoral Fringe) (+3 more)
+Cohesion: 0.40
+Nodes (6): AFRICOM (U.S. Africa Command), Lethal Triad (hypothermia / acidosis / coagulopathy), One-Health / Zoonotic Partner-Force Medicine, Scenario 22 — Brucellosis (Operation Pastoral Fringe), Scenario 23 — Leptospirosis / Weil's Disease (Operation Floodplain), Scenario 27 — Junctional Hemorrhage (Operation Thorn Gate)
 
 ### Community 109 - "Community 109"
 Cohesion: 0.33
@@ -674,8 +678,12 @@ Cohesion: 0.40
 Nodes (5): Anticipation & Readiness — Core Skill of Protective Medicine, Cover-and-Evacuate + TCCC/MARCH On-the-Move Trauma Care, Mission-Priority Tension — Principal vs. Bystanders, Pre-Coordination with Local EMS / Hospitals / Routes, NORTHCOM Scenario 43 — Protective Medicine / VIP Dignitary Support (Operation Close Guard)
 
 ### Community 114 - "Community 114"
-Cohesion: 0.67
-Nodes (3): Delirium (hyperactive/hypoactive), Naloxone (opioid reversal), Scenario 45: Analgesia, Sedation & Delirium Over Days (Operation Long Night)
+Cohesion: 0.17
+Nodes (13): Cerebral Malaria (impaired consciousness/seizures), Doc Whitlock (medic, malaria scenario), 'Firestorm' Analogy (rapid lethal malaria), Hypoglycemia in Severe Malaria, Intensive Organ-Directed Supportive Care (severe malaria), IV Artesunate, IV Quinine (older standard antimalarial), Mandatory Parallel Malaria Testing (+5 more)
+
+### Community 115 - "Community 115"
+Cohesion: 0.43
+Nodes (7): Aggressive IV Crystalloid / Fluid Resuscitation, Calcium / Albuterol / Sodium Bicarbonate (hyperkalemia field countermeasures), Compartment Syndrome, Scenario 15: Crush Injury — Rockfall in a Mountain Pass (OP ROCK SHATTER), Scenario 19: Exertional Rhabdomyolysis — Cold-Weather Ruck (OP HEAVY LOAD), Myoglobinuria / Acute Kidney Injury, Lab-Gated Return-to-Duty / Training Programming
 
 ### Community 116 - "Community 116"
 Cohesion: 0.50
@@ -728,6 +736,10 @@ Nodes (4): CNS & Neurological, Reversal Agents, Flumazenil, Midazolam
 ### Community 128 - "Community 128"
 Cohesion: 0.50
 Nodes (4): alignUp(), emscripten_realloc_buffer(), _emscripten_resize_heap(), updateGlobalBufferAndViews()
+
+### Community 129 - "Community 129"
+Cohesion: 0.47
+Nodes (6): Calabar Swellings, Ivermectin-Induced Encephalopathy (high Loa load), Loa Loa (Loiasis / African Eyeworm), Scenario 20: The Loa loa / Ivermectin Trap, Scenario 06: Human African Trypanosomiasis, Test-and-Not-Treat Strategy
 
 ### Community 130 - "Community 130"
 Cohesion: 0.67
@@ -785,6 +797,14 @@ Nodes (3): Acetazolamide, Altitude & Environmental, Nifedipine
 Cohesion: 1.00
 Nodes (3): Acyclovir, Antivirals, Oseltamivir
 
+### Community 198 - "Community 198"
+Cohesion: 0.40
+Nodes (5): Acute Radiation Syndrome (ARS), Blast/Fragmentation Trauma, MARCH (TCCC algorithm), Radiological Dispersal Device (Dirty Bomb), Scenario 36: Radiological Dispersal / Dirty Bomb (Operation Scattered Dust)
+
+### Community 199 - "Community 199"
+Cohesion: 0.40
+Nodes (5): Assisted Ventilation (the lifesaver), Neurotoxic Elapid Envenomation (Black Mamba / Cobra), Pressure Immobilization (indicated for neurotoxic bite), SAIMR Polyvalent Antivenom, Scenario 26 — Neurotoxic Snakebite (Operation Silent Fang)
+
 ## Knowledge Gaps
 - **488 isolated node(s):** `PFC · Prolonged Casualty Care Scenarios Dashboard`, `code:block1 (index.html                 Page shell · loads styles, fonts,)`, `The WebGL integration`, `1. Standalone single file (no server — just double-click)`, `code:bash (python3 -m http.server 8000)` (+483 more)
   These have ≤1 connection - possible missing edges or undocumented components.
@@ -794,10 +814,10 @@ Nodes (3): Acyclovir, Antivirals, Oseltamivir
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Combatant Command Tab Selector` connect `Community 17` to `Community 66`, `Community 72`, `Community 75`, `Community 43`, `Community 20`?**
-  _High betweenness centrality (0.015) - this node is a cross-community bridge._
-- **Why does `Prolonged Casualty Care (PCC / PFC)` connect `Community 27` to `Community 68`, `Community 37`, `Community 105`, `Community 108`, `Community 45`, `Community 76`?**
+  _High betweenness centrality (0.014) - this node is a cross-community bridge._
+- **Why does `Prolonged Casualty Care (PCC)` connect `Community 3` to `Community 81`, `Community 73`, `Community 115`?**
   _High betweenness centrality (0.013) - this node is a cross-community bridge._
-- **Why does `Prolonged Casualty Care (PCC)` connect `Community 3` to `Community 81`, `Community 73`, `Community 18`?**
+- **Why does `EUCOM Theater Tab` connect `Community 75` to `Community 198`, `Community 107`, `Community 17`, `Community 18`, `Community 56`, `Community 91`?**
   _High betweenness centrality (0.011) - this node is a cross-community bridge._
 - **Are the 24 inferred relationships involving `el()` (e.g. with `initFpills()` and `buildTweaks()`) actually correct?**
   _`el()` has 24 INFERRED edges - model-reasoned connections that need verification._
