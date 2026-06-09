@@ -6,3 +6,7 @@
 **/react-dom.development.js
 **/spline-viewer.module.js
 graphify-out/
+
+# Auto-generated offline standalone bundles — duplicates of the source the
+# graph already covers, and too large to extract. Built by build_standalone.py.
+**/*_Standalone.html
