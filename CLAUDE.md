@@ -32,3 +32,4 @@ A suite of medical-training dashboards deployed to GitHub Pages. A landing
 - This sandbox cannot reach `github.io` ("Host not in allowlist") — confirm live
   deploys with the user, not by fetching the URL.
 - Keep clinical values exact; label modelled numbers as estimates.
+- See the **Lessons & pitfalls** section of the skill before audio/creative work, deploys, or local-server debugging (can't hear audio or reach github.io in-sandbox; rebuild standalones; verify headless; merge to main only when asked).

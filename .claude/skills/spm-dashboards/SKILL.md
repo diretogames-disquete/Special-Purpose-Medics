@@ -117,3 +117,31 @@ Keyboard-activate custom controls (`role="button"`, `tabindex="0"`, Enter/Space
 via delegated listeners), `aria-pressed`/`aria-expanded`/`aria-live`, visible
 `:focus-visible` rings, and `prefers-reduced-motion` fallbacks. Prefer smooth
 CSS transitions for "fluid" feel.
+
+## Lessons & pitfalls (learned the hard way)
+- **Audio cannot be auditioned in the sandbox.** When building/adjusting sound,
+  say so up front, ask for 1–2 reference vibes first, build/change **one labelled
+  layer at a time**, and name each layer in the UI/title so the user can point to
+  the exact offender ("the cinematic boom", "the bass swell"). Don't iterate
+  blind across many layers at once.
+- **Clarify scope before building heavy or uncertain features.** A whole
+  narration/LLM-proxy feature was built then removed. For anything big, costly,
+  or subjective, confirm the approach (AskUserQuestion) before implementing.
+- **Environment limits — detect early, don't fight them.** This sandbox cannot
+  reach `github.io` (egress returns 403 "Host not in allowlist"), and `WebFetch`
+  on a private repo's pages 404s. So you cannot verify the live site yourself —
+  confirm deploys with the user. GitHub Pages needs the repo **public** for
+  anonymous viewing; pre-merge deploys from a non-default branch are blocked by
+  the `github-pages` environment, so it goes live after merge to `main`.
+- **Local server hygiene.** Stale `python3 -m http.server` processes / wrong cwd
+  cause phantom 404s. Use a fresh port, and before suspecting app code, `curl`
+  the served file and confirm it matches disk.
+- **Always rebuild + commit the standalone** in the same change after editing a
+  dashboard's sources (run its `build_standalone.py`); they must never drift.
+- **Headless verify before every merge** (0 console errors). The only acceptable
+  console noise is the DM-fonts CDN being blocked in-sandbox (`ERR_CERT…`) —
+  ignore that one; it loads when hosted.
+- **Don't merge to `main` without the user's go-ahead** unless the intent is
+  clearly "make it live". One change at a time, verified, then PR → merge.
+- **Match existing style.** Each dashboard has its own tokens/theme mechanism
+  (`data-theme` vs `body.light`); reuse its variables rather than hard-coding.
